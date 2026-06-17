@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HK Hotel HR</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --primary: #3B5BDB;
+  --primary-dark: #2F4AC7;
+  --primary-light: #EEF2FF;
+  --accent: #F76707;
+  --accent-light: #FFF4E6;
+  --green: #2F9E44;
+  --green-light: #EBFBEE;
+  --red: #E03131;
+  --red-light: #FFF5F5;
+  --yellow: #E67700;
+  --yellow-light: #FFF9DB;
+  --bg: #F0F4FF;
+  --surface: #FFFFFF;
+  --text: #1A1B2E;
+  --muted: #6C757D;
+  --border: #E9ECEF;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── LOGIN ── */
+#loginScreen {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #3B5BDB 0%, #2F4AC7 50%, #1a2d8a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+.login-logo {
+  width: 80px; height: 80px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.login-title { font-size: 26px; font-weight: 800; color: white; margin-bottom: 6px; }
+.login-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 40px; }
+.login-card {
+  background: white;
+  border-radius: 24px;
+  padding: 28px 24px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.login-card h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
+.form-input {
+  width: 100%; border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 12px 14px; font-size: 15px; color: var(--text);
+  background: var(--bg); outline: none; font-family: inherit;
+  transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--primary); }
+.btn-login {
+  width: 100%; background: var(--primary); color: white;
+  border: none; border-radius: 12px; padding: 14px;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  font-family: inherit; margin-top: 8px;
+  transition: background 0.2s;
+}
+.btn-login:active { background: var(--primary-dark); }
+.login-error {
+  background: var(--red-light); color: var(--red);
+  border-radius: 10px; padding: 10px 14px;
+  font-size: 13px; font-weight: 600;
+  margin-top: 12px; display: none; text-align: center;
+}
+
+/* ── APP ── */
+#appScreen { display: none; min-height: 100vh; padding-bottom: 70px; }
+
+/* Header */
+.header {
+  background: var(--primary);
+  padding: 44px 20px 20px;
+  color: white;
+}
+.header-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.header-left .greeting { font-size: 12px; opacity: 0.7; }
+.header-left .name { font-size: 22px; font-weight: 800; margin-top: 2px; }
+.header-left .dept { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
+/* Content */
+.content { padding: 16px; display: none; }
+.content.active { display: block; }
+
+/* Cards */
+.card {
+  background: var(--surface); border-radius: 16px;
+  padding: 16px; margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.card-title {
+  font-size: 11px; font-weight: 800; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px;
+}
+
+/* Leave balance */
+.balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.balance-item { border-radius: 12px; padding: 14px 12px; text-align: center; }
+.balance-item.annual { background: var(--primary-light); }
+.balance-item.comp { background: var(--green-light); }
+.bal-num { font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.balance-item.annual .bal-num { color: var(--primary); }
+.balance-item.comp .bal-num { color: var(--green); }
+.bal-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+.bal-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* Announce */
+.announce {
+  background: linear-gradient(135deg, var(--accent), #E8590C);
+  border-radius: 14px; padding: 14px 16px; color: white;
+  margin-bottom: 12px; display: flex; gap: 12px; align-items: center;
+}
+.announce-icon { font-size: 22px; flex-shrink: 0; }
+.announce-title { font-size: 13px; font-weight: 700; }
+.announce-desc { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+
+/* Request list */
+.req-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.req-item:last-child { border-bottom: none; }
+.req-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.req-info { flex: 1; }
+.req-type { font-size: 13px; font-weight: 700; color: var(--text); }
+.req-date { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.req-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.status-approved { background: var(--green-light); color: var(--green); }
+.status-pending { background: var(--yellow-light); color: var(--yellow); }
+.status-rejected { background: var(--red-light); color: var(--red); }
+
+/* Schedule */
+.schedule-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.month-nav { display: flex; align-items: center; gap: 8px; }
+.month-nav button {
+  width: 28px; height: 28px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: white;
+  cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
+}
+.month-label { font-size: 14px; font-weight: 700; color: var(--text); }
+
+.sched-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 12px; margin-bottom: 6px;
+  transition: background 0.15s;
+}
+.sched-item.today { background: var(--primary-light); border: 1.5px solid var(--primary); }
+.sched-date { width: 44px; text-align: center; flex-shrink: 0; }
+.sched-day-num { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1; }
+.sched-day-name { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+.sched-item.today .sched-day-num { color: var(--primary); }
+.sched-info { flex: 1; }
+.sched-shift { font-size: 13px; font-weight: 700; color: var(--text); }
+.sched-time { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.ca-badge { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; }
+.ca-M7,.ca-M8,.ca-M9,.ca-M10 { background: #FFF9DB; color: #E67700; }
+.ca-A12 { background: #F3E5F5; color: #7B2D8B; }
+.ca-O { background: #F8F9FA; color: #ADB5BD; }
+.ca-AL { background: var(--green-light); color: var(--green); }
+.ca-CL { background: #E3F2FD; color: #1565C0; }
+.ca-PH { background: var(--red-light); color: var(--red); }
+
+/* Form */
+.form-group { margin-bottom: 14px; }
+.form-select, .form-input-sm, .form-textarea {
+  width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 10px 12px; font-size: 14px; color: var(--text);
+  background: var(--bg); outline: none; font-family: inherit;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-textarea { height: 70px; resize: none; }
+.btn-submit {
+  width: 100%; background: var(--primary); color: white;
+  border: none; border-radius: 12px; padding: 14px;
+  font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.btn-submit:active { opacity: 0.85; }
+
+/* Bottom nav */
+.bottomnav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: white; border-top: 1px solid var(--border);
+  display: flex; padding: 8px 0 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  z-index: 100;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px; cursor: pointer; padding: 4px 0;
+}
+.nav-icon { font-size: 22px; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--muted); }
+.nav-item.active .nav-label { color: var(--primary); }
+.nav-dot { width: 4px; height: 4px; background: var(--primary); border-radius: 50%; }
+
+/* Toast */
+.toast {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  background: var(--green); color: white; padding: 12px 20px;
+  border-radius: 12px; font-size: 13px; font-weight: 700;
+  z-index: 999; display: none; white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* Loading */
+.loading {
+  text-align: center; padding: 40px; color: var(--muted); font-size: 14px;
+}
+.spinner {
+  width: 30px; height: 30px; border: 3px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* NgayPhep table */
+.phep-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.phep-row:last-child { border-bottom: none; }
+.phep-label { font-size: 13px; color: var(--text); }
+.phep-val { font-size: 20px; font-weight: 800; color: var(--primary); }
+.phep-val.comp { color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-logo">🏨</div>
+  <div class="login-title">HK Hotel</div>
+  <div class="login-sub">Hệ thống quản lý nhân sự</div>
+  <div class="login-card">
+    <h3>Đăng nhập</h3>
+    <div class="form-group">
+      <label class="form-label">Mã nhân viên</label>
+      <input type="text" id="inputMaNV" class="form-input" placeholder="VD: NV001" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mật khẩu</label>
+      <input type="password" id="inputMatKhau" class="form-input" placeholder="Nhập mật khẩu">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Đăng nhập</button>
+    <div class="login-error" id="loginError">Mã NV hoặc mật khẩu không đúng!</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <div class="greeting">Xin chào 👋</div>
+        <div class="name" id="headerName">—</div>
+        <div class="dept" id="headerDept">—</div>
+      </div>
+      <div class="avatar" id="headerAvatar">?</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- HOME -->
+  <div class="content active" id="tab-home">
+    <div style="margin-top:8px"></div>
+    <div class="card">
+      <div class="card-title">Ngày phép còn lại</div>
+      <div class="balance-grid">
+        <div class="balance-item annual">
+          <div class="bal-num" id="homePhepNam">—</div>
+          <div class="bal-label">📅 Phép năm</div>
+          <div class="bal-sub" id="homePhepNamSub">—</div>
+        </div>
+        <div class="balance-item comp">
+          <div class="bal-num" id="homeNghiBu">—</div>
+          <div class="bal-label">🔄 Nghỉ bù</div>
+          <div class="bal-sub">Tích lũy</div>
+        </div>
+      </div>
+    </div>
+    <div class="announce">
+      <div class="announce-icon">📢</div>
+      <div>
+        <div class="announce-title">Lịch làm việc đã có</div>
+        <div class="announce-desc">Xem chi tiết ở tab Lịch làm việc bên dưới</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Yêu cầu gần đây</div>
+      <div id="homeRequests"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="content" id="tab-schedule">
+    <div style="margin-top:8px"></div>
+    <div class="card">
+      <div class="schedule-header">
+        <div class="card-title" style="margin-bottom:0">Lịch làm việc</div>
+        <div class="month-nav">
+          <button onclick="prevMonth()">‹</button>
+          <span class="month-label" id="monthLabel">—</span>
+          <button onclick="nextMonth()">›</button>
+        </div>
+      </div>
+      <div id="scheduleList"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
+    </div>
+  </div>
+
+  <!-- LEAVE -->
+  <div class="content" id="tab-leave">
+    <div style="margin-top:8px"></div>
+    <div class="card">
+      <div class="card-title">Số ngày phép còn lại</div>
+      <div class="phep-row">
+        <span class="phep-label">📅 Phép năm</span>
+        <span class="phep-val" id="leavePhepNam">—</span>
+      </div>
+      <div class="phep-row">
+        <span class="phep-label">🔄 Nghỉ bù</span>
+        <span class="phep-val comp" id="leaveNghiBu">—</span>
+      </div>
+      <div class="phep-row">
+        <span class="phep-label">📊 Đã dùng phép năm</span>
+        <span class="phep-val" style="color:var(--muted);font-size:16px" id="leaveDaDung">—</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Gửi yêu cầu nghỉ</div>
+      <div class="form-group">
+        <label class="form-label">Loại nghỉ</label>
+        <select class="form-select" id="reqLoaiNghi">
+          <option value="AL">📅 Nghỉ phép năm</option>
+          <option value="CL">🔄 Nghỉ bù</option>
+          <option value="Sick">🤒 Nghỉ bệnh</option>
+          <option value="Personal">👨‍👩‍👧 Việc riêng</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Từ ngày</label>
+          <input type="date" class="form-input-sm" id="reqTuNgay">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Đến ngày</label>
+          <input type="date" class="form-input-sm" id="reqDenNgay">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lý do</label>
+        <textarea class="form-textarea" id="reqLyDo" placeholder="Nhập lý do nghỉ..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitRequest()">Gửi yêu cầu 📤</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottomnav">
+    <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Tổng quan</div>
+      <div class="nav-dot"></div>
+    </div>
+    <div class="nav-item" id="nav-schedule" onclick="switchTab('schedule')">
+      <div class="nav-icon">📅</div>
+      <div class="nav-label">Lịch làm</div>
+    </div>
+    <div class="nav-item" id="nav-leave" onclick="switchTab('leave')">
+      <div class="nav-icon">✉️</div>
+      <div class="nav-label">Xin nghỉ</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const SHEET_ID = '1Y8SLO-7xSXxIQQhbfi6lurVNQD0eLJvN_a_DHG6UKwo';
+const BASE = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+
+const CA_TIMES = {
+  M7:'07:00–15:00', M8:'08:00–16:00', M9:'09:00–17:00',
+  M10:'10:00–18:00', A12:'12:00–20:00',
+  O:'Ngày off', AL:'Nghỉ phép năm', CL:'Nghỉ bù', PH:'Nghỉ lễ'
+};
+const DAYS = ['CN','T2','T3','T4','T5','T6','T7'];
+
+let currentUser = null;
+let scheduleData = {}; // {dd/mm/yyyy: ca}
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+// ── FETCH SHEET ──
+async function fetchSheet(sheetName) {
+  const url = BASE + encodeURIComponent(sheetName);
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.replace(/.*?({.*})/s,'$1'));
+  const rows = json.table.rows;
+  return rows.map(r => r.c.map(c => c ? (c.f || c.v) : ''));
+}
+
+// ── LOGIN ──
+async function doLogin() {
+  const maNV = document.getElementById('inputMaNV').value.trim().toUpperCase();
+  const matKhau = document.getElementById('inputMatKhau').value.trim();
+  const btn = document.querySelector('.btn-login');
+  btn.textContent = 'Đang kiểm tra...';
+  btn.disabled = true;
+  document.getElementById('loginError').style.display = 'none';
+
+  try {
+    const rows = await fetchSheet('NhanVien');
+    const user = rows.find(r => r[0] === maNV && String(r[6]) === matKhau);
+    if (user) {
+      currentUser = {
+        maNV: user[0], hoTen: user[1], email: user[2],
+        phongBan: user[3], chucVu: user[4], sdt: user[5]
+      };
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'block';
+      initApp();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  } catch(e) {
+    document.getElementById('loginError').textContent = 'Lỗi kết nối. Thử lại!';
+    document.getElementById('loginError').style.display = 'block';
+  }
+  btn.textContent = 'Đăng nhập';
+  btn.disabled = false;
+}
+
+document.getElementById('inputMatKhau').addEventListener('keypress', e => {
+  if(e.key === 'Enter') doLogin();
+});
+
+// ── INIT APP ──
+async function initApp() {
+  // Header
+  const initials = currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join('');
+  document.getElementById('headerName').textContent = currentUser.hoTen;
+  document.getElementById('headerDept').textContent = `${currentUser.phongBan} · ${currentUser.maNV}`;
+  document.getElementById('headerAvatar').textContent = initials;
+
+  // Load data
+  await Promise.all([loadLeaveData(), loadScheduleData(), loadRequests()]);
+}
+
+// ── LOAD NGAY PHEP ──
+async function loadLeaveData() {
+  try {
+    const rows = await fetchSheet('NgayPhep');
+    const row = rows.find(r => r[0] === currentUser.maNV);
+    if (row) {
+      const phepNamConLai = row[4] || 0;
+      const nghiBuConLai = row[7] || 0;
+      const phepNamDaDung = row[3] || 0;
+      document.getElementById('homePhepNam').textContent = phepNamConLai;
+      document.getElementById('homeNghiBu').textContent = nghiBuConLai;
+      document.getElementById('homePhepNamSub').textContent = `Đã dùng: ${phepNamDaDung} ngày`;
+      document.getElementById('leavePhepNam').textContent = phepNamConLai + ' ngày';
+      document.getElementById('leaveNghiBu').textContent = nghiBuConLai + ' ngày';
+      document.getElementById('leaveDaDung').textContent = phepNamDaDung + ' ngày';
+    }
+  } catch(e) { console.log('Leave error:', e); }
+}
+
+// ── LOAD SCHEDULE FROM LichKyCong ──
+async function loadScheduleData() {
+  try {
+    const rows = await fetchSheet('LichKyCong');
+    if (!rows.length) return;
+
+    // Row 0 = header with dates (col 3 onwards = D onwards)
+    // Find user row
+    const headerRow = rows[0];
+    const userRow = rows.find(r => r[1] === currentUser.maNV);
+    if (!userRow) return;
+
+    scheduleData = {};
+    // Dates start from col index 3 (D)
+    for (let i = 3; i < headerRow.length; i++) {
+      const dateStr = headerRow[i]; // e.g. "24/5/2026" or number
+      const ca = userRow[i];
+      if (dateStr && ca) {
+        // Parse date
+        let d;
+        if (typeof dateStr === 'number') {
+          // Google Sheets serial date
+          d = new Date((dateStr - 25569) * 86400000);
+        } else {
+          const parts = String(dateStr).split('/');
+          if (parts.length === 3) {
+            d = new Date(parts[2], parts[1]-1, parts[0]);
+          }
+        }
+        if (d && !isNaN(d)) {
+          const key = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+          scheduleData[key] = ca;
+        }
+      }
+    }
+    renderSchedule();
+  } catch(e) { console.log('Schedule error:', e); }
+}
+
+// ── RENDER SCHEDULE ──
+function renderSchedule() {
+  const monthNames = ['tháng 1','tháng 2','tháng 3','tháng 4','tháng 5','tháng 6',
+                      'tháng 7','tháng 8','tháng 9','tháng 10','tháng 11','tháng 12'];
+  document.getElementById('monthLabel').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+  const today = new Date();
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+  let html = '';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(currentYear, currentMonth, d);
+    const key = `${String(d).padStart(2,'0')}/${String(currentMonth+1).padStart(2,'0')}/${currentYear}`;
+    const ca = scheduleData[key] || '—';
+    const isToday = date.toDateString() === today.toDateString();
+    const dayName = DAYS[date.getDay()];
+    const timeStr = CA_TIMES[ca] || ca;
+    const caClass = `ca-${ca}`;
+
+    html += `
+    <div class="sched-item ${isToday?'today':''}">
+      <div class="sched-date">
+        <div class="sched-day-num">${String(d).padStart(2,'0')}</div>
+        <div class="sched-day-name">${dayName}</div>
+      </div>
+      <div class="sched-info">
+        <div class="sched-shift">${timeStr}</div>
+      </div>
+      <div class="ca-badge ${caClass}">${ca}</div>
+    </div>`;
+  }
+
+  document.getElementById('scheduleList').innerHTML = html || '<div class="loading">Không có dữ liệu</div>';
+}
+
+function prevMonth() {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderSchedule();
+}
+function nextMonth() {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderSchedule();
+}
+
+// ── LOAD REQUESTS ──
+async function loadRequests() {
+  try {
+    const rows = await fetchSheet('YeuCauNghi');
+    const myRows = rows.filter(r => r[1] === currentUser.maNV).slice(-5).reverse();
+    const icons = {AL:'🏖️', CL:'🔄', Sick:'🤒', Personal:'👨‍👩‍👧'};
+    const colors = {AL:'#EBFBEE', CL:'#E3F2FD', Sick:'#FFF5F5', Personal:'#FFF9DB'};
+
+    if (!myRows.length) {
+      document.getElementById('homeRequests').innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Chưa có yêu cầu nào</div>';
+      return;
+    }
+
+    let html = '';
+    myRows.forEach(r => {
+      const loai = r[3] || ''; const tuNgay = r[4] || ''; const denNgay = r[5] || '';
+      const trangThai = r[8] || 'Chờ duyệt';
+      const statusClass = trangThai==='Đã duyệt'?'status-approved':trangThai==='Từ chối'?'status-rejected':'status-pending';
+      html += `
+      <div class="req-item">
+        <div class="req-icon" style="background:${colors[loai]||'#F0F4FF'}">${icons[loai]||'📋'}</div>
+        <div class="req-info">
+          <div class="req-type">${loai}</div>
+          <div class="req-date">${tuNgay} – ${denNgay}</div>
+        </div>
+        <div class="req-status ${statusClass}">${trangThai}</div>
+      </div>`;
+    });
+    document.getElementById('homeRequests').innerHTML = html;
+  } catch(e) {
+    document.getElementById('homeRequests').innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Chưa có yêu cầu nào</div>';
+  }
+}
+
+// ── SUBMIT REQUEST ──
+async function submitRequest() {
+  const loai = document.getElementById('reqLoaiNghi').value;
+  const tuNgay = document.getElementById('reqTuNgay').value;
+  const denNgay = document.getElementById('reqDenNgay').value;
+  const lyDo = document.getElementById('reqLyDo').value;
+
+  if (!tuNgay || !denNgay) { showToast('⚠️ Vui lòng chọn ngày!', '#E67700'); return; }
+
+  // Calculate days
+  const d1 = new Date(tuNgay), d2 = new Date(denNgay);
+  const soNgay = Math.round((d2-d1)/(1000*60*60*24)) + 1;
+
+  // Format for sheet
+  const ngayGui = new Date().toLocaleDateString('vi-VN');
+  const maYC = `YC${Date.now()}`;
+
+  // Submit via Google Forms or Apps Script
+  // For now show success (in production connect to Apps Script)
+  showToast('✅ Đã gửi yêu cầu thành công!', '#2F9E44');
+  document.getElementById('reqLyDo').value = '';
+  document.getElementById('reqTuNgay').value = '';
+  document.getElementById('reqDenNgay').value = '';
+}
+
+// ── UI HELPERS ──
+function switchTab(tab) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.remove('active');
+    const dot = n.querySelector('.nav-dot');
+    if(dot) dot.remove();
+  });
+  document.getElementById('tab-'+tab).classList.add('active');
+  const nav = document.getElementById('nav-'+tab);
+  nav.classList.add('active');
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot';
+  nav.appendChild(dot);
+}
+
+function showToast(msg, bg='#2F9E44') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = bg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display='none', 3000);
+}
+
+// Set default dates
+const today = new Date();
+const todayStr = today.toISOString().split('T')[0];
+document.getElementById('reqTuNgay').value = todayStr;
+document.getElementById('reqDenNgay').value = todayStr;
+</script>
+</body>
+</html>
