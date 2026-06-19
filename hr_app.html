@@ -289,7 +289,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 </div>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fsbz-_mTWwwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
+// ✅ URL ĐÚNG của Apps Script
+const API = 'https://script.google.com/macros/s/AKfycbyHRlfVCI0v3GT0ADurqGQ4mtoz-9q4cx0ux_KmsIpXHH9Nwdb-7rI2I_TNzUN4i2Ok/exec';
 
 const CA_TIMES = {
   M7:'07:00–15:00', M8:'08:00–16:00', M9:'09:00–17:00',
@@ -352,7 +353,7 @@ async function doLogin() {
       document.getElementById('loginError').style.display = 'block';
     }
   } catch(e) {
-    document.getElementById('loginError').textContent = 'Lỗi kết nối. Thử lại!';
+    document.getElementById('loginError').textContent = 'Lỗi kết nối. Thử lại! (' + e.message + ')';
     document.getElementById('loginError').style.display = 'block';
   }
   btn.textContent = 'Đăng nhập';
