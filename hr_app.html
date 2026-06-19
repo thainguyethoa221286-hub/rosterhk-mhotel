@@ -1,83 +1,572 @@
-function doGet(e) {
-  var action = e.parameter.action;
-  var callback = e.parameter.callback;
-  var result = { success: false };
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HK Hotel HR</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --primary: #3B5BDB; --primary-dark: #2F4AC7; --primary-light: #EEF2FF;
+  --accent: #F76707; --green: #2F9E44; --green-light: #EBFBEE;
+  --red: #E03131; --red-light: #FFF5F5; --yellow: #E67700; --yellow-light: #FFF9DB;
+  --bg: #F0F4FF; --surface: #FFFFFF; --text: #1A1B2E; --muted: #6C757D; --border: #E9ECEF;
+}
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); min-height: 100vh; max-width: 430px; margin: 0 auto; }
+
+/* LOGIN */
+#loginScreen { min-height: 100vh; background: linear-gradient(160deg, #3B5BDB 0%, #1a2d8a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; }
+.login-logo { width: 80px; height: 80px; background: rgba(255,255,255,0.15); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.2); }
+.login-title { font-size: 26px; font-weight: 800; color: white; margin-bottom: 4px; }
+.login-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 36px; }
+.login-card { background: white; border-radius: 24px; padding: 28px 24px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.login-card h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
+.form-input { width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 14px; font-size: 15px; color: var(--text); background: var(--bg); outline: none; font-family: inherit; }
+.form-input:focus { border-color: var(--primary); }
+.btn-login { width: 100%; background: var(--primary); color: white; border: none; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 8px; }
+.btn-login:disabled { opacity: 0.7; }
+.login-error { background: var(--red-light); color: var(--red); border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; text-align: center; }
+
+/* APP */
+#appScreen { display: none; min-height: 100vh; padding-bottom: 72px; }
+.header { background: var(--primary); padding: 48px 20px 20px; color: white; }
+.header-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.header-left .greeting { font-size: 12px; opacity: 0.7; }
+.header-left .name { font-size: 22px; font-weight: 800; margin-top: 2px; }
+.header-left .dept { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: white; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; }
+
+.content { padding: 16px; display: none; }
+.content.active { display: block; }
+.card { background: var(--surface); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.card-title { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
+
+/* Balance */
+.balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.balance-item { border-radius: 12px; padding: 14px 12px; text-align: center; }
+.balance-item.annual { background: var(--primary-light); }
+.balance-item.comp { background: var(--green-light); }
+.bal-num { font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.balance-item.annual .bal-num { color: var(--primary); }
+.balance-item.comp .bal-num { color: var(--green); }
+.bal-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+.bal-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* Progress bar */
+.progress-wrap { margin-top: 12px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.progress-bar { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.5s ease; }
+
+/* Announce */
+.announce { background: linear-gradient(135deg, var(--accent), #E8590C); border-radius: 14px; padding: 14px 16px; color: white; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
+.announce-icon { font-size: 22px; flex-shrink: 0; }
+.announce-title { font-size: 13px; font-weight: 700; }
+.announce-desc { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+
+/* Request list */
+.req-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.req-item:last-child { border-bottom: none; }
+.req-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.req-info { flex: 1; }
+.req-type { font-size: 13px; font-weight: 700; color: var(--text); }
+.req-date { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.req-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.status-approved { background: var(--green-light); color: var(--green); }
+.status-pending { background: var(--yellow-light); color: var(--yellow); }
+.status-rejected { background: var(--red-light); color: var(--red); }
+
+/* Schedule */
+.schedule-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.month-nav { display: flex; align-items: center; gap: 8px; }
+.month-nav button { width: 28px; height: 28px; border-radius: 8px; border: 1.5px solid var(--border); background: white; cursor: pointer; font-size: 14px; }
+.month-label { font-size: 13px; font-weight: 700; color: var(--text); }
+.sched-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; margin-bottom: 6px; background: #FAFBFF; }
+.sched-item.today { background: var(--primary-light); border: 1.5px solid var(--primary); }
+.sched-item.weekend { opacity: 0.6; }
+.sched-date { width: 40px; text-align: center; flex-shrink: 0; }
+.sched-day-num { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1; }
+.sched-day-name { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+.sched-item.today .sched-day-num { color: var(--primary); }
+.sched-info { flex: 1; }
+.sched-shift { font-size: 13px; font-weight: 700; color: var(--text); }
+.sched-time { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.ca-badge { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; }
+.ca-M7, .ca-M8, .ca-M9, .ca-M10 { background: #FFF9DB; color: #E67700; }
+.ca-A12 { background: #F3E5F5; color: #7B2D8B; }
+.ca-O { background: #F8F9FA; color: #ADB5BD; }
+.ca-AL { background: var(--green-light); color: var(--green); }
+.ca-CL { background: #E3F2FD; color: #1565C0; }
+.ca-PH { background: var(--red-light); color: var(--red); }
+
+/* Form */
+.form-select, .form-input-sm, .form-textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 14px; color: var(--text); background: var(--bg); outline: none; font-family: inherit; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-textarea { height: 70px; resize: none; }
+.btn-submit { width: 100%; background: var(--primary); color: white; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btn-submit:disabled { opacity: 0.7; }
+
+/* Leave page */
+.phep-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.phep-row:last-child { border-bottom: none; }
+.phep-label { font-size: 13px; color: var(--text); }
+.phep-val { font-size: 20px; font-weight: 800; color: var(--primary); }
+.phep-val.comp { color: var(--green); }
+
+/* Bottom nav */
+.bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: white; border-top: 1px solid var(--border); display: flex; padding: 8px 0 16px; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 100; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 0; }
+.nav-icon { font-size: 22px; }
+.nav-label { font-size: 10px; font-weight: 600; color: var(--muted); }
+.nav-item.active .nav-label { color: var(--primary); }
+.nav-dot { width: 4px; height: 4px; background: var(--primary); border-radius: 50%; }
+
+/* Toast */
+.toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); color: white; padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 700; z-index: 999; display: none; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+
+/* Loading */
+.loading { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
+.spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-logo">🏨</div>
+  <div class="login-title">HK Hotel</div>
+  <div class="login-sub">Hệ thống quản lý nhân sự</div>
+  <div class="login-card">
+    <h3>Đăng nhập</h3>
+    <div class="form-group">
+      <label class="form-label">Mã nhân viên</label>
+      <input type="text" id="inputMaNV" class="form-input" placeholder="VD: NV001" autocomplete="off" style="text-transform:uppercase">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mật khẩu</label>
+      <input type="password" id="inputMatKhau" class="form-input" placeholder="Nhập mật khẩu">
+    </div>
+    <button class="btn-login" id="btnLogin" onclick="doLogin()">Đăng nhập</button>
+    <div class="login-error" id="loginError">Mã NV hoặc mật khẩu không đúng!</div>
+  </div>
+</div>
+
+<div id="appScreen">
+  <div class="header">
+    <div class="header-row">
+      <div class="header-left">
+        <div class="greeting">Xin chào 👋</div>
+        <div class="name" id="headerName">—</div>
+        <div class="dept" id="headerDept">—</div>
+      </div>
+      <div class="avatar" id="headerAvatar">?</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="content active" id="tab-home">
+    <div style="margin-top:8px"></div>
+    <div class="card">
+      <div class="card-title">Ngày phép còn lại</div>
+      <div class="balance-grid">
+        <div class="balance-item annual">
+          <div class="bal-num" id="homePhepNam">—</div>
+          <div class="bal-label">📅 Phép năm</div>
+          <div class="bal-sub" id="homePhepSub">—</div>
+        </div>
+        <div class="balance-item comp">
+          <div class="bal-num" id="homeNghiBu">—</div>
+          <div class="bal-label">🔄 Nghỉ bù</div>
+          <div class="bal-sub" id="homeNghiBuSub">—</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Phép năm đã dùng</span>
+          <span id="progressText">0/12 ngày</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="announce">
+      <div class="announce-icon">📢</div>
+      <div>
+        <div class="announce-title">Lịch làm việc đã có</div>
+        <div class="announce-desc">Xem chi tiết ở tab Lịch làm việc bên dưới</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Yêu cầu gần đây</div>
+      <div id="homeRequests"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
+    </div>
+  </div>
+
+  <div class="content" id="tab-schedule">
+    <div style="margin-top:8px"></div>
+    <div class="card">
+      <div class="schedule-header">
+        <div class="card-title" style="margin-bottom:0">Lịch làm việc</div>
+        <div class="month-nav">
+          <button onclick="prevMonth()">‹</button>
+          <span class="month-label" id="monthLabel">—</span>
+          <button onclick="nextMonth()">›</button>
+        </div>
+      </div>
+      <div id="scheduleList"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
+    </div>
+  </div>
+
+  <div class="content" id="tab-leave">
+    <div style="margin-top:8px"></div>
+    <div class="card">
+      <div class="card-title">Số ngày phép còn lại</div>
+      <div class="phep-row">
+        <span class="phep-label">📅 Phép năm còn lại</span>
+        <span class="phep-val" id="leavePhepNam">—</span>
+      </div>
+      <div class="phep-row">
+        <span class="phep-label">🔄 Nghỉ bù còn lại</span>
+        <span class="phep-val comp" id="leaveNghiBu">—</span>
+      </div>
+      <div class="phep-row">
+        <span class="phep-label">📊 Đã dùng phép năm</span>
+        <span class="phep-val" style="color:var(--muted);font-size:16px" id="leaveDaDung">—</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Gửi yêu cầu nghỉ</div>
+      <div class="form-group">
+        <label class="form-label">Loại nghỉ</label>
+        <select class="form-select" id="reqLoaiNghi">
+          <option value="AL">📅 Nghỉ phép năm</option>
+          <option value="CL">🔄 Nghỉ bù</option>
+          <option value="Sick">🤒 Nghỉ bệnh</option>
+          <option value="Personal">👨‍👩‍👧 Việc riêng</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Từ ngày</label>
+          <input type="date" class="form-input-sm" id="reqTuNgay">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Đến ngày</label>
+          <input type="date" class="form-input-sm" id="reqDenNgay">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lý do</label>
+        <textarea class="form-textarea" id="reqLyDo" placeholder="Nhập lý do nghỉ..."></textarea>
+      </div>
+      <button class="btn-submit" id="btnSubmit" onclick="submitRequest()">Gửi yêu cầu 📤</button>
+    </div>
+  </div>
+
+  <div class="bottomnav">
+    <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label">Tổng quan</div>
+      <div class="nav-dot"></div>
+    </div>
+    <div class="nav-item" id="nav-schedule" onclick="switchTab('schedule')">
+      <div class="nav-icon">📅</div>
+      <div class="nav-label">Lịch làm</div>
+    </div>
+    <div class="nav-item" id="nav-leave" onclick="switchTab('leave')">
+      <div class="nav-icon">✉️</div>
+      <div class="nav-label">Xin nghỉ</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fsbz-_mTWwwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
+
+const CA_TIMES = {
+  M7:'07:00–15:00', M8:'08:00–16:00', M9:'09:00–17:00',
+  M10:'10:00–18:00', A12:'12:00–20:00',
+  O:'Ngày off', AL:'Nghỉ phép năm', CL:'Nghỉ bù', PH:'Nghỉ lễ'
+};
+const DAYS = ['CN','T2','T3','T4','T5','T6','T7'];
+
+let currentUser = null;
+let scheduleData = {};
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+function callAPI(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+    const url = API + '?' + new URLSearchParams(params).toString() + '&callback=' + cbName;
+    const script = document.createElement('script');
+    const timer = setTimeout(function() {
+      delete window[cbName];
+      if (script.parentNode) document.body.removeChild(script);
+      reject(new Error('Timeout'));
+    }, 15000);
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) document.body.removeChild(script);
+      resolve(data);
+    };
+    script.onerror = function() {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) document.body.removeChild(script);
+      reject(new Error('Network error'));
+    };
+    script.src = url;
+    document.body.appendChild(script);
+  });
+}
+
+async function doLogin() {
+  const maNV = document.getElementById('inputMaNV').value.trim().toUpperCase();
+  const matKhau = document.getElementById('inputMatKhau').value.trim();
+  if (!maNV || !matKhau) return;
+
+  const btn = document.getElementById('btnLogin');
+  btn.textContent = 'Đang kiểm tra...';
+  btn.disabled = true;
+  document.getElementById('loginError').style.display = 'none';
 
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet();
-    var maNV = String(e.parameter.maNV || '').trim().toUpperCase();
-    
-    // 1. TÍNH NĂNG ĐĂNG NHẬP
-    if (action === 'login') {
-      var matKhau = String(e.parameter.matKhau || '').trim();
-      var ws = sheet.getSheetByName('NhanVien') || sheet.getSheets()[0];
-      var data = ws.getDataRange().getValues();
-      
-      for (var i = 1; i < data.length; i++) {
-        if (String(data[i][0]).trim().toUpperCase() === maNV && String(data[i][6]).trim() === matKhau) {
-          result = {
-            success: true, maNV: String(data[i][0]), hoTen: String(data[i][1]),
-            phongBan: String(data[i][3]), chucVu: String(data[i][4])
-          };
-          break;
-        }
-      }
+    const data = await callAPI({action: 'login', maNV, matKhau});
+    if (data.success) {
+      currentUser = data;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'block';
+      initApp();
+    } else {
+      document.getElementById('loginError').textContent = 'Mã NV hoặc mật khẩu không đúng!';
+      document.getElementById('loginError').style.display = 'block';
     }
-    
-    // 2. TÍNH NĂNG LẤY NGÀY PHÉP
-    else if (action === 'getLeave') {
-      var ws = sheet.getSheetByName('NhanVien') || sheet.getSheets()[0];
-      var data = ws.getDataRange().getValues();
-      for (var i = 1; i < data.length; i++) {
-        if (String(data[i][0]).trim().toUpperCase() === maNV) {
-          result = {
-            success: true,
-            phepNamTong: Number(data[i][11]) || 12,    // Cột L
-            phepNamDaDung: Number(data[i][12]) || 0,  // Cột M
-            phepNamConLai: Number(data[i][13]) || 0,  // Cột N
-            nghiBuConLai: Number(data[i][14]) || 0    // Cột O
-          };
-          break;
-        }
-      }
-    }
-    
-    // 3. TÍNH NĂNG LẤY LỊCH LÀM VIỆC
-    else if (action === 'getSchedule') {
-      var ws = sheet.getSheetByName('LichLamViec') || sheet.getSheetByName('Lịch làm việc') || sheet.getSheets()[1];
-      if (ws) {
-        var data = ws.getDataRange().getValues();
-        var headers = data[0];
-        var userRow = null;
-        
-        for (var i = 1; i < data.length; i++) {
-          if (String(data[i][0]).trim().toUpperCase() === maNV) {
-            userRow = data[i];
-            break;
-          }
-        }
-        
-        var list = [];
-        if (userRow) {
-          for (var j = 1; j < headers.length; j++) {
-            if (headers[j]) {
-              var dStr = headers[j] instanceof Date ? Utilities.formatDate(headers[j], Session.getScriptTimeZone(), "dd/MM/yyyy") : String(headers[j]);
-              list.push({ date: dStr, ca: String(userRow[j] || '—').trim() });
-            }
-          }
-        }
-        result = { success: true, schedule: list };
-      }
-    }
-    
-    // 4. TÍNH NĂNG LẤY YÊU CẦU XIN NGHỈ
-    else if (action === 'getRequests') {
-      result = { success: true, requests: [] };
-    }
-  } catch(err) {
-    result.error = err.toString();
+  } catch(e) {
+    document.getElementById('loginError').textContent = 'Lỗi kết nối. Thử lại!';
+    document.getElementById('loginError').style.display = 'block';
   }
-  
-  var memo = callback + "(" + JSON.stringify(result) + ");";
-  return ContentService.createTextOutput(memo).setMimeType(ContentService.MimeType.JAVASCRIPT);
+  btn.textContent = 'Đăng nhập';
+  btn.disabled = false;
 }
+
+document.getElementById('inputMatKhau').addEventListener('keypress', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+async function initApp() {
+  const initials = currentUser.hoTen.split(' ').slice(-2).map(w => w[0]).join('');
+  document.getElementById('headerName').textContent = currentUser.hoTen;
+  document.getElementById('headerDept').textContent = `${currentUser.phongBan} · ${currentUser.maNV}`;
+  document.getElementById('headerAvatar').textContent = initials;
+
+  await Promise.all([loadLeaveData(), loadScheduleData(), loadRequests()]);
+}
+
+async function loadLeaveData() {
+  try {
+    const data = await callAPI({action: 'getLeave', maNV: currentUser.maNV});
+    if (data.success) {
+      const conLai = data.phepNamConLai || 0;
+      const daDung = data.phepNamDaDung || 0;
+      const tong = data.phepNamTong || 12;
+      const nghiBu = data.nghiBuConLai || 0;
+
+      document.getElementById('homePhepNam').textContent = conLai;
+      document.getElementById('homePhepSub').textContent = `Đã dùng: ${daDung} ngày`;
+      document.getElementById('homeNghiBu').textContent = nghiBu;
+      document.getElementById('homeNghiBuSub').textContent = `Tổng: ${data.nghiBuTong || 0}`;
+      document.getElementById('leavePhepNam').textContent = conLai + ' ngày';
+      document.getElementById('leaveNghiBu').textContent = nghiBu + ' ngày';
+      document.getElementById('leaveDaDung').textContent = daDung + ' ngày';
+
+      const pct = Math.round((daDung / tong) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressText').textContent = `${daDung}/${tong} ngày`;
+    }
+  } catch(e) { console.log('Leave error:', e); }
+}
+
+async function loadScheduleData() {
+  try {
+    const data = await callAPI({action: 'getSchedule', maNV: currentUser.maNV});
+    if (data.success && data.schedule) {
+      scheduleData = {};
+      data.schedule.forEach(item => {
+        let key = item.date;
+        if (key.includes('-')) {
+          const parts = key.split('-');
+          key = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        } else if (key.includes('/')) {
+          const parts = key.split('/');
+          if (parts[0].length <= 2) {
+            key = `${String(parts[0]).padStart(2,'0')}/${String(parts[1]).padStart(2,'0')}/${parts[2]}`;
+          }
+        }
+        scheduleData[key] = item.ca;
+      });
+      renderSchedule();
+    }
+  } catch(e) { console.log('Schedule error:', e); }
+}
+
+function renderSchedule() {
+  const monthNames = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
+                      'Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+  document.getElementById('monthLabel').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+  const today = new Date();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  let html = '';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(currentYear, currentMonth, d);
+    const key = `${String(d).padStart(2,'0')}/${String(currentMonth+1).padStart(2,'0')}/${currentYear}`;
+    const ca = scheduleData[key] || '—';
+    const isToday = date.toDateString() === today.toDateString();
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+    const dayName = DAYS[date.getDay()];
+    const timeStr = CA_TIMES[ca] || ca;
+    const caClass = ca !== '—' ? `ca-${ca}` : '';
+
+    html += `
+    <div class="sched-item ${isToday?'today':''} ${isWeekend&&!isToday?'weekend':''}">
+      <div class="sched-date">
+        <div class="sched-day-num">${String(d).padStart(2,'0')}</div>
+        <div class="sched-day-name">${dayName}</div>
+      </div>
+      <div class="sched-info">
+        <div class="sched-shift">${timeStr}</div>
+      </div>
+      ${ca !== '—' ? `<div class="ca-badge ${caClass}">${ca}</div>` : ''}
+    </div>`;
+  }
+
+  document.getElementById('scheduleList').innerHTML = html || '<div class="empty">Không có dữ liệu</div>';
+}
+
+function prevMonth() {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderSchedule();
+}
+function nextMonth() {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderSchedule();
+}
+
+async function loadRequests() {
+  try {
+    const data = await callAPI({action: 'getRequests', maNV: currentUser.maNV});
+    const icons = {AL:'🏖️', CL:'🔄', Sick:'🤒', Personal:'👨‍👩‍👧'};
+    const colors = {AL:'#EBFBEE', CL:'#E3F2FD', Sick:'#FFF5F5', Personal:'#FFF9DB'};
+
+    if (!data.success || !data.requests || !data.requests.length) {
+      document.getElementById('homeRequests').innerHTML = '<div class="empty">Chưa có yêu cầu nào</div>';
+      return;
+    }
+
+    let html = '';
+    data.requests.forEach(r => {
+      const statusClass = r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending';
+      html += `
+      <div class="req-item">
+        <div class="req-icon" style="background:${colors[r.loaiNghi]||'#F0F4FF'}">${icons[r.loaiNghi]||'📋'}</div>
+        <div class="req-info">
+          <div class="req-type">${r.loaiNghi}</div>
+          <div class="req-date">${r.tuNgay} – ${r.denNgay} · ${r.soNgay} ngày</div>
+        </div>
+        <div class="req-status ${statusClass}">${r.trangThai}</div>
+      </div>`;
+    });
+    document.getElementById('homeRequests').innerHTML = html;
+  } catch(e) {
+    document.getElementById('homeRequests').innerHTML = '<div class="empty">Chưa có yêu cầu nào</div>';
+  }
+}
+
+async function submitRequest() {
+  const loai = document.getElementById('reqLoaiNghi').value;
+  const tuNgay = document.getElementById('reqTuNgay').value;
+  const denNgay = document.getElementById('reqDenNgay').value;
+  const lyDo = document.getElementById('reqLyDo').value;
+
+  if (!tuNgay || !denNgay) { showToast('⚠️ Vui lòng chọn ngày!', '#E67700'); return; }
+
+  const d1 = new Date(tuNgay), d2 = new Date(denNgay);
+  if (d2 < d1) { showToast('⚠️ Ngày kết thúc phải sau ngày bắt đầu!', '#E67700'); return; }
+  const soNgay = Math.round((d2 - d1) / (1000*60*60*24)) + 1;
+
+  const btn = document.getElementById('btnSubmit');
+  btn.textContent = 'Đang gửi...';
+  btn.disabled = true;
+
+  try {
+    const data = await callAPI({
+      action: 'submitRequest',
+      maYC: 'YC' + Date.now(),
+      maNV: currentUser.maNV,
+      hoTen: currentUser.hoTen,
+      loaiNghi: loai,
+      tuNgay: tuNgay,
+      denNgay: denNgay,
+      soNgay: soNgay,
+      lyDo: lyDo || 'Không có lý do'
+    });
+
+    if (data.success) {
+      showToast('✅ Đã gửi yêu cầu thành công!', '#2F9E44');
+      document.getElementById('reqLyDo').value = '';
+      loadRequests();
+    } else {
+      showToast('❌ Gửi thất bại. Thử lại!', '#E03131');
+    }
+  } catch(e) {
+    showToast('❌ Lỗi kết nối. Thử lại!', '#E03131');
+  }
+
+  btn.textContent = 'Gửi yêu cầu 📤';
+  btn.disabled = false;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.remove('active');
+    n.querySelector('.nav-label').style.color = '';
+    const dot = n.querySelector('.nav-dot');
+    if (dot) dot.remove();
+  });
+  document.getElementById('tab-' + tab).classList.add('active');
+  const nav = document.getElementById('nav-' + tab);
+  nav.classList.add('active');
+  nav.querySelector('.nav-label').style.color = '#3B5BDB';
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot';
+  nav.appendChild(dot);
+}
+
+function showToast(msg, bg = '#2F9E44') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = bg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('reqTuNgay').value = today;
+document.getElementById('reqDenNgay').value = today;
+</script>
+</body>
+</html>
