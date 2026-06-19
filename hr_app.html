@@ -135,7 +135,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-logo">🏨</div>
   <div class="login-title">HK Hotel</div>
@@ -155,7 +154,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   </div>
 </div>
 
-<!-- APP -->
 <div id="appScreen">
   <div class="header">
     <div class="header-row">
@@ -170,7 +168,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 
   <div class="toast" id="toast"></div>
 
-  <!-- HOME -->
   <div class="content active" id="tab-home">
     <div style="margin-top:8px"></div>
     <div class="card">
@@ -212,7 +209,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
 
-  <!-- SCHEDULE -->
   <div class="content" id="tab-schedule">
     <div style="margin-top:8px"></div>
     <div class="card">
@@ -228,7 +224,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
 
-  <!-- LEAVE -->
   <div class="content" id="tab-leave">
     <div style="margin-top:8px"></div>
     <div class="card">
@@ -276,7 +271,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
 
-  <!-- BOTTOM NAV -->
   <div class="bottomnav">
     <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
       <div class="nav-icon">🏠</div>
@@ -295,7 +289,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 </div>
 
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbyHRlfVCI0v3GT0ADurqGQ4mtoz-9q4cx0ux_KmsIpXHH9Nwdb-7rI2I_TNzUN4i2Ok/exec';
+const API = 'https://script.google.com/macros/s/AKfycbyMkdrz9Vlx_55yQURx0qjtB25zTppbvWZntBlgEweHi9XNvu08l61fia9KYRRwHj9_Dw/exec';
 
 const CA_TIMES = {
   M7:'07:00–15:00', M8:'08:00–16:00', M9:'09:00–17:00',
@@ -386,9 +380,7 @@ async function loadScheduleData() {
     if (data.success && data.schedule) {
       scheduleData = {};
       data.schedule.forEach(item => {
-        // date can be "24/5/2026" or "2026-05-24"
         let key = item.date;
-        // normalize to dd/mm/yyyy
         if (key.includes('-')) {
           const parts = key.split('-');
           key = `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -550,7 +542,6 @@ function showToast(msg, bg = '#2F9E44') {
   setTimeout(() => t.style.display = 'none', 3000);
 }
 
-// Set default dates
 const today = new Date().toISOString().split('T')[0];
 document.getElementById('reqTuNgay').value = today;
 document.getElementById('reqDenNgay').value = today;
