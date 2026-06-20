@@ -534,6 +534,36 @@ async function loadLeaveData() {
   } catch(e){console.log('leave err',e);}
 }
 
+// ── NORMALIZE KEY: chuẩn hóa key ngày về dd/MM/yyyy ─────────────────
+// Backend có thể trả về "24/6/2026" hoặc "24/06/2026" → chuẩn hóa hết
+function normalizeKey(raw) {
+  if (!raw) return '';
+  const s = String(raw).trim();
+  // Nếu đã đúng dạng dd/MM/yyyy
+  if (s.match(/^\d{2}\/\d{2}\/\d{4}$/)) return s;
+  // Dạng d/M/yyyy hoặc dd/M/yyyy hoặc d/MM/yyyy
+  if (s.includes('/')) {
+    const p = s.split('/');
+    if (p.length === 3) return pad(p[0])+'/'+pad(p[1])+'/'+p[2];
+  }
+  // Dạng yyyy-MM-dd
+  if (s.match(/^\d{4}-\d{2}-\d{2}/)) {
+    const p = s.split('T')[0].split('-');
+    return pad(p[2])+'/'+pad(p[1])+'/'+p[0];
+  }
+  return s;
+}
+
+// Normalize toàn bộ schedule object: chuẩn hóa tất cả key
+function normalizeSchedule(schedule) {
+  if (!schedule) return {};
+  const out = {};
+  Object.keys(schedule).forEach(k => {
+    out[normalizeKey(k)] = schedule[k];
+  });
+  return out;
+}
+
 // ── LOAD ALL SCHEDULE (nguồn chung) ──────────────────────────────────
 async function loadAllSchedule() {
   document.getElementById('calGrid').innerHTML='<div class="loading"><div class="spinner"></div></div>';
@@ -541,10 +571,17 @@ async function loadAllSchedule() {
   try {
     const d=await callAPI({action:'getAllSchedule',month:scMonth+1,year:scYear});
     if(d.success&&d.employees){
-      allEmployeesData=d.employees;
-      // ✅ Tìm đúng NV đang đăng nhập và lấy schedule của họ
-      const me=d.employees.find(e=>e.maNV===currentUser.maNV);
-      mySchedule = me && me.schedule ? me.schedule : {};
+      // Normalize schedule keys cho tất cả NV
+      allEmployeesData = d.employees.map(emp => ({
+        ...emp,
+        maNV: String(emp.maNV||'').trim().toUpperCase(),
+        schedule: normalizeSchedule(emp.schedule)
+      }));
+      // Tìm đúng NV đang đăng nhập (so sánh sau khi normalize)
+      const myMaNV = String(currentUser.maNV||'').trim().toUpperCase();
+      const me = allEmployeesData.find(e => e.maNV === myMaNV);
+      mySchedule = me ? me.schedule : {};
+      console.log('✅ myMaNV:', myMaNV, '| found:', !!me, '| keys sample:', Object.keys(mySchedule).slice(0,3));
     } else {
       allEmployeesData=[]; mySchedule={};
     }
@@ -705,7 +742,7 @@ function renderLichTong() {
     tbody+='<tr><td class="col-name">'+emp.hoTen+'<div class="nv-id">'+emp.maNV+'</div></td>';
     dates.forEach(date=>{
       const k=dateToKey(date);
-      const ca=(emp.schedule&&emp.schedule[k])||'';
+      const ca=(emp.schedule&&emp.schedule[normalizeKey(k)])||'';
       const isT=k===todayKey;
       tbody+='<td class="'+(ca?'ca-cell-'+ca:'')+(isT?' ca-cell-today-border':'')+'">'+ca+'</td>';
     });
