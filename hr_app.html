@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HK M-HOTEL</title>
+<title>HK Hotel HR</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
@@ -113,13 +113,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .dc-num { font-size:14px; font-weight:800; color:var(--text); line-height:1; }
 .dc-dow { font-size:9px;  color:var(--muted); font-weight:600; }
 
-/* Ca badge inside cell */
+/* Ca badge inside cell (Màu đậm lịch cá nhân) */
 .dc-ca { font-size:8px; font-weight:900; padding:2px 5px; border-radius:6px; line-height:1.4; letter-spacing:.3px; white-space:nowrap; }
 .ca-M7,.ca-M8,.ca-M9,.ca-M10 { background:#F76707; color:white; }
 .ca-A12 { background:#3B5BDB; color:white; }
 .ca-O   { background:#CED4DA; color:#495057; }
-.ca-AL  { background:#2F9E44; color:white; }
-.ca-CL  { background:#1565C0; color:white; }
+.ca-AL  { background:#E67700; color:white; } /* Đổi AL thành Vàng đậm */
+.ca-CL  { background:#2F9E44; color:white; } /* Đổi CL thành Xanh lá */
 .ca-PH  { background:#E03131; color:white; }
 
 /* Legend */
@@ -224,13 +224,16 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .lt-table tbody tr:nth-child(even) td         { background:#FAFBFF; }
 .lt-table tbody tr:nth-child(even) td.col-name { background:#F3F5FF!important; }
 .nv-id { font-size:8px; color:var(--muted); font-weight:400; margin-top:1px; }
+
+/* Định dạng màu chữ/nền các ca trên Lịch Tổng */
 .cc-M7,.cc-M8,.cc-M9,.cc-M10 { background:#FFF9DB!important; color:#E67700; }
 .cc-A12 { background:#E3F2FD!important; color:#1565C0; }
 .cc-O   { background:#F8F9FA!important; color:#ADB5BD; }
-.cc-AL  { background:#EBFBEE!important; color:#2F9E44; }
-.cc-CL  { background:#E8F4FD!important; color:#0277BD; }
+.cc-AL  { background:#FFF9DB!important; color:#E67700; } /* AL sang Vàng nhạt */
+.cc-CL  { background:#EBFBEE!important; color:#2F9E44; } /* CL sang Xanh lá nhạt */
 .cc-PH  { background:#FFF5F5!important; color:#E03131; }
 .cc-today { outline:2px solid var(--accent); outline-offset:-2px; }
+
 .legend { display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px; background:white; border-top:1px solid var(--border); }
 .legend-item { display:flex; align-items:center; gap:4px; font-size:10px; }
 .legend-dot  { width:20px; height:15px; border-radius:4px; font-size:8px; font-weight:800; display:flex; align-items:center; justify-content:center; }
@@ -253,7 +256,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 
 <div id="loginScreen">
   <div class="login-logo">🏨</div>
-  <div class="login-title">HK M-Hotel</div>
+  <div class="login-title">HK Hotel</div>
   <div class="login-sub">Hệ thống quản lý nhân sự</div>
   <div class="login-card">
     <h3>Đăng nhập</h3>
@@ -335,8 +338,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       <div class="cal-legend">
         <div class="leg-item"><div class="leg-dot" style="background:#F76707">M</div>Sáng</div>
         <div class="leg-item"><div class="leg-dot" style="background:#3B5BDB">A</div>Chiều</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#2F9E44">AL</div>Phép</div>
-        <div class="leg-item"><div class="leg-dot" style="background:#1565C0">CL</div>Bù</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#E67700">AL</div>Phép</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2F9E44">CL</div>Bù</div>
         <div class="leg-item"><div class="leg-dot" style="background:#CED4DA;color:#333">O</div>Off</div>
         <div class="leg-item"><div class="leg-dot" style="background:#E03131">PH</div>Lễ</div>
       </div>
@@ -510,9 +513,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     <div class="legend">
       <div class="legend-item"><div class="legend-dot" style="background:#FFF9DB;color:#E67700">M</div>Sáng</div>
       <div class="legend-item"><div class="legend-dot" style="background:#E3F2FD;color:#1565C0">A</div>Chiều</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#EBFBEE;color:#2F9E44">AL</div>Phép</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#E8F4FD;color:#0277BD">CL</div>Bù</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#F8F9FA;color:#ADB5BD">O</div>Off</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FFF9DB;color:#E67700">AL</div>Phép</div> <div class="legend-item"><div class="legend-dot" style="background:#EBFBEE;color:#2F9E44">CL</div>Bù</div>   <div class="legend-item"><div class="legend-dot" style="background:#F8F9FA;color:#ADB5BD">O</div>Off</div>
       <div class="legend-item"><div class="legend-dot" style="background:#FFF5F5;color:#E03131">PH</div>Lễ</div>
     </div>
   </div>
@@ -537,20 +538,19 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fSbz-_mTWWwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
 
 // ── 📝 DANH SÁCH CẤU HÌNH HỌ TÊN NHÂN VIÊN ────────────────────
-// Sửa trực tiếp tên của từng người ứng với mã số tại đây:
 const DANH_SACH_TEN = {
   "NV001": "Thái Nguyệt Hoa",
-  "NV002": "Hồng Tú Ngân",
-  "NV003": "Ngô T Cẩm Tiên",
-  "NV004": "Hồ P Minh Châu",
-  "NV005": "Lê Thị Thuý Loan",
-  "NV006": "Nguyễn Thành Nhân",
-  "NV007": "Nguyễn Nam Hải",
-  "NV008": "Nguyễn Cẩm Tiên",
-  "NV009": "Lê Tuấn Nghị",
-  "NV010": "Huỳnh V Ngọc Quỳnh",
-  "NV011": "Huỳnh T Diễm Trúc",
-  "NV012": "Lã V Xuân Hồng"
+  "NV002": "Nguyễn Văn B",
+  "NV003": "Trần Thị C",
+  "NV004": "Lê Văn D",
+  "NV005": "Phạm Văn E",
+  "NV006": "Hoàng Thị F",
+  "NV007": "Ngô Văn G",
+  "NV008": "Vũ Thị H",
+  "NV009": "Đặng Văn I",
+  "NV010": "Bùi Thị K",
+  "NV011": "Lý Văn L",
+  "NV012": "Phan Thị M"
 };
 
 const CA_TIMES = { M7:'07:00–15:00', M8:'08:00–16:00', M9:'09:00–17:00', M10:'10:00–18:00', A12:'12:00–20:00', O:'Ngày off', AL:'Nghỉ phép năm', CL:'Nghỉ bù', PH:'Nghỉ lễ' };
@@ -744,7 +744,7 @@ document.addEventListener('click',function(e){
     if(menu) menu.style.display='none';
     const btn=document.getElementById('lvDropBtn');
     if(btn){ btn.style.borderRadius='14px'; btn.style.borderColor='#E8EAF2'; }
-    const arrow=document.getElementById('lvDropArrow');
+    const arrow=document.getElementById('brassArrow');
     if(arrow) arrow.style.transform='rotate(0)';
   }
 });
@@ -937,7 +937,7 @@ async function loadRequests(){
   try{
     const d=await callAPI({action:'getRequests',maNV:currentUser.maNV});
     const icons={AL:'🏖️',CL:'🔄',Sick:'🤒',Personal:'👨‍👩‍👧',DOICA:'↔️',KHAC:'📋'};
-    const colors={AL:'#EBFBEE',CL:'#E3F2FD',Sick:'#FFF5F5',Personal:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#F0F4FF'};
+    const colors={AL:'#FFF9DB',CL:'#EBFBEE',Sick:'#FFF5F5',Personal:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#F0F4FF'};
     
     let html='';
     if(!d.success||!d.requests||!d.requests.length){
@@ -1001,7 +1001,7 @@ async function submitRequest(){
   const d1=new Date(tuNgay),d2=new Date(denNgay);
   const soNgay=loai==='DOICA'?1:Math.round((d2-d1)/86400000)+1;
   let lf=lyDo||'';
-  if(loai==='DOICA') lf+=(lf?'\n':'')+'[Đổi ca: '+fmtDate(doiNgay)+' từ '+caHT+' → '+caMD+']';
+  if(loai==='DOICA') lf+=(lf?String.fromCharCode(10):'')+'[Đổi ca: '+fmtDate(doiNgay)+' từ '+caHT+' → '+caMD+']';
   
   const btn=document.getElementById('btnSubmit');
   btn.textContent='Đang gửi...'; btn.disabled=true;
