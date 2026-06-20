@@ -194,8 +194,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .portal-textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px; font-size: 14px; color: var(--text); background: #FAFBFF; outline: none; font-family: inherit; height: 100px; resize: none; line-height: 1.5; }
 .portal-textarea:focus { border-color: var(--primary); }
 
-/* Submit button */
-.btn-portal-submit { width: 100%; background: var(--primary); color: white; border: none; border-radius: 16px; padding: 18px; font-size: 15px; font-weight: 900; cursor: pointer; font-family: inherit; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(59,91,219,.35); transition: transform .15s; }
+/* Dropdown radio mới */
+.lv-radio { width:20px;height:20px;border-radius:50%;border:2px solid #D0D5E8;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s; }
+.lv-radio-sel { border-color:#2F9E44;background:#2F9E44; }
+.lv-radio-dot { width:8px;height:8px;border-radius:50%;background:white;display:none; }
+.lv-radio-sel .lv-radio-dot { display:block; } { width: 100%; background: var(--primary); color: white; border: none; border-radius: 16px; padding: 18px; font-size: 15px; font-weight: 900; cursor: pointer; font-family: inherit; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(59,91,219,.35); transition: transform .15s; }
 .btn-portal-submit:active { transform: scale(.97); }
 .btn-portal-submit:disabled { opacity: .7; }
 
@@ -344,128 +347,123 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     <div id="dayDetail"></div>
   </div>
 
-  <!-- XIN NGHỈ -->
-  <div class="content" id="tab-leave">
+  <!-- XIN NGHỈ — Premium UI -->
+  <div class="content" id="tab-leave" style="padding:0;background:#F0F2F8;min-height:100vh">
 
-    <!-- Portal Header -->
-    <div class="portal-header">
-      <div class="portal-tag">CỔNG THÔNG TIN YÊU CẦU</div>
-      <div class="portal-title">Gửi Yêu Cầu</div>
+    <!-- Header -->
+    <div style="padding:28px 24px 16px;background:#F0F2F8">
+      <div style="font-size:10px;font-weight:800;color:#3B5BDB;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">CỔNG THÔNG TIN YÊU CẦU</div>
+      <div style="font-size:28px;font-weight:900;color:#1A1F36;letter-spacing:-0.5px">Gửi Yêu Cầu</div>
     </div>
 
-    <!-- ① BALANCE CARDS: Phép năm + Nghỉ bù -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:14px">
+    <!-- ① 2 CARD SỐ DƯ -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:16px">
 
       <!-- Phép năm -->
-      <div style="background:white;border-radius:18px;padding:16px 14px;box-shadow:0 2px 12px rgba(59,91,219,0.1);border:1.5px solid #EEF2FF">
-        <div style="font-size:10px;font-weight:800;color:#3B5BDB;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px">📅 Phép năm</div>
-        <div style="font-size:32px;font-weight:900;color:#3B5BDB;line-height:1" id="lv-phepNam">—</div>
-        <div style="font-size:10px;color:#8892B0;margin-top:4px;font-weight:600">ngày còn lại</div>
-        <div style="height:1px;background:#EEF2FF;margin:10px 0"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="background:white;border-radius:20px;padding:18px 14px;box-shadow:0 4px 16px rgba(59,91,219,0.1);border:1.5px solid #EEF2FF">
+        <div style="font-size:10px;font-weight:800;color:#3B5BDB;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">📅 Phép năm</div>
+        <div style="font-size:36px;font-weight:900;color:#3B5BDB;line-height:1" id="lv-phepNam">—</div>
+        <div style="font-size:10px;color:#8892B0;margin-top:4px;font-weight:600;margin-bottom:12px">ngày còn lại</div>
+        <div style="height:1px;background:#EEF2FF;margin-bottom:10px"></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
           <span style="font-size:10px;color:#8892B0">Đã dùng</span>
           <span style="font-size:13px;font-weight:800;color:#F76707" id="lv-phepDaDung">—</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <div style="display:flex;justify-content:space-between">
           <span style="font-size:10px;color:#8892B0">Tổng</span>
-          <span style="font-size:13px;font-weight:800;color:#1A1B2E" id="lv-phepTong">—</span>
+          <span style="font-size:13px;font-weight:800;color:#1A1F36" id="lv-phepTong">—</span>
         </div>
       </div>
 
       <!-- Nghỉ bù -->
-      <div style="background:white;border-radius:18px;padding:16px 14px;box-shadow:0 2px 12px rgba(47,158,68,0.1);border:1.5px solid #EBFBEE">
-        <div style="font-size:10px;font-weight:800;color:#2F9E44;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px">🔄 Nghỉ bù</div>
-        <div style="font-size:32px;font-weight:900;color:#2F9E44;line-height:1" id="lv-nghiBu">—</div>
-        <div style="font-size:10px;color:#8892B0;margin-top:4px;font-weight:600">ngày còn lại</div>
-        <div style="height:1px;background:#EBFBEE;margin:10px 0"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="background:white;border-radius:20px;padding:18px 14px;box-shadow:0 4px 16px rgba(47,158,68,0.1);border:1.5px solid #EBFBEE">
+        <div style="font-size:10px;font-weight:800;color:#2F9E44;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">🔄 Nghỉ bù</div>
+        <div style="font-size:36px;font-weight:900;color:#2F9E44;line-height:1" id="lv-nghiBu">—</div>
+        <div style="font-size:10px;color:#8892B0;margin-top:4px;font-weight:600;margin-bottom:12px">ngày còn lại</div>
+        <div style="height:1px;background:#EBFBEE;margin-bottom:10px"></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
           <span style="font-size:10px;color:#8892B0">Đã dùng</span>
           <span style="font-size:13px;font-weight:800;color:#F76707" id="lv-nghiBuDaDung">—</span>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <div style="display:flex;justify-content:space-between">
           <span style="font-size:10px;color:#8892B0">Tổng</span>
-          <span style="font-size:13px;font-weight:800;color:#1A1B2E" id="lv-nghiBuTong">—</span>
+          <span style="font-size:13px;font-weight:800;color:#1A1F36" id="lv-nghiBuTong">—</span>
         </div>
       </div>
     </div>
 
-    <!-- ② FORM GỬI YÊU CẦU -->
-    <div class="portal-card">
+    <!-- ② FORM CARD -->
+    <div style="background:white;border-radius:24px;margin:0 16px;padding:22px 20px;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
 
       <!-- Chọn loại yêu cầu -->
-      <div class="field-label">CHỌN LOẠI YÊU CẦU</div>
-      <div class="req-type-list">
-        <div class="req-type-item active" id="rt-AL" onclick="selectReqType('AL')">
-          <div class="rt-radio" id="rtr-AL"><div class="rt-radio-dot"></div></div>
-          <div class="rt-info">
-            <div class="rt-name">Xin nghỉ phép năm</div>
-            <div class="rt-desc" id="rtd-AL">Còn lại: — ngày</div>
-          </div>
-          <div class="rt-icon">📅</div>
-        </div>
-        <div class="req-type-item" id="rt-CL" onclick="selectReqType('CL')">
-          <div class="rt-radio" id="rtr-CL"><div class="rt-radio-dot"></div></div>
-          <div class="rt-info">
-            <div class="rt-name">Xin nghỉ bù</div>
-            <div class="rt-desc" id="rtd-CL">Còn lại: — ngày</div>
-          </div>
-          <div class="rt-icon">🔄</div>
-        </div>
-        <div class="req-type-item" id="rt-DOICA" onclick="selectReqType('DOICA')">
-          <div class="rt-radio" id="rtr-DOICA"><div class="rt-radio-dot"></div></div>
-          <div class="rt-info">
-            <div class="rt-name">Đổi ca</div>
-            <div class="rt-desc">Hoán đổi ca làm việc</div>
-          </div>
-          <div class="rt-icon">↔️</div>
-        </div>
-      </div>
+      <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px">CHỌN LOẠI YÊU CẦU</div>
 
-      <!-- Form: Xin nghỉ -->
-      <div id="formNghi" style="margin-top:18px">
-        <div class="field-label">THỜI GIAN XIN NGHỈ</div>
-        <div class="date-row">
-          <div class="date-field">
-            <div class="date-field-label">Từ ngày</div>
-            <div class="date-input-wrap">
-              <span class="date-icon">📅</span>
-              <input type="date" class="date-input" id="reqTuNgay" onchange="calcDuration()">
-            </div>
+      <!-- Dropdown -->
+      <div style="position:relative" id="lvDropWrap">
+        <button onclick="lvToggleDrop()" id="lvDropBtn"
+          style="width:100%;background:#F7F8FC;border:1.5px solid #E8EAF2;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:600;color:#1A1F36;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:inherit;transition:border-color .2s">
+          <span id="lvDropLabel">📅 Xin nghỉ phép năm</span>
+          <span id="lvDropArrow" style="font-size:11px;color:#8892B0;transition:transform .2s">▼</span>
+        </button>
+        <div id="lvDropMenu" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid #3B5BDB;border-top:none;border-radius:0 0 16px 16px;box-shadow:0 8px 24px rgba(59,91,219,0.15);z-index:50;overflow:hidden">
+          <div onclick="lvSelectOpt(this,'AL','📅 Xin nghỉ phép năm')" data-val="AL"
+            style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid #F0F2F8">
+            <div class="lv-radio lv-radio-sel"><div class="lv-radio-dot"></div></div>
+            <span style="font-size:15px">📅</span>
+            <span style="font-size:15px;font-weight:600;color:#2F9E44;flex:1">Xin nghỉ phép năm</span>
           </div>
-          <div class="date-arrow">→</div>
-          <div class="date-field">
-            <div class="date-field-label">Đến ngày</div>
-            <div class="date-input-wrap">
-              <span class="date-icon">📅</span>
-              <input type="date" class="date-input" id="reqDenNgay" onchange="calcDuration()">
-            </div>
+          <div onclick="lvSelectOpt(this,'CL','🔄 Xin nghỉ bù')" data-val="CL"
+            style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid #F0F2F8">
+            <div class="lv-radio"><div class="lv-radio-dot"></div></div>
+            <span style="font-size:15px">🔄</span>
+            <span style="font-size:15px;font-weight:600;color:#1A1F36;flex:1">Xin nghỉ bù</span>
           </div>
-        </div>
-        <div class="duration-box" id="durationBox" style="margin-top:12px">
-          <div class="dur-left">
-            <span class="dur-icon">🗓️</span>
-            <div>
-              <div class="dur-label">Tổng thời gian</div>
-              <div class="dur-val" id="durVal">— ngày</div>
-            </div>
+          <div onclick="lvSelectOpt(this,'DOICA','↔️ Đổi ca')" data-val="DOICA"
+            style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer">
+            <div class="lv-radio"><div class="lv-radio-dot"></div></div>
+            <span style="font-size:15px">↔️</span>
+            <span style="font-size:15px;font-weight:600;color:#1A1F36;flex:1">Đổi ca</span>
           </div>
         </div>
       </div>
 
-      <!-- Form: Đổi ca -->
-      <div id="formDoiCa" style="display:none;margin-top:18px">
-        <div class="field-label">THÔNG TIN ĐỔI CA</div>
-        <div class="date-field" style="margin-bottom:14px">
-          <div class="date-field-label">Ngày cần đổi</div>
-          <div class="date-input-wrap">
-            <span class="date-icon">📅</span>
-            <input type="date" class="date-input" id="reqDoiCaNgay">
+      <!-- Phần ngày (Xin nghỉ) -->
+      <div id="lvFormNghi" style="margin-top:20px">
+        <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px">NGÀY BẮT ĐẦU & KẾT THÚC</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#8892B0;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Từ ngày</div>
+            <div style="display:flex;align-items:center;background:#F7F8FC;border:1.5px solid #E8EAF2;border-radius:12px;padding:11px 12px;gap:8px">
+              <span style="font-size:14px">📅</span>
+              <input type="date" id="reqTuNgay" onchange="calcDuration()" style="border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:#1A1F36;font-family:inherit;width:100%">
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#8892B0;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Đến ngày</div>
+            <div style="display:flex;align-items:center;background:#F7F8FC;border:1.5px solid #E8EAF2;border-radius:12px;padding:11px 12px;gap:8px">
+              <span style="font-size:14px">📅</span>
+              <input type="date" id="reqDenNgay" onchange="calcDuration()" style="border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:#1A1F36;font-family:inherit;width:100%">
+            </div>
           </div>
         </div>
-        <div class="shift-swap-row">
-          <div class="shift-field">
-            <div class="date-field-label">Ca hiện tại</div>
-            <select class="shift-select" id="reqCaHienTai">
+        <!-- Duration -->
+        <div style="background:#F0FFF4;border:1.5px solid #B2DFBB;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px">🗓️</span>
+          <span style="font-size:15px;font-weight:800;color:#2F9E44" id="durVal">Tổng thời gian: 1 Ngày</span>
+        </div>
+      </div>
+
+      <!-- Phần đổi ca -->
+      <div id="lvFormDoiCa" style="display:none;margin-top:20px">
+        <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px">THÔNG TIN ĐỔI CA</div>
+        <div style="background:#F7F8FC;border:1.5px solid #E8EAF2;border-radius:12px;padding:11px 12px;display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span>📅</span>
+          <input type="date" id="reqDoiCaNgay" style="border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:#1A1F36;font-family:inherit;width:100%">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#8892B0;margin-bottom:6px;text-transform:uppercase">Ca hiện tại</div>
+            <select id="reqCaHienTai" style="width:100%;border:1.5px solid #E8EAF2;border-radius:12px;padding:11px 12px;font-size:13px;font-weight:600;color:#1A1F36;background:#F7F8FC;outline:none;font-family:inherit">
               <option value="">Chọn ca</option>
               <option value="M7">M7 — 07:00</option>
               <option value="M8">M8 — 08:00</option>
@@ -474,10 +472,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
               <option value="A12">A12 — 12:00</option>
             </select>
           </div>
-          <div class="swap-arrow">⇄</div>
-          <div class="shift-field">
-            <div class="date-field-label">Ca muốn đổi</div>
-            <select class="shift-select" id="reqCaMuonDoi">
+          <div style="font-size:20px;color:#3B5BDB;font-weight:900;text-align:center;padding-bottom:8px">⇄</div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#8892B0;margin-bottom:6px;text-transform:uppercase">Ca muốn đổi</div>
+            <select id="reqCaMuonDoi" style="width:100%;border:1.5px solid #E8EAF2;border-radius:12px;padding:11px 12px;font-size:13px;font-weight:600;color:#1A1F36;background:#F7F8FC;outline:none;font-family:inherit">
               <option value="">Chọn ca</option>
               <option value="M7">M7 — 07:00</option>
               <option value="M8">M8 — 08:00</option>
@@ -489,26 +487,29 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
         </div>
       </div>
 
-      <!-- Ghi chú -->
-      <div class="field-label" style="margin-top:18px">GHI CHÚ / LÝ DO</div>
-      <textarea class="portal-textarea" id="reqLyDo" placeholder="Nhập lý do hoặc thông tin bổ sung..."></textarea>
+      <!-- Lý do / Ghi chú -->
+      <div style="margin-top:20px">
+        <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px">LÝ DO XIN NGHỈ / GHI CHÚ</div>
+        <textarea id="reqLyDo" placeholder="Nhập lý do hoặc thông tin bổ sung..."
+          style="width:100%;background:#F7F8FC;border:1.5px solid #E8EAF2;border-radius:14px;padding:14px;font-size:14px;color:#1A1F36;font-family:inherit;resize:none;height:100px;outline:none;line-height:1.5"></textarea>
+      </div>
 
       <!-- Submit -->
-      <button class="btn-portal-submit" id="btnSubmit" onclick="submitRequest()" style="margin-top:18px">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      <button id="btnSubmit" onclick="submitRequest()"
+        style="width:100%;background:linear-gradient(135deg,#2D46DB,#1a2fa8);color:white;border:none;border-radius:16px;padding:17px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 20px rgba(45,70,219,0.35);letter-spacing:0.5px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         GỬI YÊU CẦU
       </button>
-      <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">
-        ☕ Roster changes automatically match hotel shifts upon HKM confirmation.
+      <div style="text-align:center;margin-top:12px;font-size:11px;color:#8892B0;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>☕</span><span>Roster changes automatically match hotel shifts upon HKM confirmation.</span>
       </div>
     </div>
 
     <!-- Yêu cầu gần đây -->
-    <div class="portal-card" style="margin:0 16px 24px">
-      <div class="field-label">YÊU CẦU GẦN ĐÂY</div>
+    <div style="background:white;border-radius:20px;margin:14px 16px 24px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+      <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px">YÊU CẦU GẦN ĐÂY</div>
       <div id="leaveRecentReqs"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
     </div>
-
   </div>
 
   <!-- LỊCH TỔNG -->
@@ -711,8 +712,59 @@ async function loadLeave(){
   } catch(e){console.log('leave',e);}
 }
 
-// Tính số ngày nghỉ khi chọn ngày
-function calcDuration(){
+// ── DROPDOWN XIN NGHỈ ────────────────────────────────────────────────
+let lvCurrentType = 'AL';
+
+function lvToggleDrop(){
+  const menu=document.getElementById('lvDropMenu');
+  const btn=document.getElementById('lvDropBtn');
+  const arrow=document.getElementById('lvDropArrow');
+  const isOpen=menu.style.display==='block';
+  menu.style.display=isOpen?'none':'block';
+  btn.style.borderRadius=isOpen?'14px':'14px 14px 0 0';
+  btn.style.borderColor=isOpen?'#E8EAF2':'#3B5BDB';
+  arrow.style.transform=isOpen?'rotate(0)':'rotate(180deg)';
+}
+
+function lvSelectOpt(el, val, label){
+  // Reset tất cả radio
+  document.querySelectorAll('#lvDropMenu .lv-radio').forEach(r=>{
+    r.classList.remove('lv-radio-sel');
+    r.querySelector('.lv-radio-dot').style.display='none';
+  });
+  document.querySelectorAll('#lvDropMenu [data-val] span:last-child').forEach(s=>{
+    s.style.color='#1A1F36';
+  });
+  // Set selected
+  const radio=el.querySelector('.lv-radio');
+  radio.classList.add('lv-radio-sel');
+  radio.querySelector('.lv-radio-dot').style.display='block';
+  el.querySelectorAll('span').forEach((s,i)=>{ if(i>0) s.style.color='#2F9E44'; });
+  // Update label
+  document.getElementById('lvDropLabel').textContent=label;
+  lvCurrentType=val;
+  // Đóng menu
+  document.getElementById('lvDropMenu').style.display='none';
+  document.getElementById('lvDropBtn').style.borderRadius='14px';
+  document.getElementById('lvDropBtn').style.borderColor='#E8EAF2';
+  document.getElementById('lvDropArrow').style.transform='rotate(0)';
+  // Show/hide form phù hợp
+  document.getElementById('lvFormNghi').style.display=val==='DOICA'?'none':'block';
+  document.getElementById('lvFormDoiCa').style.display=val==='DOICA'?'block':'none';
+}
+
+// Đóng dropdown khi click ngoài
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('lvDropWrap');
+  if(wrap&&!wrap.contains(e.target)){
+    const menu=document.getElementById('lvDropMenu');
+    if(menu) menu.style.display='none';
+    const btn=document.getElementById('lvDropBtn');
+    if(btn){ btn.style.borderRadius='14px'; btn.style.borderColor='#E8EAF2'; }
+    const arrow=document.getElementById('lvDropArrow');
+    if(arrow) arrow.style.transform='rotate(0)';
+  }
+});
   const s=document.getElementById('reqTuNgay').value;
   const e=document.getElementById('reqDenNgay').value;
   if(!s||!e) return;
@@ -720,7 +772,7 @@ function calcDuration(){
   if(isNaN(d1)||isNaN(d2)) return;
   const days=Math.max(1,Math.round((d2-d1)/86400000)+1);
   const el=document.getElementById('durVal');
-  if(el) el.textContent=days+(days>1?' ngày':' ngày');
+  if(el) el.textContent='Tổng thời gian: '+days+' Ngày';
 }
 
 // ── LOAD LỊCH CÁ NHÂN ─────────────────────────────────────────────────
