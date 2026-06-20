@@ -765,6 +765,9 @@ document.addEventListener('click',function(e){
     if(arrow) arrow.style.transform='rotate(0)';
   }
 });
+
+// Tính số ngày nghỉ
+function calcDuration(){
   const s=document.getElementById('reqTuNgay').value;
   const e=document.getElementById('reqDenNgay').value;
   if(!s||!e) return;
