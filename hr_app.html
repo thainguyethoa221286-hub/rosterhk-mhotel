@@ -14,6 +14,7 @@
 }
 body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); min-height: 100vh; max-width: 430px; margin: 0 auto; }
 
+/* LOGIN */
 #loginScreen { min-height: 100vh; background: linear-gradient(160deg, #3B5BDB 0%, #1a2d8a 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; }
 .login-logo { width: 80px; height: 80px; background: rgba(255,255,255,0.15); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.2); }
 .login-title { font-size: 26px; font-weight: 800; color: white; margin-bottom: 4px; }
@@ -28,6 +29,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .btn-login:disabled { opacity: 0.7; }
 .login-error { background: var(--red-light); color: var(--red); border-radius: 10px; padding: 10px 14px; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; text-align: center; }
 
+/* APP */
 #appScreen { display: none; min-height: 100vh; padding-bottom: 72px; }
 .header { background: var(--primary); padding: 48px 20px 20px; color: white; }
 .header-row { display: flex; justify-content: space-between; align-items: flex-start; }
@@ -41,6 +43,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .card { background: var(--surface); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
 .card-title { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
 
+/* BALANCE */
 .balance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .balance-item { border-radius: 12px; padding: 14px 12px; }
 .balance-item.annual { background: var(--primary-light); }
@@ -48,20 +51,22 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .bal-title { font-size: 11px; font-weight: 800; margin-bottom: 10px; }
 .balance-item.annual .bal-title { color: var(--primary); }
 .balance-item.comp .bal-title { color: var(--green); }
-.bal-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.bal-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
 .bal-row:last-child { border-bottom: none; }
 .bal-row-label { font-size: 10px; color: var(--muted); }
-.bal-row-val { font-size: 14px; font-weight: 800; }
+.bal-row-val { font-size: 16px; font-weight: 800; }
 .balance-item.annual .bal-row-val { color: var(--primary); }
 .balance-item.comp .bal-row-val { color: var(--green); }
-.bal-row-val.used { color: var(--accent) !important; }
-.bal-row-val.big { font-size: 22px; }
+.bal-row-val.used { color: var(--accent) !important; font-size: 14px; }
+.bal-row-val.big { font-size: 24px; }
 
+/* ANNOUNCE */
 .announce { background: linear-gradient(135deg, var(--accent), #E8590C); border-radius: 14px; padding: 14px 16px; color: white; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
 .announce-icon { font-size: 22px; flex-shrink: 0; }
 .announce-title { font-size: 13px; font-weight: 700; }
 .announce-desc { font-size: 11px; opacity: 0.85; margin-top: 2px; }
 
+/* REQUESTS */
 .req-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
 .req-item:last-child { border-bottom: none; }
 .req-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
@@ -73,7 +78,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .status-pending { background: var(--yellow-light); color: var(--yellow); }
 .status-rejected { background: var(--red-light); color: var(--red); }
 
-/* LỊCH LÀM - danh sách dọc */
+/* SCHEDULE */
 .schedule-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .month-nav { display: flex; align-items: center; gap: 8px; }
 .month-nav button { width: 28px; height: 28px; border-radius: 8px; border: 1.5px solid var(--border); background: white; cursor: pointer; font-size: 14px; }
@@ -81,9 +86,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .sched-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; margin-bottom: 6px; background: #FAFBFF; }
 .sched-item.today { background: var(--primary-light); border: 1.5px solid var(--primary); }
 .sched-item.weekend { opacity: 0.6; }
-.sched-date { width: 40px; text-align: center; flex-shrink: 0; }
+.sched-date { width: 44px; text-align: center; flex-shrink: 0; }
 .sched-day-num { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1; }
 .sched-day-name { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+.sched-month { font-size: 9px; color: var(--muted); }
 .sched-item.today .sched-day-num { color: var(--primary); }
 .sched-info { flex: 1; }
 .sched-shift { font-size: 13px; font-weight: 700; color: var(--text); }
@@ -95,16 +101,16 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .ca-CL { background: #E3F2FD; color: #1565C0; }
 .ca-PH { background: var(--red-light); color: var(--red); }
 
-/* FORM XIN NGHỈ */
-.request-3col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+/* FORM XIN NGHỈ - 2 cột + ghi chú */
+.request-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .request-col { background: #FAFBFF; border-radius: 12px; padding: 12px; border: 1.5px solid var(--border); }
-.request-col-title { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-.note-col { grid-column: 1 / -1; }
-.form-select,.form-input-sm,.form-textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 13px; color: var(--text); background: white; outline: none; font-family: inherit; margin-bottom: 8px; }
+.request-col-title { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+.request-col-full { grid-column: 1 / -1; }
+.form-select, .form-input-sm, .form-textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 13px; color: var(--text); background: white; outline: none; font-family: inherit; margin-bottom: 8px; }
+.form-select:last-child, .form-input-sm:last-child { margin-bottom: 0; }
 .form-textarea { height: 80px; resize: none; margin-bottom: 0; }
 .btn-submit { width: 100%; background: var(--primary); color: white; border: none; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
 .btn-submit:disabled { opacity: 0.7; }
-
 .phep-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
 .phep-row:last-child { border-bottom: none; }
 .phep-label { font-size: 13px; color: var(--text); }
@@ -114,30 +120,39 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 /* LỊCH TỔNG */
 .lich-tong-header { background: var(--primary); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
 .lich-tong-header .month-nav button { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); color: white; }
-.lich-tong-header .month-label { color: white; }
-.cycle-label { font-size: 10px; color: rgba(255,255,255,0.75); text-align: right; line-height: 1.4; }
+.lich-tong-header .month-label { color: white; font-size: 14px; font-weight: 700; }
+.cycle-range { font-size: 10px; color: rgba(255,255,255,0.8); text-align: right; }
 .lich-tong-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .lich-tong-table { border-collapse: collapse; width: max-content; }
-.lich-tong-table th { background: #2F4AC7; color: white; padding: 4px 3px; text-align: center; font-size: 10px; font-weight: 700; min-width: 30px; white-space: nowrap; }
-.lich-tong-table th.col-name { min-width: 100px; text-align: left; padding-left: 8px; background: #1a2d8a; position: sticky; left: 0; z-index: 5; }
-.lich-tong-table th.col-weekend { background: #1a3a8a; }
-.lich-tong-table th.col-today { background: #F76707; }
-.lich-tong-table td { padding: 5px 3px; text-align: center; border: 1px solid #E9ECEF; font-weight: 700; font-size: 10px; min-width: 30px; }
-.lich-tong-table td.col-name { position: sticky; left: 0; background: white; z-index: 2; text-align: left; padding-left: 8px; font-size: 11px; font-weight: 600; color: var(--text); border-right: 2px solid var(--primary); min-width: 100px; }
-.lich-tong-table tr:nth-child(even) td { background: #FAFBFF; }
-.lich-tong-table tr:nth-child(even) td.col-name { background: #F5F7FF; }
+
+/* Header 2 hàng */
+.lich-tong-table thead tr:first-child th { background: #1a2d8a; color: white; padding: 5px 3px; font-size: 11px; font-weight: 800; text-align: center; min-width: 30px; border: 1px solid #2a3d9a; }
+.lich-tong-table thead tr:last-child th { background: #2F4AC7; color: rgba(255,255,255,0.85); padding: 3px 3px; font-size: 9px; font-weight: 600; text-align: center; border: 1px solid #3a5ad7; }
+.lich-tong-table thead th.col-name { min-width: 100px; text-align: left; padding-left: 8px; background: #0f1f6a !important; position: sticky; left: 0; z-index: 6; }
+.lich-tong-table thead th.col-weekend { background: #1e3799 !important; }
+.lich-tong-table thead th.col-today { background: #F76707 !important; }
+
+/* Body */
+.lich-tong-table tbody td { padding: 5px 3px; text-align: center; border: 1px solid #E9ECEF; font-weight: 700; font-size: 10px; min-width: 30px; background: white; }
+.lich-tong-table tbody td.col-name { position: sticky; left: 0; background: white !important; z-index: 2; text-align: left; padding-left: 8px; font-size: 11px; font-weight: 600; color: var(--text); border-right: 2px solid var(--primary); min-width: 100px; }
+.lich-tong-table tbody tr:nth-child(even) td { background: #FAFBFF; }
+.lich-tong-table tbody tr:nth-child(even) td.col-name { background: #F3F5FF !important; }
 .nv-id { font-size: 9px; color: var(--muted); font-weight: 400; }
+
+/* Ca colors */
 .ca-cell-M7,.ca-cell-M8,.ca-cell-M9,.ca-cell-M10 { background: #FFF9DB !important; color: #E67700; }
 .ca-cell-A12 { background: #E3F2FD !important; color: #1565C0; }
 .ca-cell-O { background: #F8F9FA !important; color: #ADB5BD; }
 .ca-cell-AL { background: #EBFBEE !important; color: #2F9E44; }
 .ca-cell-CL { background: #E8F4FD !important; color: #0277BD; }
 .ca-cell-PH { background: #FFF5F5 !important; color: #E03131; }
-.ca-cell-today { outline: 2px solid var(--accent); outline-offset: -2px; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; background: white; border-top: 1px solid var(--border); }
-.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; }
-.legend-dot { width: 18px; height: 16px; border-radius: 4px; font-size: 8px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.ca-cell-today-border { outline: 2px solid var(--accent); outline-offset: -2px; }
 
+.legend { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; background: white; border-top: 1px solid var(--border); }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text); }
+.legend-dot { width: 20px; height: 16px; border-radius: 4px; font-size: 8px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+
+/* BOTTOM NAV */
 .bottomnav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: white; border-top: 1px solid var(--border); display: flex; padding: 8px 0 16px; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 100; }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 0; }
 .nav-icon { font-size: 20px; }
@@ -154,6 +169,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-logo">🏨</div>
   <div class="login-title">HK Hotel</div>
@@ -173,6 +189,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   </div>
 </div>
 
+<!-- APP -->
 <div id="appScreen">
   <div class="header">
     <div class="header-row">
@@ -186,7 +203,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   </div>
   <div class="toast" id="toast"></div>
 
-  <!-- HOME -->
+  <!-- TAB: TỔNG QUAN -->
   <div class="content active" id="tab-home">
     <div style="margin-top:8px"></div>
     <div class="card">
@@ -194,15 +211,33 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       <div class="balance-grid">
         <div class="balance-item annual">
           <div class="bal-title">📅 Phép năm</div>
-          <div class="bal-row"><span class="bal-row-label">Tổng</span><span class="bal-row-val big" id="homePhepTong">—</span></div>
-          <div class="bal-row"><span class="bal-row-label">Đã dùng</span><span class="bal-row-val used" id="homePhepDaDung">—</span></div>
-          <div class="bal-row"><span class="bal-row-label">Còn lại</span><span class="bal-row-val" id="homePhepNam">—</span></div>
+          <div class="bal-row">
+            <span class="bal-row-label">Tổng</span>
+            <span class="bal-row-val big" id="homePhepTong">—</span>
+          </div>
+          <div class="bal-row">
+            <span class="bal-row-label">Đã dùng</span>
+            <span class="bal-row-val used" id="homePhepDaDung">—</span>
+          </div>
+          <div class="bal-row">
+            <span class="bal-row-label">Còn lại</span>
+            <span class="bal-row-val" id="homePhepNam">—</span>
+          </div>
         </div>
         <div class="balance-item comp">
           <div class="bal-title">🔄 Nghỉ bù</div>
-          <div class="bal-row"><span class="bal-row-label">Tổng</span><span class="bal-row-val big" id="homeNghiBuTong">—</span></div>
-          <div class="bal-row"><span class="bal-row-label">Đã dùng</span><span class="bal-row-val used" id="homeNghiBuDaDung">—</span></div>
-          <div class="bal-row"><span class="bal-row-label">Còn lại</span><span class="bal-row-val" id="homeNghiBu">—</span></div>
+          <div class="bal-row">
+            <span class="bal-row-label">Tổng</span>
+            <span class="bal-row-val big" id="homeNghiBuTong">—</span>
+          </div>
+          <div class="bal-row">
+            <span class="bal-row-label">Đã dùng</span>
+            <span class="bal-row-val used" id="homeNghiBuDaDung">—</span>
+          </div>
+          <div class="bal-row">
+            <span class="bal-row-label">Còn lại</span>
+            <span class="bal-row-val" id="homeNghiBu">—</span>
+          </div>
         </div>
       </div>
     </div>
@@ -219,7 +254,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
 
-  <!-- LỊCH LÀM -->
+  <!-- TAB: LỊCH LÀM -->
   <div class="content" id="tab-schedule">
     <div style="margin-top:8px"></div>
     <div class="card">
@@ -231,11 +266,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <button onclick="nextCycle()">›</button>
         </div>
       </div>
+      <div style="font-size:10px;color:var(--muted);margin-bottom:10px" id="cycleDateRange">—</div>
       <div id="scheduleList"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
     </div>
   </div>
 
-  <!-- XIN NGHỈ -->
+  <!-- TAB: XIN NGHỈ -->
   <div class="content" id="tab-leave">
     <div style="margin-top:8px"></div>
     <div class="card">
@@ -246,7 +282,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
     <div class="card">
       <div class="card-title">Gửi yêu cầu</div>
-      <div class="request-3col">
+      <div class="request-grid">
+        <!-- Cột 1: Xin nghỉ -->
         <div class="request-col">
           <div class="request-col-title">📅 Xin nghỉ</div>
           <select class="form-select" id="reqLoaiNghi">
@@ -256,30 +293,32 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
             <option value="Personal">Việc riêng</option>
           </select>
           <input type="date" class="form-input-sm" id="reqTuNgay">
-          <input type="date" class="form-input-sm" id="reqDenNgay">
+          <input type="date" class="form-input-sm" id="reqDenNgay" style="margin-bottom:0">
         </div>
+        <!-- Cột 2: Đổi ca -->
         <div class="request-col">
           <div class="request-col-title">🔄 Đổi ca</div>
           <input type="date" class="form-input-sm" id="reqDoiCaNgay">
           <select class="form-select" id="reqCaHienTai">
             <option value="">Ca hiện tại</option>
-            <option value="M7">M7 07:00</option>
-            <option value="M8">M8 08:00</option>
-            <option value="M9">M9 09:00</option>
-            <option value="M10">M10 10:00</option>
-            <option value="A12">A12 12:00</option>
+            <option value="M7">M7 — 07:00</option>
+            <option value="M8">M8 — 08:00</option>
+            <option value="M9">M9 — 09:00</option>
+            <option value="M10">M10 — 10:00</option>
+            <option value="A12">A12 — 12:00</option>
           </select>
-          <select class="form-select" id="reqCaMuonDoi">
+          <select class="form-select" id="reqCaMuonDoi" style="margin-bottom:0">
             <option value="">Ca muốn đổi</option>
-            <option value="M7">M7 07:00</option>
-            <option value="M8">M8 08:00</option>
-            <option value="M9">M9 09:00</option>
-            <option value="M10">M10 10:00</option>
-            <option value="A12">A12 12:00</option>
+            <option value="M7">M7 — 07:00</option>
+            <option value="M8">M8 — 08:00</option>
+            <option value="M9">M9 — 09:00</option>
+            <option value="M10">M10 — 10:00</option>
+            <option value="A12">A12 — 12:00</option>
           </select>
         </div>
-        <div class="request-col note-col">
-          <div class="request-col-title">📝 Ghi chú</div>
+        <!-- Cột 3: Ghi chú (full width) -->
+        <div class="request-col request-col-full">
+          <div class="request-col-title">📝 Ghi chú / Lý do</div>
           <textarea class="form-textarea" id="reqLyDo" placeholder="Nhập lý do hoặc thông tin bổ sung..."></textarea>
         </div>
       </div>
@@ -287,7 +326,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
 
-  <!-- LỊCH TỔNG -->
+  <!-- TAB: LỊCH TỔNG -->
   <div class="content" id="tab-lichTong" style="padding:0">
     <div class="lich-tong-header">
       <div class="month-nav">
@@ -295,7 +334,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
         <span class="month-label" id="cycleLabelTong">—</span>
         <button onclick="nextCycleTong()">›</button>
       </div>
-      <div class="cycle-label" id="cycleDateRangeTong">—</div>
+      <div class="cycle-range" id="cycleRangeTong">—</div>
     </div>
     <div class="lich-tong-wrap">
       <div id="lichTongTable"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
@@ -310,6 +349,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
 
+  <!-- BOTTOM NAV -->
   <div class="bottomnav">
     <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
       <div class="nav-icon">🏠</div><div class="nav-label">Tổng quan</div><div class="nav-dot"></div>
@@ -328,54 +368,66 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fSbz-_mTWWwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
-const CA_TIMES = { M7:'07:00-15:00', M8:'08:00-16:00', M9:'09:00-17:00', M10:'10:00-18:00', A12:'12:00-20:00', O:'Ngày off', AL:'Nghỉ phép năm', CL:'Nghỉ bù', PH:'Nghỉ lễ' };
+const CA_TIMES = { M7:'07:00–15:00', M8:'08:00–16:00', M9:'09:00–17:00', M10:'10:00–18:00', A12:'12:00–20:00', O:'Ngày off', AL:'Nghỉ phép năm', CL:'Nghỉ bù', PH:'Nghỉ lễ' };
 const DAYS = ['CN','T2','T3','T4','T5','T6','T7'];
 const MONTH_NAMES = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
-let currentUser = null, scheduleData = {}, allScheduleData = {};
-let lichTongLoaded = false;
+let currentUser = null, scheduleData = {}, allScheduleData = null;
 
-// ===== CHU KỲ CÔNG: 24 tháng này -> 23 tháng sau =====
-// cycleMonth/cycleYear = tháng bắt đầu (tháng có ngày 24)
-const now = new Date();
-// Nếu hôm nay < 24 thì đang trong chu kỳ tháng trước
-let cycleMonth = now.getDate() >= 24 ? now.getMonth() : (now.getMonth() === 0 ? 11 : now.getMonth() - 1);
-let cycleYear = now.getDate() >= 24 ? now.getFullYear() : (now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear());
-let lichTongCycleMonth = cycleMonth;
-let lichTongCycleYear = cycleYear;
+// ===== CHU KỲ: 24 tháng X → 23 tháng X+1 =====
+// cycleMonth = tháng bắt đầu (tháng có ngày 24)
+function getCurrentCycle() {
+  const now = new Date();
+  const d = now.getDate();
+  // Nếu hôm nay >= 24: chu kỳ bắt đầu từ tháng này
+  // Nếu hôm nay < 24:  chu kỳ bắt đầu từ tháng trước
+  if (d >= 24) {
+    return { month: now.getMonth(), year: now.getFullYear() };
+  } else {
+    const m = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+    const y = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+    return { month: m, year: y };
+  }
+}
 
-// Tạo mảng ngày cho chu kỳ: từ 24/startMonth/startYear đến 23/nextMonth/nextYear
+let { month: cycleMonth, year: cycleYear } = getCurrentCycle();
+let lichTongCycleMonth = cycleMonth, lichTongCycleYear = cycleYear;
+
+// Tạo mảng ngày: 24/startMonth → 23/nextMonth
 function generateCycleDates(startMonth, startYear) {
-  var dates = [];
-  var d = new Date(startYear, startMonth, 24); // ngày 24 tháng startMonth
-  var endMonth = startMonth === 11 ? 0 : startMonth + 1;
-  var endYear = startMonth === 11 ? startYear + 1 : startYear;
-  var endDate = new Date(endYear, endMonth, 23); // ngày 23 tháng sau
-  while (d <= endDate) {
-    dates.push(new Date(d));
-    d.setDate(d.getDate() + 1);
+  const dates = [];
+  // Ngày bắt đầu: 24 tháng startMonth
+  const start = new Date(startYear, startMonth, 24);
+  // Ngày kết thúc: 23 tháng sau
+  const endMonth = startMonth === 11 ? 0 : startMonth + 1;
+  const endYear  = startMonth === 11 ? startYear + 1 : startYear;
+  const end = new Date(endYear, endMonth, 23);
+  const cur = new Date(start);
+  while (cur <= end) {
+    dates.push(new Date(cur));
+    cur.setDate(cur.getDate() + 1);
   }
   return dates;
 }
 
+function getCycleLabel(m, y) { return MONTH_NAMES[m] + ' ' + y; }
+function getCycleRange(m, y) {
+  const em = m === 11 ? 0 : m + 1;
+  const ey = m === 11 ? y + 1 : y;
+  return '24/' + pad(m+1) + '/' + y + ' – 23/' + pad(em+1) + '/' + ey;
+}
+
 function pad(n) { return String(n).padStart(2,'0'); }
-
-function dateToKey(d) {
-  return pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear();
+function dateToKey(d) { return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); }
+function formatDate(val) {
+  if (!val) return '';
+  if (typeof val==='string' && val.match(/^\d{2}\/\d{2}\/\d{4}$/)) return val;
+  const d = new Date(val);
+  if (!isNaN(d.getTime())) return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
+  return String(val);
 }
 
-function getCycleLabel(startMonth, startYear) {
-  var endMonth = startMonth === 11 ? 0 : startMonth + 1;
-  var endYear = startMonth === 11 ? startYear + 1 : startYear;
-  return MONTH_NAMES[startMonth] + ' ' + startYear;
-}
-
-function getCycleDateRange(startMonth, startYear) {
-  var endMonth = startMonth === 11 ? 0 : startMonth + 1;
-  var endYear = startMonth === 11 ? startYear + 1 : startYear;
-  return '24/' + pad(startMonth+1) + ' – 23/' + pad(endMonth+1);
-}
-
+// ===== API =====
 function callAPI(params) {
   return new Promise((resolve, reject) => {
     const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
@@ -390,14 +442,7 @@ function callAPI(params) {
   });
 }
 
-function formatDate(val) {
-  if (!val) return '';
-  if (typeof val === 'string' && val.match(/^\d{2}\/\d{2}\/\d{4}$/)) return val;
-  const d = new Date(val);
-  if (!isNaN(d.getTime())) return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
-  return String(val);
-}
-
+// ===== LOGIN =====
 async function doLogin() {
   const maNV = document.getElementById('inputMaNV').value.trim().toUpperCase();
   const matKhau = document.getElementById('inputMatKhau').value.trim();
@@ -422,9 +467,9 @@ async function doLogin() {
   }
   btn.textContent = 'Đăng nhập'; btn.disabled = false;
 }
-
 document.getElementById('inputMatKhau').addEventListener('keypress', e => { if(e.key==='Enter') doLogin(); });
 
+// ===== INIT =====
 async function initApp() {
   const initials = currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join('');
   document.getElementById('headerName').textContent = currentUser.hoTen;
@@ -433,6 +478,7 @@ async function initApp() {
   await Promise.all([loadLeaveData(), loadScheduleData(), loadRequests()]);
 }
 
+// ===== LEAVE =====
 async function loadLeaveData() {
   try {
     const data = await callAPI({action:'getLeave', maNV:currentUser.maNV});
@@ -440,11 +486,12 @@ async function loadLeaveData() {
       const tong = data.phepNamTong||12, daDung = data.phepNamDaDung||0;
       const conLai = data.phepNamConLai||(tong-daDung);
       const nghiBuTong = data.nghiBuTong||0, nghiBuConLai = data.nghiBuConLai||0;
+      const nghiBuDaDung = nghiBuTong - nghiBuConLai;
       document.getElementById('homePhepTong').textContent = tong;
       document.getElementById('homePhepDaDung').textContent = daDung;
       document.getElementById('homePhepNam').textContent = conLai;
       document.getElementById('homeNghiBuTong').textContent = nghiBuTong;
-      document.getElementById('homeNghiBuDaDung').textContent = nghiBuTong - nghiBuConLai;
+      document.getElementById('homeNghiBuDaDung').textContent = nghiBuDaDung;
       document.getElementById('homeNghiBu').textContent = nghiBuConLai;
       document.getElementById('leavePhepNam').textContent = conLai + ' ngày';
       document.getElementById('leaveNghiBu').textContent = nghiBuConLai + ' ngày';
@@ -453,54 +500,74 @@ async function loadLeaveData() {
   } catch(e) { console.log('Leave error:', e); }
 }
 
+// ===== SCHEDULE CÁ NHÂN =====
+// Dùng chung getAllSchedule — lọc ra NV đang đăng nhập
+// allScheduleData đã được load khi vào tab Lịch tổng
+// Nếu chưa có thì gọi API riêng
 async function loadScheduleData() {
   try {
-    const data = await callAPI({action:'getSchedule', maNV:currentUser.maNV});
-    if (data.success && data.schedule) {
+    // Gọi getAllSchedule cho chu kỳ hiện tại
+    const data = await callAPI({
+      action: 'getAllSchedule',
+      month: cycleMonth + 1,
+      year: cycleYear
+    });
+    if (data.success && data.employees) {
+      // Lưu vào allScheduleData nếu chưa có (tránh gọi lại khi vào Lịch tổng)
+      if (!allScheduleData) allScheduleData = data;
+      // Lọc ra nhân viên đang đăng nhập
       scheduleData = {};
-      data.schedule.forEach(item => { scheduleData[item.date] = item.ca; });
-      renderSchedule();
+      const me = data.employees.find(emp => emp.maNV === currentUser.maNV);
+      if (me && me.schedule) scheduleData = me.schedule;
     }
   } catch(e) { console.log('Schedule error:', e); }
+  renderSchedule();
 }
 
 function renderSchedule() {
-  // Hiển thị chu kỳ hiện tại
   document.getElementById('cycleLabel').textContent = getCycleLabel(cycleMonth, cycleYear);
-  const cycleDates = generateCycleDates(cycleMonth, cycleYear);
-  const today = new Date();
-  const todayKey = dateToKey(today);
+  document.getElementById('cycleDateRange').textContent = '📆 ' + getCycleRange(cycleMonth, cycleYear);
+  const dates = generateCycleDates(cycleMonth, cycleYear);
+  const todayKey = dateToKey(new Date());
   let html = '';
-  cycleDates.forEach(date => {
+  dates.forEach(date => {
     const key = dateToKey(date);
     const ca = scheduleData[key] || '';
     const isToday = key === todayKey;
     const isWeekend = date.getDay()===0 || date.getDay()===6;
-    const timeStr = CA_TIMES[ca] || (ca || 'Chưa có lịch');
+    // Hiển thị giờ làm nếu có ca, không có thì để trống (không hiện "Chưa có lịch")
+    const timeStr = ca ? (CA_TIMES[ca] || ca) : '';
     const caClass = ca ? 'ca-'+ca : '';
-    html += '<div class="sched-item '+(isToday?'today':'')+(isWeekend&&!isToday?' weekend':'')+'">'+
+    const monthLabel = MONTH_NAMES[date.getMonth()].replace('Tháng ','T');
+    html += '<div class="sched-item'+(isToday?' today':'')+(isWeekend&&!isToday?' weekend':'')+'">'+
       '<div class="sched-date">'+
         '<div class="sched-day-num">'+pad(date.getDate())+'</div>'+
         '<div class="sched-day-name">'+DAYS[date.getDay()]+'</div>'+
+        '<div class="sched-month">'+monthLabel+'</div>'+
       '</div>'+
-      '<div class="sched-info"><div class="sched-shift">'+timeStr+'</div></div>'+
-      (ca?'<div class="ca-badge '+caClass+'">'+ca+'</div>':'')+
-      '</div>';
+      '<div class="sched-info">'+
+        '<div class="sched-shift" style="color:'+(ca?'var(--text)':'var(--border)')+'">'+
+          (timeStr || '—')+
+        '</div>'+
+      '</div>'+
+      (ca ? '<div class="ca-badge '+caClass+'">'+ca+'</div>' : '')+
+    '</div>';
   });
   document.getElementById('scheduleList').innerHTML = html || '<div class="empty">Không có dữ liệu</div>';
 }
 
-function prevCycle() {
-  cycleMonth--;
-  if (cycleMonth < 0) { cycleMonth = 11; cycleYear--; }
-  renderSchedule();
+async function prevCycle() {
+  cycleMonth--; if(cycleMonth<0){cycleMonth=11;cycleYear--;}
+  scheduleData = {};
+  await loadScheduleData();
 }
-function nextCycle() {
-  cycleMonth++;
-  if (cycleMonth > 11) { cycleMonth = 0; cycleYear++; }
-  renderSchedule();
+async function nextCycle() {
+  cycleMonth++; if(cycleMonth>11){cycleMonth=0;cycleYear++;}
+  scheduleData = {};
+  await loadScheduleData();
 }
 
+// ===== REQUESTS =====
 async function loadRequests() {
   try {
     const data = await callAPI({action:'getRequests', maNV:currentUser.maNV});
@@ -511,7 +578,7 @@ async function loadRequests() {
     }
     let html='';
     data.requests.forEach(r=>{
-      const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending';
+      const sc = r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending';
       html+='<div class="req-item">'+
         '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div>'+
         '<div class="req-info"><div class="req-type">'+r.loaiNghi+'</div>'+
@@ -522,24 +589,25 @@ async function loadRequests() {
   } catch(e) { document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; }
 }
 
+// ===== SUBMIT =====
 async function submitRequest() {
-  const loai=document.getElementById('reqLoaiNghi').value;
-  const tuNgay=document.getElementById('reqTuNgay').value;
-  const denNgay=document.getElementById('reqDenNgay').value;
-  const lyDo=document.getElementById('reqLyDo').value;
-  const doiCaNgay=document.getElementById('reqDoiCaNgay').value;
-  const caHT=document.getElementById('reqCaHienTai').value;
-  const caMD=document.getElementById('reqCaMuonDoi').value;
+  const loai = document.getElementById('reqLoaiNghi').value;
+  const tuNgay = document.getElementById('reqTuNgay').value;
+  const denNgay = document.getElementById('reqDenNgay').value;
+  const lyDo = document.getElementById('reqLyDo').value;
+  const doiCaNgay = document.getElementById('reqDoiCaNgay').value;
+  const caHT = document.getElementById('reqCaHienTai').value;
+  const caMD = document.getElementById('reqCaMuonDoi').value;
   if (!tuNgay||!denNgay) { showToast('⚠️ Vui lòng chọn ngày nghỉ!','#E67700'); return; }
-  const d1=new Date(tuNgay),d2=new Date(denNgay);
+  const d1=new Date(tuNgay), d2=new Date(denNgay);
   if (d2<d1) { showToast('⚠️ Ngày kết thúc phải sau ngày bắt đầu!','#E67700'); return; }
-  const soNgay=Math.round((d2-d1)/(1000*60*60*24))+1;
-  let lyDoFull=lyDo||'';
-  if (doiCaNgay&&caHT&&caMD) lyDoFull+=(lyDoFull?'\n':'')+'[Đổi ca: '+formatDate(doiCaNgay)+' từ '+caHT+' sang '+caMD+']';
-  const btn=document.getElementById('btnSubmit');
+  const soNgay = Math.round((d2-d1)/(1000*60*60*24))+1;
+  let lyDoFull = lyDo||'';
+  if (doiCaNgay&&caHT&&caMD) lyDoFull += (lyDoFull?'\n':'')+'[Đổi ca: '+formatDate(doiCaNgay)+' từ '+caHT+' → '+caMD+']';
+  const btn = document.getElementById('btnSubmit');
   btn.textContent='Đang gửi...'; btn.disabled=true;
   try {
-    const data=await callAPI({action:'submitRequest',maYC:'YC'+Date.now(),maNV:currentUser.maNV,hoTen:currentUser.hoTen,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:lyDoFull||'Không có lý do'});
+    const data = await callAPI({action:'submitRequest',maYC:'YC'+Date.now(),maNV:currentUser.maNV,hoTen:currentUser.hoTen,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:lyDoFull||'Không có lý do'});
     if (data.success) {
       showToast('✅ Đã gửi yêu cầu thành công!','#2F9E44');
       document.getElementById('reqLyDo').value='';
@@ -552,20 +620,20 @@ async function submitRequest() {
   btn.textContent='Gửi yêu cầu 📤'; btn.disabled=false;
 }
 
+// ===== LỊCH TỔNG =====
 async function loadLichTong() {
   document.getElementById('lichTongTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải lịch tổng...</div>';
   document.getElementById('cycleLabelTong').textContent = getCycleLabel(lichTongCycleMonth, lichTongCycleYear);
-  document.getElementById('cycleDateRangeTong').textContent = getCycleDateRange(lichTongCycleMonth, lichTongCycleYear);
+  document.getElementById('cycleRangeTong').textContent = getCycleRange(lichTongCycleMonth, lichTongCycleYear);
   try {
     const data = await callAPI({
-      action:'getAllSchedule',
-      month: lichTongCycleMonth+1,
-      year: lichTongCycleYear
+      action: 'getAllSchedule',
+      month: lichTongCycleMonth + 1,
+      year:  lichTongCycleYear
     });
     if (data.success && data.employees && data.employees.length) {
       allScheduleData = data;
       renderLichTong();
-      lichTongLoaded = true;
     } else {
       document.getElementById('lichTongTable').innerHTML='<div class="empty">Không có dữ liệu lịch tổng</div>';
     }
@@ -575,48 +643,59 @@ async function loadLichTong() {
 }
 
 function renderLichTong() {
+  if (!allScheduleData || !allScheduleData.employees) return;
   document.getElementById('cycleLabelTong').textContent = getCycleLabel(lichTongCycleMonth, lichTongCycleYear);
-  document.getElementById('cycleDateRangeTong').textContent = getCycleDateRange(lichTongCycleMonth, lichTongCycleYear);
-  if (!allScheduleData.employees) return;
+  document.getElementById('cycleRangeTong').textContent = getCycleRange(lichTongCycleMonth, lichTongCycleYear);
 
-  // Tạo mảng ngày theo chu kỳ 24->23
-  const cycleDates = generateCycleDates(lichTongCycleMonth, lichTongCycleYear);
-  const today = new Date();
-  const todayKey = dateToKey(today);
+  // Mảng ngày chu kỳ: 24/month → 23/month+1
+  const dates = generateCycleDates(lichTongCycleMonth, lichTongCycleYear);
+  const todayKey = dateToKey(new Date());
 
-  // Header row 1: ngày (24,25,...30,01,02,...23)
-  // Header row 2: thứ
-  let thead = '<tr><th class="col-name" rowspan="2">Nhân viên</th>';
-  cycleDates.forEach(date => {
-    const isWeekend = date.getDay()===0||date.getDay()===6;
-    const isToday = dateToKey(date)===todayKey;
-    const cls = isToday?'col-today':(isWeekend?'col-weekend':'');
-    thead += '<th class="'+cls+'">'+pad(date.getDate())+'</th>';
+  // ===== HEADER 2 HÀNG =====
+  // Hàng 1: số ngày
+  let hRow1 = '<tr><th class="col-name" rowspan="2">Nhân viên</th>';
+  dates.forEach(date => {
+    const key = dateToKey(date);
+    const isWeekend = date.getDay()===0 || date.getDay()===6;
+    const isToday = key === todayKey;
+    const cls = isToday ? 'col-today' : (isWeekend ? 'col-weekend' : '');
+    hRow1 += '<th class="'+cls+'">'+pad(date.getDate())+'</th>';
   });
-  thead += '</tr><tr>';
-  cycleDates.forEach(date => {
-    const isWeekend = date.getDay()===0||date.getDay()===6;
-    const isToday = dateToKey(date)===todayKey;
-    const cls = isToday?'col-today':(isWeekend?'col-weekend':'');
-    thead += '<th class="'+cls+'" style="font-size:8px;opacity:0.85">'+DAYS[date.getDay()]+'</th>';
-  });
-  thead += '</tr>';
+  hRow1 += '</tr>';
 
-  // Rows
+  // Hàng 2: thứ
+  let hRow2 = '<tr>';
+  dates.forEach(date => {
+    const key = dateToKey(date);
+    const isWeekend = date.getDay()===0 || date.getDay()===6;
+    const isToday = key === todayKey;
+    const cls = isToday ? 'col-today' : (isWeekend ? 'col-weekend' : '');
+    hRow2 += '<th class="'+cls+'">'+DAYS[date.getDay()]+'</th>';
+  });
+  hRow2 += '</tr>';
+
+  // ===== BODY: Mỗi NV 1 dòng, vòng lặp con chạy qua ngày =====
   let tbody = '';
   allScheduleData.employees.forEach(emp => {
-    tbody += '<tr><td class="col-name">'+emp.hoTen+'<div class="nv-id">'+emp.maNV+'</div></td>';
-    cycleDates.forEach(date => {
+    tbody += '<tr>';
+    tbody += '<td class="col-name">'+emp.hoTen+'<div class="nv-id">'+emp.maNV+'</div></td>';
+    // Vòng lặp con: chạy qua từng ngày trong chu kỳ
+    dates.forEach(date => {
       const key = dateToKey(date);
       const ca = (emp.schedule && emp.schedule[key]) || '';
-      const isToday = key===todayKey;
-      tbody += '<td class="'+(ca?'ca-cell-'+ca:'')+(isToday?' ca-cell-today':'')+'">'+ca+'</td>';
+      const isToday = key === todayKey;
+      const caClass = ca ? 'ca-cell-'+ca : '';
+      const todayClass = isToday ? ' ca-cell-today-border' : '';
+      tbody += '<td class="'+caClass+todayClass+'">'+ca+'</td>';
     });
     tbody += '</tr>';
   });
 
   document.getElementById('lichTongTable').innerHTML =
-    '<table class="lich-tong-table"><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table>';
+    '<table class="lich-tong-table">'+
+      '<thead>'+hRow1+hRow2+'</thead>'+
+      '<tbody>'+tbody+'</tbody>'+
+    '</table>';
 }
 
 function prevCycleTong() {
@@ -630,6 +709,7 @@ function nextCycleTong() {
   loadLichTong();
 }
 
+// ===== TAB SWITCH =====
 function switchTab(tab) {
   document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>{
@@ -645,16 +725,17 @@ function switchTab(tab) {
   if (tab==='lichTong') loadLichTong();
 }
 
-function showToast(msg,bg='#2F9E44') {
+function showToast(msg, bg='#2F9E44') {
   const t=document.getElementById('toast');
   t.textContent=msg; t.style.background=bg; t.style.display='block';
-  setTimeout(()=>t.style.display='none',3000);
+  setTimeout(()=>t.style.display='none', 3000);
 }
 
-const todayStr=new Date().toISOString().split('T')[0];
-document.getElementById('reqTuNgay').value=todayStr;
-document.getElementById('reqDenNgay').value=todayStr;
-document.getElementById('reqDoiCaNgay').value=todayStr;
+// Set ngày mặc định
+const todayStr = new Date().toISOString().split('T')[0];
+document.getElementById('reqTuNgay').value = todayStr;
+document.getElementById('reqDenNgay').value = todayStr;
+document.getElementById('reqDoiCaNgay').value = todayStr;
 </script>
 </body>
 </html>
