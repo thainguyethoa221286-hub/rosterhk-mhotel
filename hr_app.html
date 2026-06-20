@@ -671,6 +671,7 @@ async function initApp(){
   document.getElementById('headerName').textContent=currentUser.hoTen;
   document.getElementById('headerDept').textContent=currentUser.phongBan+' · '+currentUser.maNV;
   document.getElementById('headerAvatar').textContent=init;
+  const now=new Date();
   selKey=todayKey();
   await Promise.all([loadLeave(), loadMySchedule(), loadRequests()]);
 }
@@ -792,6 +793,8 @@ async function loadMySchedule(){
 
 // ── TODAY SHIFT ────────────────────────────────────────────────────────
 function renderTodayShift(){
+  const now=new Date();
+  // ✅ Key hôm nay theo local time
   const key=todayKey();
   const ca=mySchedule[key]||'';
   if(!ca){
@@ -805,8 +808,8 @@ function renderTodayShift(){
   const type=getCaType(ca);
   const cls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':'leave';
   const name=CA_NAMES[ca]||ca, time=CA_TIMES[ca]||'';
-  const tnow=new Date();
-  const dl=DOW_VI[tnow.getDay()]+', '+pad(tnow.getDate())+'/'+pad(tnow.getMonth()+1)+'/'+tnow.getFullYear();
+  const now=new Date();
+  const dl=DOW_VI[now.getDay()]+', '+pad(now.getDate())+'/'+pad(now.getMonth()+1)+'/'+now.getFullYear();
   document.getElementById('todayShiftCard').innerHTML=
     '<div class="shift-card '+cls+'">'+
       '<div class="shift-lbl">Ca làm việc hôm nay</div>'+
@@ -823,9 +826,9 @@ function renderCalendar(){
   document.getElementById('calTitle').textContent=MON_VI[calMonth]+' '+calYear;
   document.getElementById('calSub').textContent='📅 Lịch cá nhân — Chu kỳ: '+cycleRange(calMonth,calYear);
 
-  const _now=new Date();
+  const now=new Date();
   // ✅ Dùng tên khác để tránh conflict với hàm todayKey()
-  const keyToday=makeKey(_now.getFullYear(),_now.getMonth(),_now.getDate());
+  const keyToday=makeKey(now.getFullYear(),now.getMonth(),now.getDate());
 
   // Ngày 1 của tháng là thứ mấy (Mon=0)
   const firstDow=(new Date(calYear,calMonth,1).getDay()+6)%7;
