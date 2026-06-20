@@ -501,24 +501,12 @@ async function loadLeaveData() {
 }
 
 // ===== SCHEDULE CÁ NHÂN =====
-// Dùng chung getAllSchedule — lọc ra NV đang đăng nhập
-// allScheduleData đã được load khi vào tab Lịch tổng
-// Nếu chưa có thì gọi API riêng
 async function loadScheduleData() {
+  scheduleData = {};
   try {
-    // Gọi getAllSchedule cho chu kỳ hiện tại
-    const data = await callAPI({
-      action: 'getAllSchedule',
-      month: cycleMonth + 1,
-      year: cycleYear
-    });
-    if (data.success && data.employees) {
-      // Lưu vào allScheduleData nếu chưa có (tránh gọi lại khi vào Lịch tổng)
-      if (!allScheduleData) allScheduleData = data;
-      // Lọc ra nhân viên đang đăng nhập
-      scheduleData = {};
-      const me = data.employees.find(emp => emp.maNV === currentUser.maNV);
-      if (me && me.schedule) scheduleData = me.schedule;
+    const data = await callAPI({action:'getSchedule', maNV:currentUser.maNV});
+    if (data.success && data.schedule) {
+      data.schedule.forEach(item => { scheduleData[item.date] = item.ca; });
     }
   } catch(e) { console.log('Schedule error:', e); }
   renderSchedule();
@@ -556,15 +544,13 @@ function renderSchedule() {
   document.getElementById('scheduleList').innerHTML = html || '<div class="empty">Không có dữ liệu</div>';
 }
 
-async function prevCycle() {
+function prevCycle() {
   cycleMonth--; if(cycleMonth<0){cycleMonth=11;cycleYear--;}
-  scheduleData = {};
-  await loadScheduleData();
+  renderSchedule();
 }
-async function nextCycle() {
+function nextCycle() {
   cycleMonth++; if(cycleMonth>11){cycleMonth=0;cycleYear++;}
-  scheduleData = {};
-  await loadScheduleData();
+  renderSchedule();
 }
 
 // ===== REQUESTS =====
