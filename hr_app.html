@@ -469,7 +469,22 @@ function callAPI(params){ return new Promise((res,rej)=>{ const cb='cb_'+Date.no
 async function doLogin(){ const maNV=document.getElementById('inputMaNV').value.trim().toUpperCase(); const matKhau=document.getElementById('inputMatKhau').value.trim(); if(!maNV||!matKhau)return; const btn=document.getElementById('btnLogin'); btn.textContent='Đang kiểm tra...'; btn.disabled=true; document.getElementById('loginError').style.display='none'; try{ const d=await callAPI({action:'login',maNV,matKhau}); if(d.success){ currentUser=d; document.getElementById('loginScreen').style.display='none'; document.getElementById('appScreen').style.display='block'; initApp(); } else { document.getElementById('loginError').textContent='Mã NV hoặc mật khẩu không đúng!'; document.getElementById('loginError').style.display='block'; } } catch(e){ document.getElementById('loginError').textContent='Lỗi kết nối. Thử lại!'; document.getElementById('loginError').style.display='block'; } btn.textContent='Đăng nhập'; btn.disabled=false; }
 document.getElementById('inputMatKhau').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 async function initApp(){ const init=currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join(''); document.getElementById('headerName').textContent=currentUser.hoTen; document.getElementById('headerDept').textContent=currentUser.phongBan+' · '+currentUser.maNV; document.getElementById('headerAvatar').textContent=init; selKey=todayKey(); await Promise.all([loadLeave(),loadMySchedule(),loadRequests()]); }
-async function loadLeave(){ try{ const d=await callAPI({action:'getLeave',maNV:currentUser.maNV}); if(d.success){ const t=d.phepNamTong||12,u=d.phepNamDaDung||0,r=d.phepNamConLai||(t-u),nb=d.nghiBuTong||0,nc=d.nghiBuConLai||0; document.getElementById('homePhepTong').textContent=t; document.getElementById('homePhepDaDung').textContent=u; document.getElementById('homePhepNam').textContent=r; document.getElementById('homeNghiBuTong').textContent=nb; document.getElementById('homeNghiBuDaDung').textContent=nb-nc; document.getElementById('homeNghiBu').textContent=nc; const ids=['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBu','lv-nghiBuDaDung','lv-nghiBuTong']; const vals=[r,u,t,nc,nb-nc,nb]; ids.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=vals[i];}); } } catch(e){console.log('leave',e);} }
+async function loadLeave(){ try{ const d=await callAPI({action:'getLeave',maNV:currentUser.maNV}); if(d.success){
+  const t=d.phepNamTong||12, u=d.phepNamDaDung||0, r=d.phepNamConLai||(t-u);
+  // ✅ Dùng trực tiếp từ API, không tự tính
+  const nb=d.nghiBuTong||0, nd=d.nghiBuDaDung||0, nc=d.nghiBuConLai||0;
+  // Tab Home
+  document.getElementById('homePhepTong').textContent=t;
+  document.getElementById('homePhepDaDung').textContent=u;
+  document.getElementById('homePhepNam').textContent=r;
+  document.getElementById('homeNghiBuTong').textContent=nb;
+  document.getElementById('homeNghiBuDaDung').textContent=nd;
+  document.getElementById('homeNghiBu').textContent=nc;
+  // Tab Xin nghỉ
+  const ids=['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBu','lv-nghiBuDaDung','lv-nghiBuTong'];
+  const vals=[r, u, t, nc, nd, nb];
+  ids.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=vals[i];});
+} } catch(e){console.log('leave',e);} }
 let lvCurrentType='AL';
 function lvToggleDrop(){ const menu=document.getElementById('lvDropMenu'),btn=document.getElementById('lvDropBtn'),arrow=document.getElementById('lvDropArrow'),isOpen=menu.style.display==='block'; menu.style.display=isOpen?'none':'block'; btn.style.borderRadius=isOpen?'14px':'14px 14px 0 0'; btn.style.borderColor=isOpen?'#E8EAF2':'#3B5BDB'; arrow.style.transform=isOpen?'rotate(0)':'rotate(180deg)'; }
 function lvSelectOpt(el,val,label){ document.querySelectorAll('#lvDropMenu .lv-radio').forEach(r=>{r.classList.remove('lv-radio-sel');r.querySelector('.lv-radio-dot').style.display='none';}); const radio=el.querySelector('.lv-radio'); radio.classList.add('lv-radio-sel'); radio.querySelector('.lv-radio-dot').style.display='block'; document.getElementById('lvDropLabel').textContent=label; lvCurrentType=val; document.getElementById('lvDropMenu').style.display='none'; document.getElementById('lvDropBtn').style.borderRadius='14px'; document.getElementById('lvDropBtn').style.borderColor='#E8EAF2'; document.getElementById('lvDropArrow').style.transform='rotate(0)'; document.getElementById('lvFormNghi').style.display=val==='DOICA'?'none':'block'; document.getElementById('lvFormDoiCa').style.display=val==='DOICA'?'block':'none'; }
