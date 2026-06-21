@@ -13,8 +13,6 @@
   --bg: #F0F4FF; --surface: #FFFFFF; --text: #1A1B2E; --muted: #6C757D; --border: #E9ECEF;
 }
 body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); min-height: 100vh; max-width: 430px; margin: 0 auto; }
-
-/* LOGIN */
 #loginScreen { min-height: 100vh; background: linear-gradient(160deg,#3B5BDB,#1a2d8a); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; }
 .login-logo { width:80px; height:80px; background:rgba(255,255,255,0.15); border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:16px; border:1px solid rgba(255,255,255,0.2); }
 .login-title { font-size:26px; font-weight:800; color:white; margin-bottom:4px; }
@@ -28,8 +26,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .btn-login { width:100%; background:var(--primary); color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:700; cursor:pointer; font-family:inherit; margin-top:8px; }
 .btn-login:disabled { opacity:0.7; }
 .login-error { background:var(--red-light); color:var(--red); border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600; margin-top:12px; display:none; text-align:center; }
-
-/* APP */
 #appScreen { display:none; min-height:100vh; padding-bottom:72px; }
 .header { background:var(--primary); padding:48px 20px 20px; color:white; }
 .header-row { display:flex; justify-content:space-between; align-items:flex-start; }
@@ -37,13 +33,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .header-left .name { font-size:22px; font-weight:800; margin-top:2px; }
 .header-left .dept { font-size:11px; opacity:0.6; margin-top:2px; }
 .avatar { width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:white; border:2px solid rgba(255,255,255,0.3); flex-shrink:0; }
-
 .content { padding:16px; display:none; }
 .content.active { display:block; }
 .card { background:var(--surface); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 .card-title { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:12px; }
-
-/* TODAY SHIFT */
 .shift-card { border-radius:16px; padding:18px; margin-bottom:12px; position:relative; overflow:hidden; }
 .shift-card.morning   { background:linear-gradient(135deg,#FF8C00,#F76707); }
 .shift-card.afternoon { background:linear-gradient(135deg,#3B5BDB,#2F4AC7); }
@@ -54,8 +47,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .shift-time { font-size:18px; font-weight:700; color:white; margin-bottom:6px; }
 .shift-date { font-size:12px; color:rgba(255,255,255,0.75); }
 .shift-badge { position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.25); border-radius:20px; padding:4px 14px; font-size:14px; font-weight:900; color:white; }
-
-/* BALANCE */
 .balance-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .balance-item { border-radius:12px; padding:14px 12px; }
 .balance-item.annual { background:var(--primary-light); }
@@ -71,7 +62,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .balance-item.comp   .bal-row-val { color:var(--green); }
 .bal-row-val.used { color:var(--accent)!important; font-size:14px; }
 .bal-row-val.big  { font-size:22px; }
-
 .req-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
 .req-item:last-child { border-bottom:none; }
 .req-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
@@ -82,24 +72,16 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .status-approved { background:var(--green-light); color:var(--green); }
 .status-pending  { background:var(--yellow-light); color:var(--yellow); }
 .status-rejected { background:var(--red-light); color:var(--red); }
-
-/* ===== CALENDAR ===== */
 .cal-wrap { background:var(--surface); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 .cal-nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
 .cal-title { font-size:17px; font-weight:800; color:var(--text); }
 .cal-sub   { font-size:10px; color:var(--muted); margin-bottom:14px; }
 .cal-btns  { display:flex; gap:8px; }
 .cal-btn   { width:32px; height:32px; border-radius:10px; border:1.5px solid var(--border); background:var(--bg); cursor:pointer; font-size:16px; font-weight:700; color:var(--text); }
-
-/* Weekday row */
 .cal-days-hdr { display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:6px; }
 .cal-hdr-cell { text-align:center; font-size:11px; font-weight:700; color:var(--muted); padding:3px 0; }
 .cal-hdr-cell.red { color:var(--red); }
-
-/* Grid */
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
-
-/* Each day cell */
 .dc { border-radius:10px; min-height:52px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; background:#F8F9FF; border:1.5px solid transparent; padding:3px 2px; transition:all .15s; }
 .dc:active { transform:scale(.95); }
 .dc.empty   { background:transparent; border:none; cursor:default; }
@@ -109,29 +91,25 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .dc.selected { border-color:var(--primary); background:var(--primary-light); }
 .dc.weekend .dc-num { color:var(--red); }
 .dc.today.weekend .dc-num { color:white; }
-
 .dc-num { font-size:14px; font-weight:800; color:var(--text); line-height:1; }
-.dc-dow { font-size:9px;  color:var(--muted); font-weight:600; }
-
+.dc-dow { font-size:9px; color:var(--muted); font-weight:600; }
 /* ===== CA BADGES - CALENDAR ===== */
 .dc-ca { font-size:8px; font-weight:900; padding:2px 5px; border-radius:6px; line-height:1.4; letter-spacing:.3px; white-space:nowrap; }
 .ca-M7,.ca-M8,.ca-M9,.ca-M10 { background:#F76707; color:white; }
 .ca-A12 { background:#3B5BDB; color:white; }
 .ca-O   { background:#CED4DA; color:#495057; }
-.ca-AL  { background:#CCFF00; color:#2E7D32; } /* ✅ AL màu Vàng Chanh sáng */
-.ca-CL  { background:#2F9E44; color:white; }   /* ✅ CL màu Xanh Lá */
+.ca-AL  { background:#CCFF00; color:#2E7D32; } /* AL màu Vàng Chanh sáng */
+.ca-CL  { background:#2F9E44; color:white; }   /* CL màu Xanh Lá */
 .ca-PH  { background:#E03131; color:white; }
-/* Ca gãy nửa ngày */
-.ca-AL2 { background:#F4FF81; color:#33691E; } /* ½ Phép: Vàng chanh dịu */
-.ca-CL2 { background:#C8E6C9; color:#2E7D32; } /* ½ Bù: Xanh lá nhạt */
+/* CA GÃY MỚI */
+.ca-AL2 { background:#F4FF81; color:#33691E; }
+.ca-CL2 { background:#C8E6C9; color:#2E7D32; }
 .ca-O2  { background:#EEEEEE; color:#757575; }
-
-/* Legend */
+/* ===== LEGEND ===== */
 .cal-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
 .leg-item { display:flex; align-items:center; gap:5px; font-size:10px; color:var(--muted); font-weight:600; }
 .leg-dot  { width:26px; height:16px; border-radius:5px; font-size:8px; font-weight:900; display:flex; align-items:center; justify-content:center; color:white; }
-
-/* Day detail card */
+/* ===== DAY DETAIL ===== */
 .ddc { background:var(--surface); border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.08); margin-bottom:12px; }
 .ddc-hdr { padding:16px; display:flex; justify-content:space-between; align-items:flex-start; }
 .ddc-hdr.morning   { background:linear-gradient(135deg,#FF9A3C,#F76707); }
@@ -148,7 +126,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .ddc-icon { width:36px; height:36px; border-radius:10px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
 .ddc-lbl  { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
 .ddc-val  { font-size:15px; font-weight:700; color:var(--text); }
-
 /* ===== PORTAL XIN NGHỈ ===== */
 .lv-radio { width:20px;height:20px;border-radius:50%;border:2px solid #D0D5E8;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s; }
 .lv-radio-sel { border-color:#2F9E44;background:#2F9E44; }
@@ -157,7 +134,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .btn-portal-submit { width:100%; background:var(--primary); color:white; border:none; border-radius:16px; padding:18px; font-size:15px; font-weight:900; cursor:pointer; font-family:inherit; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 8px 24px rgba(59,91,219,.35); transition:transform .15s; }
 .btn-portal-submit:active { transform:scale(.97); }
 .btn-portal-submit:disabled { opacity:.7; }
-
 /* ===== LỊCH TỔNG ===== */
 .lt-header { background:var(--primary); padding:12px 16px; display:flex; justify-content:space-between; align-items:center; }
 .lt-nav { display:flex; align-items:center; gap:10px; }
@@ -176,24 +152,21 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .lt-table tbody tr:nth-child(even) td         { background:#FAFBFF; }
 .lt-table tbody tr:nth-child(even) td.col-name { background:#F3F5FF!important; }
 .nv-id { font-size:9px; color:var(--muted); font-weight:400; }
-
 /* ===== CA COLORS - LỊCH TỔNG ===== */
 .cc-M7,.cc-M8,.cc-M9,.cc-M10 { background:#FFF9DB!important; color:#E67700; }
 .cc-A12 { background:#E3F2FD!important; color:#1565C0; }
 .cc-O   { background:#F8F9FA!important; color:#ADB5BD; }
-.cc-AL  { background:#F4FF81!important; color:#33691E; } /* ✅ AL màu Vàng Chanh nhạt lịch tổng */
-.cc-CL  { background:#EBFBEE!important; color:#2F9E44; } /* ✅ CL màu Xanh Lá nhạt lịch tổng */
+.cc-AL  { background:#F4FF81!important; color:#33691E; } /* AL màu Vàng Chanh nhạt */
+.cc-CL  { background:#EBFBEE!important; color:#2F9E44; } /* CL màu Xanh Lá nhạt */
 .cc-PH  { background:#FFF5F5!important; color:#E03131; }
-/* Ca gãy lịch tổng */
+/* CA GÃY MỚI - LỊCH TỔNG */
 .cc-AL2 { background:#FAFFD1!important; color:#558B2F; }
 .cc-CL2 { background:#E8F5E9!important; color:#2E7D32; }
 .cc-O2  { background:#F5F5F5!important; color:#9E9E9E; }
 .cc-today { outline:2px solid var(--accent); outline-offset:-2px; }
-
 .legend { display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px; background:white; border-top:1px solid var(--border); }
 .legend-item { display:flex; align-items:center; gap:4px; font-size:10px; }
 .legend-dot  { width:20px; height:15px; border-radius:4px; font-size:8px; font-weight:800; display:flex; align-items:center; justify-content:center; }
-
 .bottomnav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:white; border-top:1px solid var(--border); display:flex; padding:8px 0 16px; box-shadow:0 -4px 20px rgba(0,0,0,.08); z-index:100; }
 .nav-item  { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px 0; }
 .nav-icon  { font-size:20px; }
@@ -244,6 +217,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     <div class="card">
       <div class="card-title">Ngày phép</div>
       <div class="balance-grid">
+        <div class="balance-grid">
         <div class="balance-item annual">
           <div class="bal-title">📅 Phép năm</div>
           <div class="bal-row"><span class="bal-row-label">Tổng</span><span class="bal-row-val big" id="homePhepTong">—</span></div>
@@ -437,7 +411,9 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     <div class="legend">
       <div class="legend-item"><div class="legend-dot" style="background:#FFF9DB;color:#E67700">M</div>Sáng</div>
       <div class="legend-item"><div class="legend-dot" style="background:#E3F2FD;color:#1565C0">A</div>Chiều</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#F4FF81;color:#33691E">AL</div>Phép</div> <div class="legend-item"><div class="legend-dot" style="background:#EBFBEE;color:#2F9E44">CL</div>Bù</div>   <div class="legend-item"><div class="legend-dot" style="background:#F8F9FA;color:#ADB5BD">O</div>Off</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F4FF81;color:#33691E">AL</div>Phép</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#EBFBEE;color:#2F9E44">CL</div>Bù</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F8F9FA;color:#ADB5BD">O</div>Off</div>
       <div class="legend-item"><div class="legend-dot" style="background:#FFF5F5;color:#E03131">PH</div>Lễ</div>
       <div class="legend-item"><div class="legend-dot" style="background:#FAFFD1;color:#558B2F">AL2</div>½Phép</div>
       <div class="legend-item"><div class="legend-dot" style="background:#E8F5E9;color:#2E7D32">CL2</div>½Bù</div>
@@ -489,34 +465,22 @@ async function doLogin(){ const maNV=document.getElementById('inputMaNV').value.
 document.getElementById('inputMatKhau').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 async function initApp(){ const init=currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join(''); document.getElementById('headerName').textContent=currentUser.hoTen; document.getElementById('headerDept').textContent=currentUser.phongBan+' · '+currentUser.maNV; document.getElementById('headerAvatar').textContent=init; selKey=todayKey(); await Promise.all([loadLeave(),loadMySchedule(),loadRequests()]); }
 
-/* ✅ SỬA HÀM LOAD LEAVE: Gán trực tiếp dữ liệu chuẩn từ API, không tự trừ ngược nữa */
-async function loadLeave(){ 
-  try { 
-    const d = await callAPI({action:'getLeave',maNV:currentUser.maNV}); 
-    if(d.success){
-      const t = d.phepNamTong || 12, u = d.phepNamDaDung || 0, r = d.phepNamConLai || (t-u);
-      const nb = d.nghiBuTong || 0, nd = d.nghiBuDaDung || 0, nc = d.nghiBuConLai || 0;
-      
-      // Tab Home
-      document.getElementById('homePhepTong').textContent = t;
-      document.getElementById('homePhepDaDung').textContent = u;
-      document.getElementById('homePhepNam').textContent = r;
-      document.getElementById('homeNghiBuTong').textContent = nb;
-      document.getElementById('homeNghiBuDaDung').textContent = nd;
-      document.getElementById('homeNghiBu').textContent = nc;
-      
-      // Tab Xin nghỉ
-      const ids = ['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBu','lv-nghiBuDaDung','lv-nghiBuTong'];
-      const vals = [r, u, t, nc, nd, nb];
-      ids.forEach((id,i) => {
-        const el = document.getElementById(id);
-        if(el) el.textContent = vals[i];
-      });
-    } 
-  } catch(e) {
-    console.log('leave err', e);
-  } 
-}
+/* ✅ ĐÃ ĐỔI LẠI VỊ TRÍ CHUẨN ĐÉT KHÔNG BỊ NGƯỢC NỮA */
+async function loadLeave(){ try{ const d=await callAPI({action:'getLeave',maNV:currentUser.maNV}); if(d.success){
+  const t=d.phepNamTong||12, u=d.phepNamDaDung||0, r=d.phepNamConLai||(t-u);
+  const nb=d.nghiBuTong||0, nd=d.nghiBuDaDung||0, nc=d.nghiBuConLai||0;
+  // Tab Home
+  document.getElementById('homePhepTong').textContent=t;
+  document.getElementById('homePhepDaDung').textContent=u;
+  document.getElementById('homePhepNam').textContent=r;
+  document.getElementById('homeNghiBuTong').textContent=nb;
+  document.getElementById('homeNghiBuDaDung').textContent=nd; // Hiện chuẩn số ngày đã dùng thực tế
+  document.getElementById('homeNghiBu').textContent=nc;       // Hiện chuẩn số ngày còn lại
+  // Tab Xin nghỉ
+  const ids=['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBu','lv-nghiBuDaDung','lv-nghiBuTong'];
+  const vals=[r, u, t, nc, nd, nb]; // Khớp đúng vị trí từng ô
+  ids.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=vals[i];});
+} } catch(e){console.log('leave',e);} }
 
 let lvCurrentType='AL';
 function lvToggleDrop(){ const menu=document.getElementById('lvDropMenu'),btn=document.getElementById('lvDropBtn'),arrow=document.getElementById('lvDropArrow'),isOpen=menu.style.display==='block'; menu.style.display=isOpen?'none':'block'; btn.style.borderRadius=isOpen?'14px':'14px 14px 0 0'; btn.style.borderColor=isOpen?'#E8EAF2':'#3B5BDB'; arrow.style.transform=isOpen?'rotate(0)':'rotate(180deg)'; }
