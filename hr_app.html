@@ -157,7 +157,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .lt-table thead th.col-weekend { background:#1e3799!important; }
 .lt-table thead th.col-today   { background:#F76707!important; }
 .lt-table tbody td { padding:5px 3px; text-align:center; border:1px solid #E9ECEF; font-weight:700; font-size:10px; min-width:30px; background:white; }
-.lt-table tbody td.col-name { position:sticky; left:0; background:white!important; z-index:2; text-align:left; padding-left:8px; font-size:12px; font-weight:700; color:var(--text); border-right:2px solid var(--primary); min-width:145px; line-height:1.3; }
+.lt-table tbody td.col-name { position:sticky; left:0; background:white!important; z-index:2; text-align:left; padding-left:8px; font-size:11px; font-weight:600; color:var(--text); border-right:2px solid var(--primary); min-width:145px; line-height:1.3; }
 .lt-table tbody tr:nth-child(even) td         { background:#FAFBFF; }
 .lt-table tbody tr:nth-child(even) td.col-name { background:#F3F5FF!important; }
 .nv-id { font-size:9px; color:var(--muted); font-weight:500; margin-top:2px; display:block; }
@@ -450,16 +450,16 @@ const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0Fq
 const DANH_SACH_TEN = {
   "NV001": "Thái Nguyệt Hoa",
   "NV002": "Hồng Tú Ngân",
-  "NV003": "Ngô T Cẩm Tiên",
-  "NV004": "Hồ P Minh Châu",
-  "NV005": "Lê T Thuý Loan",
-  "NV006": "Nguyễn Thành Nhân",
-  "NV007": "Nguyễn Nam Hải",
-  "NV008": "Nguyễn Cẩm Tiên",
-  "NV009": "Lê Tuấn Nghị",
-  "NV010": "Huỳnh V Ngọc Quỳnh",
-  "NV011": "Huỳnh T Diễm Trúc",
-  "NV012": "Lã V Xuân Hồng"
+  "NV003": "Nguyễn Thị Kim Oanh",
+  "NV004": "Đào Phương Thảo",
+  "NV005": "Cao Văn Tiến",
+  "NV006": "Nguyễn Văn Hoàng",
+  "NV007": "Lê Thanh Sơn",
+  "NV008": "Phạm Đức Duy",
+  "NV009": "Đặng Mỹ Linh",
+  "NV010": "Trịnh Quốc Bảo",
+  "NV011": "Bùi Minh Tuấn",
+  "NV012": "Hoàng Thùy Dương"
 };
 
 const CA_TIMES = { M7:'07:00–15:00', M8:'08:00–16:00', M9:'09:00–17:00', M10:'10:00–18:00', A12:'12:00–20:00', O:'Ngày off', AL:'Nghỉ phép năm', CL:'Nghỉ bù', PH:'Nghỉ lễ', AL2:'Nghỉ phép ½ ngày', CL2:'Nghỉ bù ½ ngày', O2:'Off ½ ngày' };
@@ -515,7 +515,10 @@ document.addEventListener('click',function(e){ const wrap=document.getElementByI
 function calcDuration(){ const s=document.getElementById('reqTuNgay').value,e=document.getElementById('reqDenNgay').value; if(!s||!e)return; const d1=new Date(s),d2=new Date(e); if(isNaN(d1)||isNaN(d2))return; const days=Math.max(1,Math.round((d2-d1)/86400000)+1); const el=document.getElementById('durVal'); if(el)el.textContent='Tổng thời gian: '+days+' Ngày'; }
 async function loadMySchedule(){ document.getElementById('calGrid').innerHTML='<div class="loading"><div class="spinner"></div></div>'; try{ const d=await callAPI({action:'getSchedule',maNV:currentUser.maNV}); mySchedule=(d.success&&d.schedule)?d.schedule:{}; } catch(e){mySchedule={};console.log('schedule err',e);} renderTodayShift(); renderCalendar(); }
 function renderTodayShift(){ const key=todayKey(),ca=mySchedule[key]||''; if(!ca){ document.getElementById('todayShiftCard').innerHTML='<div class="card" style="display:flex;align-items:center;gap:12px;padding:16px 18px"><div style="font-size:28px">📋</div><div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Hôm nay</div><div style="font-size:15px;font-weight:700;color:var(--text)">Chưa có lịch làm</div></div></div>'; return; } const type=getCaType(ca),cls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':'leave',name=CA_NAMES[ca]||ca,time=CA_TIMES[ca]||'',tnow=new Date(),dl=DOW_VI[tnow.getDay()]+', '+pad(tnow.getDate())+'/'+pad(tnow.getMonth()+1)+'/'+tnow.getFullYear(); document.getElementById('todayShiftCard').innerHTML='<div class="shift-card '+cls+'"><div class="shift-lbl">Ca làm việc hôm nay</div><div class="shift-name">'+name+'</div>'+(time?'<div class="shift-time">⏰ '+time+'</div>':'')+'<div class="shift-date">'+dl+'</div><div class="shift-badge">'+ca+'</div></div>'; }
-function renderCalendar(){ document.getElementById('calTitle').textContent=MON_VI[calMonth]+' '+calYear; document.getElementById('calSub').textContent='📅 Chu kỳ: '+cycleRange(calMonth,calYear); const kToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),firstDow=(new Date(calYear,calMonth,1).getDay()+6)%7,dim=new Date(calYear,calMonth+1,0).getDate(); let html=''; for(let i=0;i<firstDow;i++)html+='<div class="dc empty"></div>'; for(let d=1;d<=dim;d++){ const key=makeKey(calYear,calMonth,d),ca=mySchedule[key]||'',dow=new Date(calYear,calMonth+1,d).getDay(),isToday=key===kToday,isWknd=dow===0||dow===6,isSel=key===selKey; let cls='dc'; if(isToday)cls+=' today'; else if(isSel)cls+=' selected'; if(isWknd)cls+=' weekend'; const badge=ca?'<div class="dc-ca ca-'+ca+'">'+ca+'</div>':''; html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num">'+d+'</div>'+'<div class="dc-dow">'+DOW_VI[dow]+'</div>'+badge+'</div>'; } document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey); }
+
+// ── 📅 FIX LỖI LỆCH LỊCH Ở ĐÂY (CHUYỂN calMonth + 1 VỀ calMonth CHUẨN) ────────────────────
+function renderCalendar(){ document.getElementById('calTitle').textContent=MON_VI[calMonth]+' '+calYear; document.getElementById('calSub').textContent='📅 Chu kỳ: '+cycleRange(calMonth,calYear); const kToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),firstDow=(new Date(calYear,calMonth,1).getDay()+6)%7,dim=new Date(calYear,calMonth+1,0).getDate(); let html=''; for(let i=0;i<firstDow;i++)html+='<div class="dc empty"></div>'; for(let d=1;d<=dim;d++){ const key=makeKey(calYear,calMonth,d),ca=mySchedule[key]||'',dow=new Date(calYear,calMonth,d).getDay(),isToday=key===kToday,isWknd=dow===0||dow===6,isSel=key===selKey; let cls='dc'; if(isToday)cls+=' today'; else if(isSel)cls+=' selected'; if(isWknd)cls+=' weekend'; const badge=ca?'<div class="dc-ca ca-'+ca+'">'+ca+'</div>':''; html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num">'+d+'</div>'+'<div class="dc-dow">'+DOW_VI[dow]+'</div>'+badge+'</div>'; } document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey); }
+
 function selectDay(key){ selKey=key; document.querySelectorAll('.dc').forEach(c=>{c.classList.toggle('selected',c.onclick&&c.onclick.toString().includes("'"+key+"'"));}); renderDayDetail(key); }
 function renderDayDetail(key){ if(!key){document.getElementById('dayDetail').innerHTML='';return;} const parts=key.split('-'),y=parseInt(parts[0]),m=parseInt(parts[1])-1,d=parseInt(parts[2]),date=new Date(y,m,d),ca=mySchedule[key]||'',type=getCaType(ca),hCls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':ca?'leave':'none',caName=ca?(CA_NAMES[ca]||ca):'Chưa có lịch',caTime=CA_TIMES[ca]||'',dateStr=DOW_FULL[date.getDay()]+', '+pad(d)+'/'+pad(m+1)+'/'+y; document.getElementById('dayDetail').innerHTML='<div class="ddc"><div class="ddc-hdr '+hCls+'"><div><div class="ddc-date">'+dateStr+'</div><div class="ddc-name">'+caName+'</div></div>'+(ca?'<div class="ddc-badge">'+ca+'</div>':'')+'</div>'+(caTime?'<div class="ddc-body"><div class="ddc-row"><div class="ddc-icon">⏰</div><div><div class="ddc-lbl">Giờ làm việc</div><div class="ddc-val">'+caTime+'</div></div></div></div>':'<div class="ddc-body"><div class="empty" style="padding:10px">'+(ca?'':'Ngày này chưa có ca làm việc')+'</div></div>')+'</div>'; }
 function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} loadMySchedule(); }
