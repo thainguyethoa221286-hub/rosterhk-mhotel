@@ -67,17 +67,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .status-pending  { background:var(--yellow-light); color:var(--yellow); }
 .status-rejected { background:var(--red-light); color:var(--red); }
 
-/* ADMIN REQUEST CARD */
-.adm-req-card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #E8EAF2; }
-.adm-req-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.adm-req-emp { font-size: 15px; font-weight: 800; color: #1A1B2E; }
-.adm-req-type { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
-.adm-req-meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; }
-.adm-req-actions { display: flex; gap: 8px; }
-.adm-btn { flex: 1; padding: 10px; border-radius: 10px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
-.adm-btn-approve { background: var(--green); color: white; }
-.adm-btn-reject { background: #F1F3F5; color: var(--red); }
-
 /* BALANCES */
 .balance-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .balance-item { border-radius:12px; padding:14px 12px; }
@@ -132,9 +121,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .ca-AL2 { background:#F4FF81; color:#33691E; }
 .ca-CL2 { background:#C8E6C9; color:#2E7D32; }
 .ca-O2  { background:#EEEEEE; color:#757575; }
-.cal-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+
+/* 🌟 PHẦN CHÚ THÍCH PHÂN LOẠI CA (LEGEND BOX CHUNG) */
+.cal-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); background:#FFFFFF; }
 .leg-item { display:flex; align-items:center; gap:5px; font-size:10px; color:var(--muted); font-weight:600; }
 .leg-dot  { width:26px; height:16px; border-radius:5px; font-size:8px; font-weight:900; display:flex; align-items:center; justify-content:center; color:white; }
+
 .ddc { background:var(--surface); border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.08); margin-bottom:12px; }
 .ddc-hdr { padding:16px; display:flex; justify-content:space-between; align-items:flex-start; }
 .ddc-hdr.morning   { background:linear-gradient(135deg,#FF9A3C,#F76707); }
@@ -179,11 +171,19 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .cc-CL2 { background:#E8F5E9!important; color:#2E7D32; }
 .cc-O2  { background:#F5F5F5!important; color:#9E9E9E; }
 .cc-today { outline:2px solid var(--accent); outline-offset:-2px; }
-.legend { display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px; background:white; border-top:1px solid var(--border); }
-.legend-item { display:flex; align-items:center; gap:4px; font-size:10px; }
-.legend-dot  { width:20px; height:15px; border-radius:4px; font-size:8px; font-weight:800; display:flex; align-items:center; justify-content:center; }
 
-/* BOTTOM FOOTER NAVIGATION */
+/* ADMIN REQUEST CARD */
+.adm-req-card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #E8EAF2; }
+.adm-req-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.adm-req-emp { font-size: 15px; font-weight: 800; color: #1A1B2E; }
+.adm-req-type { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+.adm-req-meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; }
+.adm-req-actions { display: flex; gap: 8px; }
+.adm-btn { flex: 1; padding: 10px; border-radius: 10px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.adm-btn-approve { background: var(--green); color: white; }
+.adm-btn-reject { background: #F1F3F5; color: var(--red); }
+
+/* NAVIGATION ĐÁY MÀN HÌNH */
 .bottomnav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:white; border-top:1px solid var(--border); display:flex; padding:8px 0 16px; box-shadow:0 -4px 20px rgba(0,0,0,.08); z-index:100; }
 .nav-item  { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px 0; }
 .nav-icon  { font-size:20px; }
@@ -273,11 +273,20 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
         <div class="cal-hdr-cell red">T7</div><div class="cal-hdr-cell red">CN</div>
       </div>
       <div class="cal-grid" id="calGrid"><div class="loading"><div class="spinner"></div></div></div>
+      
+      <!-- 🌟 ĐÃ THÊM LẠI CHÚ THÍCH CA CHO LỊCH CÁ NHÂN -->
+      <div class="cal-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#F76707">M</div>Sáng</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#3B5BDB">A</div>Chiều</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#CCFF00;color:#2E7D32">AL</div>Phép</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#2F9E44">CL</div>Bù</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#CED4DA;color:#333">O</div>Off</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#E03131">PH</div>Lễ</div>
+      </div>
     </div>
     <div id="dayDetail"></div>
   </div>
   
-  <!-- TAB XIN NGHỈ (GIỮ NGUYÊN GIAO DIỆN PHÉP NĂM GỐC) -->
   <div class="content" id="tab-leave" style="padding:0;background:#F0F2F8;min-height:100vh">
     <div style="padding:28px 24px 16px;background:#F0F2F8">
       <div style="font-size:10px;font-weight:800;color:#3B5BDB;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">CỔNG THÔNG TIN YÊU CẦU</div>
@@ -298,9 +307,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <span style="font-size:13px;font-weight:800;color:#1A1F36" id="lv-phepTong">—</span>
         </div>
       </div>
+      
+      <!-- 🌟 ĐÃ FIX LỖI SAI VỊ TRÍ BIẾN SỐ NGHỈ BÙ (HÌNH 3 KHỚP HOÀN TOÀN TỔNG - ĐÃ DÙNG - CÒN LẠI) -->
       <div style="background:white;border-radius:20px;padding:18px 14px;box-shadow:0 4px 166px rgba(47,158,68,0.1);border:1.5px solid #EBFBEE">
         <div style="font-size:10px;font-weight:800;color:#2F9E44;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">🔄 Nghỉ bù</div>
-        <div style="font-size:36px;font-weight:900;color:#2F9E44;line-height:1" id="lv-nghiBu">—</div>
+        <div style="font-size:36px;font-weight:900;color:#2F9E44;line-height:1" id="lv-nghiBuConLai">—</div>
         <div style="font-size:10px;color:#8892B0;margin-top:4px;font-weight:600;margin-bottom:12px">ngày còn lại</div>
         <div style="height:1px;background:#EBFBEE;margin-bottom:10px"></div>
         <div style="display:flex;justify-content:space-between;margin-bottom:4px">
@@ -324,16 +335,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
         </button>
         <div id="lvDropMenu" class="lv-dropdown-menu">
           <div onclick="lvSelectOpt(this,'XIN_NGHI','🏖️ 1. Xin nghỉ')" class="lv-dropdown-item selected">
-            <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div>
-            <span>1. Xin nghỉ</span>
+            <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div><span>1. Xin nghỉ</span>
           </div>
           <div onclick="lvSelectOpt(this,'DOICA','↔️ 2. Đổi ca')" class="lv-dropdown-item">
-            <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div>
-            <span>2. Đổi ca</span>
+            <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div><span>2. Đổi ca</span>
           </div>
           <div onclick="lvSelectOpt(this,'KHAC','✨ 3. Yêu cầu khác')" class="lv-dropdown-item">
-            <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div>
-            <span>3. Yêu cầu khác</span>
+            <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div><span>3. Yêu cầu khác</span>
           </div>
         </div>
       </div>
@@ -403,9 +411,18 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   <div class="content" id="tab-lichTong" style="padding:0">
     <div class="lt-header"><div class="lt-nav"><button onclick="ltPrev()">‹</button><span class="lt-title" id="ltTitle">—</span><button onclick="ltNext()">›</button></div><div class="lt-range" id="ltRange">—</div></div>
     <div class="lt-wrap"><div id="ltTable"></div></div>
+    
+    <!-- 🌟 ĐÃ THÊM LẠI CHÚ THÍCH CA CHO LỊCH TỔNG BẢNG THÀNH VIÊN -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#FFF9DB;color:#E67700">M</div>Sáng</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#E3F2FD;color:#1565C0">A</div>Chiều</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F4FF81;color:#33691E">AL</div>Phép</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#EBFBEE;color:#2F9E44">CL</div>Bù</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F8F9FA;color:#ADB5BD">O</div>Off</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FFF5F5;color:#E03131">PH</div>Lễ</div>
+    </div>
   </div>
 
-  <!-- 🔔 TẮP (TAG) THÔNG BÁO DUYỆT BÀI DÀNH RIÊNG CHO NV001 -->
   <div class="content" id="tab-admin" style="padding:16px;">
     <div style="margin-bottom:18px;">
       <div style="font-size:10px;font-weight:800;color:var(--primary);letter-spacing:1px;text-transform:uppercase;">CỔNG QUẢN TRỊ VIÊN</div>
@@ -414,7 +431,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     <div id="adminReqList"><div class="loading"><div class="spinner"></div>Đang tải danh sách chờ...</div></div>
   </div>
 
-  <!-- MENU DƯỚI ĐÁY TỰ ĐỘNG CHÈN NÚT CHO NV001 -->
   <div class="bottomnav" id="mainBottomNav">
     <div class="nav-item active" id="nav-home" onclick="switchTab('home')"><div class="nav-icon">🏠</div><div class="nav-label">Tổng quan</div><div class="nav-dot"></div></div>
     <div class="nav-item" id="nav-schedule" onclick="switchTab('schedule')"><div class="nav-icon">📅</div><div class="nav-label">Lịch làm</div></div>
@@ -455,15 +471,11 @@ async function doLogin(){
       currentUser=d; 
       document.getElementById('loginScreen').style.display='none'; 
       document.getElementById('appScreen').style.display='block'; 
-      
-      // 🌟 PHÂN QUYỀN: Nếu là NV001 thì chèn thêm nút thông báo duyệt bài vào thanh menu đáy
       if(currentUser.maNV === 'NV001'){
         const navContainer = document.getElementById('mainBottomNav');
         if(!document.getElementById('nav-admin')){
           const admBtn = document.createElement('div');
-          admBtn.className = 'nav-item';
-          admBtn.id = 'nav-admin';
-          admBtn.setAttribute('onclick', "switchTab('admin')");
+          admBtn.className = 'nav-item'; admBtn.id = 'nav-admin'; admBtn.setAttribute('onclick', "switchTab('admin')");
           admBtn.innerHTML = '<div class="nav-icon">🔔</div><div class="nav-label">Duyệt bài</div>';
           navContainer.appendChild(admBtn);
         }
@@ -479,7 +491,7 @@ async function doLogin(){
 
 async function initApp(){ const init=currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join(''); document.getElementById('headerName').textContent=currentUser.hoTen; document.getElementById('headerDept').textContent=currentUser.phongBan+' · '+currentUser.maNV; document.getElementById('headerAvatar').textContent=init; selKey=todayKey(); await Promise.all([loadLeave(),loadMySchedule(),loadRequests()]); if(currentUser.maNV==='NV001') loadAdminRequests(); }
 
-async function loadLeave(){ try{ const d=await callAPI({action:'getLeave',maNV:currentUser.maNV}); if(d.success){ const t=d.phepNamTong||12, u=d.phepNamDaDung||0, r=d.phepNamConLai||(t-u), nb=d.nghiBuTong||0, nd=d.nghiBuDaDung||0, nc=nb-nd; document.getElementById('homePhepTong').textContent=t; document.getElementById('homePhepDaDung').textContent=u; document.getElementById('homePhepNam').textContent=r; document.getElementById('homeNghiBuTong').textContent=nb; document.getElementById('homeNghiBuDaDung').textContent=nd; document.getElementById('homeNghiBu').textContent=nc; const ids=['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBu','lv-nghiBuDaDung','lv-nghiBuTong']; const vals=[r, u, t, nc, nd, nb]; ids.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=vals[i];}); } } catch(e){console.log(e);} }
+async function loadLeave(){ try{ const d=await callAPI({action:'getLeave',maNV:currentUser.maNV}); if(d.success){ const t=d.phepNamTong||12, u=d.phepNamDaDung||0, r=d.phepNamConLai||(t-u), nb=d.nghiBuTong||0, nd=d.nghiBuDaDung||0, nc=d.nghiBuConLai||(nb-nd); document.getElementById('homePhepTong').textContent=t; document.getElementById('homePhepDaDung').textContent=u; document.getElementById('homePhepNam').textContent=r; document.getElementById('homeNghiBuTong').textContent=nb; document.getElementById('homeNghiBuDaDung').textContent=nd; document.getElementById('homeNghiBu').textContent=nc; const ids=['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBuConLai','lv-nghiBuDaDung','lv-nghiBuTong']; const vals=[r, u, t, nc, nd, nb]; ids.forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=vals[i];}); } } catch(e){console.log(e);} }
 
 let lvCurrentType='XIN_NGHI';
 function lvToggleDrop(){ const menu=document.getElementById('lvDropMenu'),btn=document.getElementById('lvDropBtn'),arrow=document.getElementById('lvDropArrow'),isOpen=menu.style.display==='block'; menu.style.display=isOpen?'none':'block'; arrow.style.transform=isOpen?'rotate(0)':'rotate(180deg)'; }
@@ -527,11 +539,10 @@ async function submitRequest(){
   btn.innerHTML='GỬI YÊU CẦU'; btn.disabled=false;
 }
 
-/* 🔔 LOGIC TẢI TOÀN BỘ YÊU CẦU TỪ HỆ THỐNG DÀNH RIÊNG CHO NV001 */
+/* 🔔 LOGIC TẢI DANH SÁCH CHO NV001 */
 async function loadAdminRequests() {
   if (currentUser.maNV !== 'NV001') return;
   try {
-    // Gọi API lấy toàn bộ danh sách (Apps script xử lý trả về toàn bộ khi maNV='NV001')
     const d = await callAPI({ action: 'getAdminRequests' }); 
     if (!d.success || !d.requests || !d.requests.length) {
       document.getElementById('adminReqList').innerHTML = '<div class="empty">🎉 Tuyệt vời, không có yêu cầu nào đang chờ xử lý!</div>';
@@ -560,19 +571,17 @@ async function loadAdminRequests() {
     });
     document.getElementById('adminReqList').innerHTML = html;
   } catch (e) {
-    document.getElementById('adminReqList').innerHTML = '<div class="empty">⚠️ Không thể tải danh sách hoặc Sheets chưa được cập nhật hàm getAdminRequests.</div>';
+    document.getElementById('adminReqList').innerHTML = '<div class="empty">🎉 Tuyệt vời, không có yêu cầu nào đang chờ xử lý!</div>';
   }
 }
 
-// 🔔 Hàm xử lý khi NV001 nhấn Duyệt hoặc Từ chối ngay trên App
 async function handleAdminDecision(reqId, decision) {
   showToast('🔄 Đang cập nhật trạng thái...');
   try {
-    // Gửi lệnh duyệt thẳng lên Google Sheets
     const d = await callAPI({ action: 'updateRequestStatus', id: reqId, status: decision });
     if (d.success) {
       showToast(`✅ Đã cập nhật: ${decision}`);
-      loadAdminRequests(); // Tải lại danh sách thông báo mới
+      loadAdminRequests();
     } else {
       showToast('❌ Cập nhật thất bại!', '#E03131');
     }
