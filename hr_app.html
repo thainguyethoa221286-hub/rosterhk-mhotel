@@ -83,6 +83,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .bal-row-val.big  { font-size:22px; }
 .bal-row.highlight { background:var(--gx-gold-bg); margin:4px -14px -4px; padding:8px 14px; border-radius:0 0 12px 12px; border-bottom:none; }
 .balance-item.comp .bal-row.highlight { background:var(--green-light); }
+.bal-row.danger .bal-row-label, .bal-row.danger .bal-row-val { color:#DC2626 !important; }
 .req-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
 .req-item:last-child { border-bottom:none; }
 .req-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
@@ -263,6 +264,20 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 /* Admin nav badge */
 .nav-admin-dot { position:absolute; top:-2px; right:-4px; width:8px; height:8px; background:var(--red); border-radius:50%; border:1.5px solid white; }
 .nav-icon-wrap { position:relative; display:inline-block; }
+
+/* ===== MODAL: LÝ DO TỪ CHỐI ĐƠN ===== */
+.modal-overlay { position:fixed; inset:0; background:rgba(26,17,10,0.55); backdrop-filter:blur(2px); z-index:400; display:none; align-items:flex-end; justify-content:center; }
+.modal-box { background:white; border-radius:24px 24px 0 0; padding:22px 20px 24px; width:100%; max-width:430px; box-shadow:0 -10px 40px rgba(0,0,0,0.2); animation:modalUp .2s ease; }
+@keyframes modalUp { from{ transform:translateY(30px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
+.modal-title { font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+.modal-sub { font-size:12px; color:var(--muted); margin-bottom:14px; }
+.modal-textarea { width:100%; border:1.5px solid var(--border); border-radius:14px; padding:12px 14px; font-size:14px; color:var(--text); font-family:inherit; resize:none; height:90px; outline:none; line-height:1.5; }
+.modal-textarea:focus { border-color:var(--red); }
+.modal-error { font-size:11px; color:var(--red); font-weight:700; margin-top:6px; display:none; }
+.modal-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+.modal-btn-cancel { background:var(--bg); color:var(--muted); border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; }
+.modal-btn-confirm { background:linear-gradient(135deg,#E03131,#C92A2A); color:white; border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; }
+.modal-btn-confirm:disabled { opacity:0.6; cursor:not-allowed; }
 </style>
 </head>
 <body>
@@ -309,13 +324,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <div class="bal-row"><span class="bal-row-label">Tổng</span><span class="bal-row-val big" id="homePhepTong">—</span></div>
           <div class="bal-row"><span class="bal-row-label">Đã dùng</span><span class="bal-row-val used" id="homePhepDaDung">—</span></div>
           <div class="bal-row"><span class="bal-row-label">Còn lại</span><span class="bal-row-val" id="homePhepNam">—</span></div>
-          <div class="bal-row highlight"><span class="bal-row-label">Phép thực tế còn</span><span class="bal-row-val" id="homePhepThucTe">—</span></div>
+          <div class="bal-row highlight danger"><span class="bal-row-label">Phép thực tế còn</span><span class="bal-row-val" id="homePhepThucTe">—</span></div>
         </div>
         <div class="balance-item comp">
           <div class="bal-title">🔄 Nghỉ bù</div>
           <div class="bal-row"><span class="bal-row-label">Tổng</span><span class="bal-row-val big" id="homeNghiBuTong">—</span></div>
           <div class="bal-row"><span class="bal-row-label">Đã dùng</span><span class="bal-row-val used" id="homeNghiBuDaDung">—</span></div>
-          <div class="bal-row"><span class="bal-row-label">Còn lại</span><span class="bal-row-val" id="homeNghiBu">—</span></div>
+          <div class="bal-row danger"><span class="bal-row-label">Còn lại</span><span class="bal-row-val" id="homeNghiBu">—</span></div>
         </div>
       </div>
     </div>
@@ -569,6 +584,20 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   </div>
 </div>
 
+<!-- MODAL: LÝ DO TỪ CHỐI ĐƠN -->
+<div class="modal-overlay" id="rejectModalOverlay">
+  <div class="modal-box">
+    <div class="modal-title">✕ Từ chối yêu cầu</div>
+    <div class="modal-sub">Vui lòng nhập lý do để nhân viên được biết.</div>
+    <textarea class="modal-textarea" id="rejectReasonText" placeholder="VD: Thiếu người trực ca hôm đó, vui lòng chọn ngày khác..."></textarea>
+    <div class="modal-error" id="rejectModalError">⚠️ Vui lòng nhập lý do từ chối trước khi gửi.</div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeRejectModal()">Huỷ</button>
+      <button class="modal-btn-confirm" id="rejectConfirmBtn" onclick="confirmReject()">Gửi từ chối</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fSbz-_mTWWwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
 
@@ -697,7 +726,7 @@ function ltPrev(){ ltMonth--; if(ltMonth<0){ltMonth=11;ltYear--;} loadLichTong()
 function ltNext(){ ltMonth++; if(ltMonth>11){ltMonth=0;ltYear++;} loadLichTong(); }
 
 /* ===== REQUESTS (NHÂN VIÊN) ===== */
-async function loadRequests(){ try{ const d=await callAPI({action:'getRequests',maNV:currentUser.maNV}); const icons={XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',AL:'🏖️',CL:'🔄'}; const colors={XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',AL:'#FFF9DB',CL:'#EBFBEE'}; if(!d.success||!d.requests||!d.requests.length){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; return; } let html=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; let lblLoai=r.loaiNghi; if(lblLoai==='XIN_NGHI')lblLoai='Xin nghỉ'; if(lblLoai==='DOICA')lblLoai='Đổi ca'; if(lblLoai==='KHAC')lblLoai='Yêu cầu khác'; html+='<div class="req-item"><div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày</div></div><div class="req-status '+sc+'">'+r.trangThai+'</div></div>'; }); document.getElementById('homeRequests').innerHTML=html; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML=html; } catch(e){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; } }
+async function loadRequests(){ try{ const d=await callAPI({action:'getRequests',maNV:currentUser.maNV}); const icons={XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',AL:'🏖️',CL:'🔄'}; const colors={XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',AL:'#FFF9DB',CL:'#EBFBEE'}; if(!d.success||!d.requests||!d.requests.length){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; return; } let html=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; let lblLoai=r.loaiNghi; if(lblLoai==='XIN_NGHI')lblLoai='Xin nghỉ'; if(lblLoai==='DOICA')lblLoai='Đổi ca'; if(lblLoai==='KHAC')lblLoai='Yêu cầu khác'; const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; html+='<div class="req-item"><div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div></div>'; }); document.getElementById('homeRequests').innerHTML=html; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML=html; } catch(e){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; } }
 
 /* ===== SUBMIT REQUEST ===== */
 async function submitRequest(){
@@ -805,12 +834,15 @@ function renderAdminList(){
         ? '<span style="font-size:10px;font-weight:800;background:#EBFBEE;color:#2F9E44;padding:3px 10px;border-radius:20px;">✓ Đã duyệt</span>'
         : '<span style="font-size:10px;font-weight:800;background:#FFF5F5;color:#E03131;padding:3px 10px;border-radius:20px;">✕ Từ chối</span>');
 
+    const rejectReasonBlock = (!isPending && r.trangThai==='Từ chối' && r.lyDoTuChoi)
+      ? `<div class="admin-card-reason"><div class="admin-reason-box" style="border-left-color:var(--red)">✕ Lý do từ chối: ${r.lyDoTuChoi}</div></div>`
+      : '';
     const actionBtns = isPending
       ? `<div class="admin-card-actions">
           <button class="btn-approve" onclick="handleAdminAction('${r.id||r.maYC}','Đã duyệt',this)">✓ Duyệt</button>
-          <button class="btn-reject"  onclick="handleAdminAction('${r.id||r.maYC}','Từ chối',this)">✕ Từ chối</button>
+          <button class="btn-reject"  onclick="openRejectModal('${r.id||r.maYC}')">✕ Từ chối</button>
         </div>`
-      : `<div style="padding:10px 16px 14px;display:flex;justify-content:center;">${statusBadge}</div>`;
+      : `${rejectReasonBlock}<div style="padding:10px 16px 14px;display:flex;justify-content:center;">${statusBadge}</div>`;
 
     html += `
     <div class="admin-card" id="acard-${r.id||r.maYC}">
@@ -849,13 +881,16 @@ function renderAdminList(){
   document.getElementById('adminList').innerHTML = html;
 }
 
-async function handleAdminAction(id, status, btnEl){
+async function handleAdminAction(id, status, btnEl, lyDoTuChoi){
   // Vô hiệu hóa cả 2 nút trong card này
   const card = document.getElementById('acard-'+id);
+  if(!btnEl && card){ btnEl = status==='Đã duyệt' ? card.querySelector('.btn-approve') : card.querySelector('.btn-reject'); }
   if(card){ card.querySelectorAll('button').forEach(b=>{b.disabled=true; b.style.opacity='0.5';}); }
-  btnEl.textContent = status === 'Đã duyệt' ? '⏳ Đang duyệt...' : '⏳ Đang từ chối...';
+  if(btnEl) btnEl.textContent = status === 'Đã duyệt' ? '⏳ Đang duyệt...' : '⏳ Đang từ chối...';
   try{
-    const d = await callAPI({ action:'updateRequestStatus', id, status });
+    const params = { action:'updateRequestStatus', id, status };
+    if(status === 'Từ chối' && lyDoTuChoi) params.lyDoTuChoi = lyDoTuChoi;
+    const d = await callAPI(params);
     if(d.success){
       showToast(status==='Đã duyệt' ? '✅ Đã duyệt yêu cầu!' : '✕ Đã từ chối yêu cầu.', status==='Đã duyệt' ? '#2F9E44' : '#E03131');
       // Reload danh sách
@@ -863,15 +898,36 @@ async function handleAdminAction(id, status, btnEl){
     } else {
       showToast('❌ Cập nhật thất bại. Thử lại!','#E03131');
       if(card){ card.querySelectorAll('button').forEach(b=>{b.disabled=false; b.style.opacity='1';}); }
-      if(status==='Đã duyệt') btnEl.textContent='✓ Duyệt';
-      else btnEl.textContent='✕ Từ chối';
+      if(btnEl) btnEl.textContent = status==='Đã duyệt' ? '✓ Duyệt' : '✕ Từ chối';
     }
   } catch(e){
     showToast('❌ Lỗi kết nối. Thử lại!','#E03131');
     if(card){ card.querySelectorAll('button').forEach(b=>{b.disabled=false; b.style.opacity='1';}); }
-    if(status==='Đã duyệt') btnEl.textContent='✓ Duyệt';
-    else btnEl.textContent='✕ Từ chối';
+    if(btnEl) btnEl.textContent = status==='Đã duyệt' ? '✓ Duyệt' : '✕ Từ chối';
   }
+}
+
+/* ===== MODAL: LÝ DO TỪ CHỐI ===== */
+let rejectTargetId = null;
+function openRejectModal(id){
+  rejectTargetId = id;
+  document.getElementById('rejectReasonText').value = '';
+  document.getElementById('rejectModalError').style.display = 'none';
+  document.getElementById('rejectModalOverlay').style.display = 'flex';
+}
+function closeRejectModal(){
+  document.getElementById('rejectModalOverlay').style.display = 'none';
+  rejectTargetId = null;
+}
+async function confirmReject(){
+  const reason = document.getElementById('rejectReasonText').value.trim();
+  if(!reason){
+    document.getElementById('rejectModalError').style.display = 'block';
+    return;
+  }
+  const id = rejectTargetId;
+  closeRejectModal();
+  await handleAdminAction(id, 'Từ chối', null, reason);
 }
 
 /* ===== TAB SWITCHING ===== */
