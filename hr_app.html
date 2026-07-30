@@ -11,66 +11,78 @@
   --accent: #F76707; --green: #2F9E44; --green-light: #EBFBEE;
   --red: #E03131; --red-light: #FFF5F5; --yellow: #E67700; --yellow-light: #FFF9DB;
   --bg: #F0F4FF; --surface: #FFFFFF; --text: #1A1B2E; --muted: #6C757D; --border: #E9ECEF;
+  /* Galaxy Cam Ấm palette (dùng cho Login, Header, Dashboard, Duyệt bài, Bottom Nav) */
+  --gx-1: #FF9A3C; --gx-2: #F76707; --gx-3: #E64D00; --gx-deep: #7A2E00;
+  --gx-gold: #FFB020; --gx-gold-deep: #B36B00; --gx-gold-bg: #FFF4DF;
+  --gx-glass: rgba(255,255,255,0.55); --gx-glass-border: rgba(255,255,255,0.6);
 }
 body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); min-height: 100vh; max-width: 430px; margin: 0 auto; }
 
 /* LOGIN */
-#loginScreen { min-height: 100vh; background: linear-gradient(160deg,#3B5BDB,#1a2d8a); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; }
-.login-logo { width:80px; height:80px; background:rgba(255,255,255,0.15); border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:16px; border:1px solid rgba(255,255,255,0.2); }
-.login-title { font-size:26px; font-weight:800; color:white; margin-bottom:4px; }
-.login-sub { font-size:13px; color:rgba(255,255,255,0.65); margin-bottom:36px; }
-.login-card { background:white; border-radius:24px; padding:28px 24px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
-.login-card h3 { font-size:18px; font-weight:700; color:var(--text); margin-bottom:20px; }
+#loginScreen { min-height: 100vh; background: radial-gradient(120% 100% at 15% 0%, #FFB35C 0%, #F76707 42%, #B33D00 78%, #4A1800 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; position:relative; overflow:hidden; }
+#loginScreen::before { content:''; position:absolute; width:280px; height:280px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 70%); top:-60px; right:-80px; }
+#loginScreen::after { content:''; position:absolute; width:320px; height:320px; border-radius:50%; background:radial-gradient(circle,rgba(255,178,32,0.25),transparent 70%); bottom:-100px; left:-100px; }
+.login-logo { width:80px; height:80px; background:rgba(255,255,255,0.18); border-radius:26px; display:flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:16px; border:1px solid rgba(255,255,255,0.35); backdrop-filter:blur(10px); position:relative; z-index:1; }
+.login-title { font-size:26px; font-weight:800; color:white; margin-bottom:4px; position:relative; z-index:1; }
+.login-sub { font-size:13px; color:rgba(255,255,255,0.75); margin-bottom:36px; position:relative; z-index:1; }
+.login-card { background:var(--gx-glass); backdrop-filter:blur(20px); border:1px solid var(--gx-glass-border); border-radius:28px; padding:28px 24px; width:100%; box-shadow:0 24px 60px rgba(74,24,0,0.35); position:relative; z-index:1; }
+.login-card h3 { font-size:18px; font-weight:700; color:var(--gx-deep); margin-bottom:20px; }
 .form-group { margin-bottom:14px; }
-.form-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px; }
-.form-input { width:100%; border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; font-size:15px; color:var(--text); background:var(--bg); outline:none; font-family:inherit; }
-.form-input:focus { border-color:var(--primary); }
-.btn-login { width:100%; background:var(--primary); color:white; border:none; border-radius:12px; padding:14px; font-size:16px; font-weight:700; cursor:pointer; font-family:inherit; margin-top:8px; }
+.form-label { font-size:11px; font-weight:700; color:#8A5A2E; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:6px; }
+.form-input { width:100%; border:1.5px solid rgba(230,140,0,0.25); border-radius:14px; padding:14px 14px; font-size:16px; color:var(--gx-deep); background:rgba(255,255,255,0.7); outline:none; font-family:inherit; text-align:center; letter-spacing:2px; font-weight:700; }
+.form-input:focus { border-color:var(--gx-2); background:white; }
+.btn-login { width:100%; background:linear-gradient(135deg,var(--gx-1),var(--gx-3)); color:white; border:none; border-radius:16px; padding:15px; font-size:16px; font-weight:800; cursor:pointer; font-family:inherit; margin-top:10px; box-shadow:0 10px 24px rgba(247,103,7,0.4); letter-spacing:0.3px; }
 .btn-login:disabled { opacity:0.7; }
 .login-error { background:var(--red-light); color:var(--red); border-radius:10px; padding:10px 14px; font-size:13px; font-weight:600; margin-top:12px; display:none; text-align:center; }
 
 /* APP GENERAL */
-#appScreen { display:none; min-height:100vh; padding-bottom:72px; }
-.header { background:var(--primary); padding:48px 20px 20px; color:white; }
-.header-row { display:flex; justify-content:space-between; align-items:flex-start; }
-.header-left .greeting { font-size:12px; opacity:0.7; }
-.header-left .name { font-size:22px; font-weight:800; margin-top:2px; }
-.header-left .dept { font-size:11px; opacity:0.6; margin-top:2px; }
-.avatar { width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:white; border:2px solid rgba(255,255,255,0.3); flex-shrink:0; }
+#appScreen { display:none; min-height:100vh; padding-bottom:96px; }
+.header { background:radial-gradient(130% 160% at 10% -20%, #FFB35C 0%, #F76707 45%, #C74600 100%); padding:48px 20px 24px; color:white; position:relative; overflow:hidden; }
+.header::after { content:''; position:absolute; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,0.16),transparent 70%); top:-80px; right:-40px; pointer-events:none; }
+.header-row { display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1; }
+.header-left .greeting { font-size:11px; opacity:0.8; font-weight:700; letter-spacing:0.4px; text-transform:uppercase; }
+.header-left .name { font-size:22px; font-weight:800; margin-top:3px; }
+.header-left .dept { font-size:11px; opacity:0.75; margin-top:3px; }
+.header-right { display:flex; align-items:center; gap:10px; }
+.bell-wrap { position:relative; width:40px; height:40px; border-radius:14px; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer; backdrop-filter:blur(6px); }
+.bell-dot { position:absolute; top:7px; right:8px; width:7px; height:7px; border-radius:50%; background:#FF3B30; border:1.5px solid var(--gx-2); }
+.avatar { width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:white; border:2px solid rgba(255,255,255,0.4); flex-shrink:0; }
 
 .content { padding:16px; display:none; }
 .content.active { display:block; }
 .card { background:var(--surface); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 .card-title { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:12px; }
 
-/* TODAY SHIFT */
-.shift-card { border-radius:16px; padding:18px; margin-bottom:12px; position:relative; overflow:hidden; }
-.shift-card.morning   { background:linear-gradient(135deg,#FF8C00,#F76707); }
-.shift-card.afternoon { background:linear-gradient(135deg,#3B5BDB,#2F4AC7); }
-.shift-card.off       { background:linear-gradient(135deg,#868E96,#6C757D); }
-.shift-card.leave     { background:linear-gradient(135deg,#2F9E44,#258835); }
-.shift-lbl  { font-size:10px; font-weight:800; color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
-.shift-name { font-size:26px; font-weight:900; color:white; margin-bottom:8px; }
-.shift-time { font-size:18px; font-weight:700; color:white; margin-bottom:6px; }
-.shift-date { font-size:12px; color:rgba(255,255,255,0.75); }
-.shift-badge { position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.25); border-radius:20px; padding:4px 14px; font-size:14px; font-weight:900; color:white; }
+/* TODAY SHIFT — Dashboard (Galaxy Cam Ấm glass) */
+.shift-card { border-radius:22px; padding:20px; margin-bottom:12px; position:relative; overflow:hidden; }
+.shift-card.morning   { background:linear-gradient(135deg,#FFA24D,#F76707 55%,#C74600); box-shadow:0 12px 30px rgba(247,103,7,0.28); }
+.shift-card.afternoon { background:linear-gradient(135deg,#4C6EF5,#3B5BDB); box-shadow:0 12px 30px rgba(59,91,219,0.25); }
+.shift-card.off       { background:linear-gradient(135deg,#ADB5BD,#868E96); }
+.shift-card.leave     { background:linear-gradient(135deg,#40C057,#2F9E44); }
+.shift-lbl  { font-size:10px; font-weight:800; color:rgba(255,255,255,0.85); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.shift-name { font-size:26px; font-weight:900; color:white; margin-bottom:10px; }
+.shift-time { font-size:17px; font-weight:700; color:white; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+.shift-date { font-size:12px; color:rgba(255,255,255,0.8); display:flex; align-items:center; gap:6px; }
+.shift-badge { position:absolute; top:18px; right:18px; background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:5px 15px; font-size:14px; font-weight:900; color:white; backdrop-filter:blur(6px); }
 
-/* BALANCE */
+/* BALANCE — Ngày phép (Phép năm = vàng, Nghỉ bù = xanh lá) */
 .balance-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.balance-item { border-radius:12px; padding:14px 12px; }
-.balance-item.annual { background:var(--primary-light); }
-.balance-item.comp   { background:var(--green-light); }
-.bal-title { font-size:11px; font-weight:800; margin-bottom:10px; }
-.balance-item.annual .bal-title { color:var(--primary); }
+.balance-item { border-radius:16px; padding:14px 14px; background:var(--surface); border:1px solid var(--border); border-left:4px solid transparent; box-shadow:0 2px 10px rgba(0,0,0,0.04); }
+.balance-item.annual { border-left-color:var(--gx-gold); }
+.balance-item.comp   { border-left-color:var(--green); }
+.bal-title { font-size:11px; font-weight:800; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.balance-item.annual .bal-title { color:var(--gx-gold-deep); }
 .balance-item.comp   .bal-title { color:var(--green); }
-.bal-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+.bal-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid var(--border); }
 .bal-row:last-child { border-bottom:none; }
 .bal-row-label { font-size:10px; color:var(--muted); }
 .bal-row-val { font-size:16px; font-weight:800; }
-.balance-item.annual .bal-row-val { color:var(--primary); }
+.balance-item.annual .bal-row-val { color:var(--gx-gold-deep); }
 .balance-item.comp   .bal-row-val { color:var(--green); }
 .bal-row-val.used { color:var(--accent)!important; font-size:14px; }
 .bal-row-val.big  { font-size:22px; }
+.bal-row.highlight { background:var(--gx-gold-bg); margin:4px -14px -4px; padding:8px 14px; border-radius:0 0 12px 12px; border-bottom:none; }
+.balance-item.comp .bal-row.highlight { background:var(--green-light); }
 .req-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
 .req-item:last-child { border-bottom:none; }
 .req-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
@@ -81,8 +93,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .status-approved { background:var(--green-light); color:var(--green); }
 .status-pending  { background:var(--yellow-light); color:var(--yellow); }
 .status-rejected { background:var(--red-light); color:var(--red); }
+.card-title-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.link-mini { font-size:11px; font-weight:800; color:var(--gx-2); text-decoration:none; }
+.btn-new-mini { background:linear-gradient(135deg,var(--gx-1),var(--gx-2)); color:white; border:none; border-radius:20px; padding:6px 14px; font-size:11px; font-weight:800; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px; }
 
-/* CALENDAR */
+/* CALENDAR — TAB LỊCH LÀM (KHÔNG THAY ĐỔI) */
 .cal-wrap { background:var(--surface); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 .cal-nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
 .cal-title { font-size:17px; font-weight:800; color:var(--text); }
@@ -148,7 +163,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .lv-radio-dot-inner { width: 6px; height: 6px; border-radius: 50%; background: white; display: none; }
 .lv-dropdown-item.selected .lv-radio-dot-inner { display: block; }
 
-/* LỊCH TỔNG BẢNG */
+/* LỊCH TỔNG BẢNG — TAB LỊCH TỔNG (KHÔNG THAY ĐỔI) */
 .lt-header { background:var(--primary); padding:12px 16px; display:flex; justify-content:space-between; align-items:center; }
 .lt-nav { display:flex; align-items:center; gap:10px; }
 .lt-nav button { width:30px; height:30px; border-radius:8px; border:1.5px solid rgba(255,255,255,.3); background:rgba(255,255,255,.15); cursor:pointer; font-size:16px; color:white; }
@@ -180,36 +195,44 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .legend-item { display:flex; align-items:center; gap:4px; font-size:10px; }
 .legend-dot  { width:20px; height:15px; border-radius:4px; font-size:8px; font-weight:800; display:flex; align-items:center; justify-content:center; }
 
-/* NAVIGATION */
-.bottomnav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:white; border-top:1px solid var(--border); display:flex; padding:8px 0 16px; box-shadow:0 -4px 20px rgba(0,0,0,.08); z-index:100; }
-.nav-item  { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px 0; }
-.nav-icon  { font-size:20px; }
-.nav-label { font-size:9px; font-weight:600; color:var(--muted); }
-.nav-item.active .nav-label { color:var(--primary); }
-.nav-dot   { width:4px; height:4px; background:var(--primary); border-radius:50%; }
+/* NAVIGATION — Floating Glassmorphism */
+.bottomnav { position:fixed; bottom:14px; left:50%; transform:translateX(-50%); width:calc(100% - 28px); max-width:402px; background:rgba(255,255,255,0.72); backdrop-filter:blur(20px) saturate(160%); -webkit-backdrop-filter:blur(20px) saturate(160%); border:1px solid rgba(255,255,255,0.9); border-radius:26px; display:flex; padding:10px 6px; box-shadow:0 16px 40px rgba(74,24,0,0.16), 0 2px 8px rgba(0,0,0,0.04); z-index:100; }
+.nav-item  { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:6px 2px; border-radius:16px; transition:background .15s; }
+.nav-icon  { font-size:19px; }
+.nav-label { font-size:9px; font-weight:700; color:var(--muted); }
+.nav-item.active { background:linear-gradient(135deg,rgba(255,154,60,0.16),rgba(247,103,7,0.1)); }
+.nav-item.active .nav-label { color:var(--gx-2); }
+.nav-dot   { width:4px; height:4px; background:var(--gx-2); border-radius:50%; }
 .toast   { position:fixed; top:60px; left:50%; transform:translateX(-50%); color:white; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:700; z-index:999; display:none; white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,.15); }
 .loading { text-align:center; padding:30px; color:var(--muted); font-size:13px; }
 .spinner { width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 10px; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .empty { text-align:center; padding:24px; color:var(--muted); font-size:13px; }
 
-/* ===== ADMIN TAB — TAB DUYỆT BÀI ===== */
-#tab-admin { padding:0; background:#F0F2F8; min-height:100vh; }
-.admin-header { background:linear-gradient(135deg,#1a2d8a,#3B5BDB); padding:28px 20px 20px; }
-.admin-header-eyebrow { font-size:10px; font-weight:800; color:rgba(255,255,255,0.65); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
-.admin-header-title { font-size:26px; font-weight:900; color:white; letter-spacing:-0.5px; display:flex; align-items:center; gap:10px; }
-.admin-badge-count { background:var(--accent); color:white; font-size:12px; font-weight:800; padding:2px 10px; border-radius:20px; }
+/* ===== ADMIN TAB — TAB DUYỆT BÀI (Galaxy Cam Ấm) ===== */
+#tab-admin { padding:0; background:#FBF6F0; min-height:100vh; }
+.admin-header { background:radial-gradient(130% 160% at 10% -20%, #FFB35C 0%, #F76707 45%, #C74600 100%); padding:28px 20px 20px; position:relative; overflow:hidden; }
+.admin-header::after { content:''; position:absolute; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,0.16),transparent 70%); top:-90px; right:-40px; }
+.admin-header-eyebrow { font-size:10px; font-weight:800; color:rgba(255,255,255,0.75); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; position:relative; z-index:1; }
+.admin-header-title { font-size:24px; font-weight:900; color:white; letter-spacing:-0.5px; display:flex; align-items:center; gap:10px; position:relative; z-index:1; }
+.admin-badge-count { background:white; color:var(--gx-2); font-size:12px; font-weight:800; padding:2px 10px; border-radius:20px; }
+
+/* Tab Switcher: Chờ duyệt / Đã duyệt */
+.admin-tab-switch { display:flex; gap:8px; padding:14px 16px 0; position:relative; z-index:1; }
+.admin-tab-btn { flex:1; padding:10px 8px; border-radius:14px; border:1.5px solid rgba(255,255,255,0.4); background:rgba(255,255,255,0.16); color:rgba(255,255,255,0.9); font-size:13px; font-weight:800; cursor:pointer; font-family:inherit; backdrop-filter:blur(6px); transition:all .15s; }
+.admin-tab-btn.active { background:white; color:var(--gx-2); border-color:white; box-shadow:0 8px 18px rgba(0,0,0,0.15); }
+
 .admin-filter-row { display:flex; gap:8px; padding:14px 16px 0; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .admin-filter-row::-webkit-scrollbar { display:none; }
 .admin-filter-btn { flex-shrink:0; padding:6px 14px; border-radius:20px; border:1.5px solid var(--border); background:white; font-size:11px; font-weight:700; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
-.admin-filter-btn.active { background:var(--primary); border-color:var(--primary); color:white; }
+.admin-filter-btn.active { background:var(--gx-2); border-color:var(--gx-2); color:white; }
 .admin-list { padding:12px 16px 16px; }
 
 /* Admin Request Card */
-.admin-card { background:white; border-radius:20px; margin-bottom:12px; box-shadow:0 2px 12px rgba(0,0,0,0.07); overflow:hidden; border:1.5px solid var(--border); transition:box-shadow .2s; }
+.admin-card { background:white; border-radius:20px; margin-bottom:12px; box-shadow:0 4px 16px rgba(74,24,0,0.06); overflow:hidden; border:1.5px solid #F3E4D4; transition:box-shadow .2s; }
 .admin-card-top { padding:16px 16px 12px; display:flex; align-items:flex-start; gap:12px; }
 .admin-avatar { width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; color:white; flex-shrink:0; }
-.admin-avatar.type-nghi  { background:linear-gradient(135deg,#F76707,#E64D00); }
+.admin-avatar.type-nghi  { background:linear-gradient(135deg,#FFA24D,#E64D00); }
 .admin-avatar.type-doica { background:linear-gradient(135deg,#3B5BDB,#2F4AC7); }
 .admin-avatar.type-khac  { background:linear-gradient(135deg,#7950F2,#5C3DC7); }
 .admin-card-info { flex:1; min-width:0; }
@@ -225,7 +248,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .admin-meta-label { font-size:9px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; }
 .admin-meta-val { font-size:12px; font-weight:700; color:var(--text); }
 .admin-card-reason { padding:0 16px 12px; }
-.admin-reason-box { background:#F7F8FC; border-radius:10px; padding:10px 12px; font-size:12px; color:#555; line-height:1.5; border-left:3px solid var(--primary); }
+.admin-reason-box { background:#FFF8F0; border-radius:10px; padding:10px 12px; font-size:12px; color:#555; line-height:1.5; border-left:3px solid var(--gx-2); }
 .admin-card-actions { padding:12px 16px 16px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .btn-approve { background:linear-gradient(135deg,#2F9E44,#258835); color:white; border:none; border-radius:12px; padding:12px; font-size:13px; font-weight:800; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:6px; transition:opacity .15s; }
 .btn-approve:active { opacity:0.8; }
@@ -250,12 +273,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   <div class="login-card">
     <h3>Đăng nhập</h3>
     <div class="form-group">
-      <label class="form-label">Mã nhân viên</label>
-      <input type="text" id="inputMaNV" class="form-input" placeholder="VD: NV001" autocomplete="off" style="text-transform:uppercase">
-    </div>
-    <div class="form-group">
       <label class="form-label">Mật khẩu</label>
-      <input type="password" id="inputMatKhau" class="form-input" placeholder="Nhập mật khẩu">
+      <input type="password" id="inputMatKhau" class="form-input" placeholder="••••••">
     </div>
     <button class="btn-login" id="btnLogin" onclick="doLogin()">Đăng nhập</button>
     <div class="login-error" id="loginError"></div>
@@ -270,7 +289,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
         <div class="name" id="headerName">—</div>
         <div class="dept" id="headerDept">—</div>
       </div>
-      <div class="avatar" id="headerAvatar">?</div>
+      <div class="header-right">
+        <div class="bell-wrap" onclick="switchTab('home')">🔔<span class="bell-dot" id="headerBellDot" style="display:none"></span></div>
+        <div class="avatar" id="headerAvatar">?</div>
+      </div>
     </div>
   </div>
   <div class="toast" id="toast"></div>
@@ -287,6 +309,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <div class="bal-row"><span class="bal-row-label">Tổng</span><span class="bal-row-val big" id="homePhepTong">—</span></div>
           <div class="bal-row"><span class="bal-row-label">Đã dùng</span><span class="bal-row-val used" id="homePhepDaDung">—</span></div>
           <div class="bal-row"><span class="bal-row-label">Còn lại</span><span class="bal-row-val" id="homePhepNam">—</span></div>
+          <div class="bal-row highlight"><span class="bal-row-label">Phép thực tế còn</span><span class="bal-row-val" id="homePhepThucTe">—</span></div>
         </div>
         <div class="balance-item comp">
           <div class="bal-title">🔄 Nghỉ bù</div>
@@ -297,7 +320,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Yêu cầu gần đây</div>
+      <div class="card-title-row">
+        <div class="card-title" style="margin-bottom:0">Yêu cầu gần đây</div>
+        <button class="btn-new-mini" onclick="switchTab('leave')">+ Tạo mới</button>
+      </div>
       <div id="homeRequests"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
     </div>
   </div>
@@ -509,6 +535,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
         🔔 Duyệt Yêu Cầu
         <span class="admin-badge-count" id="adminBadgeCount" style="display:none">0</span>
       </div>
+      <div class="admin-tab-switch">
+        <button class="admin-tab-btn active" id="adminStatusTabPending" onclick="adminSetStatusTab('pending')">Chờ duyệt <span id="adminPendingCountInline"></span></button>
+        <button class="admin-tab-btn" id="adminStatusTabDone" onclick="adminSetStatusTab('done')">Đã duyệt</button>
+      </div>
     </div>
     <div class="admin-filter-row" id="adminFilterRow">
       <button class="admin-filter-btn active" onclick="adminSetFilter('all',this)">Tất cả</button>
@@ -568,22 +598,21 @@ function getCaType(ca){ if(!ca) return 'none'; if(['M7','M8','M9','M10'].include
 function fmtDate(val){ if(!val)return''; if(typeof val==='string'&&val.match(/^\d{2}\/\d{2}\/\d{4}$/))return val; const d=new Date(val); if(!isNaN(d.getTime()))return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); return String(val); }
 function callAPI(params){ return new Promise((res,rej)=>{ const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*9999); const url=API+'?'+new URLSearchParams(params)+'&callback='+cb; const s=document.createElement('script'); const t=setTimeout(()=>{cleanup();rej(new Error('Timeout'));},15000); function cleanup(){delete window[cb];s.parentNode&&document.body.removeChild(s);} window[cb]=(d)=>{clearTimeout(t);cleanup();res(d);}; s.onerror=()=>{clearTimeout(t);cleanup();rej(new Error('Network'));}; s.src=url; document.body.appendChild(s); }); }
 
-/* ===== LOGIN ===== */
+/* ===== LOGIN (chỉ mật khẩu — backend tự dò maNV theo mật khẩu khớp trong sheet NhanVien) ===== */
 async function doLogin(){
-  const maNV=document.getElementById('inputMaNV').value.trim().toUpperCase();
   const matKhau=document.getElementById('inputMatKhau').value.trim();
-  if(!maNV||!matKhau)return;
+  if(!matKhau)return;
   const btn=document.getElementById('btnLogin'); btn.textContent='Đang kiểm tra...'; btn.disabled=true;
   document.getElementById('loginError').style.display='none';
   try{
-    const d=await callAPI({action:'login',maNV,matKhau});
+    const d=await callAPI({action:'login',matKhau});
     if(d.success){
       currentUser=d;
       document.getElementById('loginScreen').style.display='none';
       document.getElementById('appScreen').style.display='block';
       initApp();
     } else {
-      document.getElementById('loginError').textContent='Mã NV hoặc mật khẩu không đúng!';
+      document.getElementById('loginError').textContent='Mật khẩu không chính xác, vui lòng thử lại!';
       document.getElementById('loginError').style.display='block';
     }
   } catch(e){
@@ -629,6 +658,9 @@ async function loadLeave(){
       const t=d.phepNamTong||12, u=d.phepNamDaDung||0, r=d.phepNamConLai||(t-u);
       const nb=d.nghiBuTong||0, nd=d.nghiBuConLai||0, nc=nb-nd;
       document.getElementById('homePhepTong').textContent=t; document.getElementById('homePhepDaDung').textContent=u; document.getElementById('homePhepNam').textContent=r;
+      // "Phép thực tế còn" = phép còn lại trừ các ngày phép đã ĐĂNG KÝ nhưng đang chờ duyệt (nếu API trả về d.phepThucTeConLai thì dùng, không thì tạm lấy bằng "Còn lại")
+      const rt = (d.phepThucTeConLai !== undefined && d.phepThucTeConLai !== null) ? d.phepThucTeConLai : r;
+      const rtEl=document.getElementById('homePhepThucTe'); if(rtEl) rtEl.textContent=rt;
       document.getElementById('homeNghiBuTong').textContent=nb; document.getElementById('homeNghiBuDaDung').textContent=nd; document.getElementById('homeNghiBu').textContent=nc;
       const ids=['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBu','lv-nghiBuDaDung','lv-nghiBuTong'];
       const vals=[r,u,t,nc,nd,nb];
@@ -651,7 +683,7 @@ async function loadMySchedule(){
   try{ const d=await callAPI({action:'getSchedule',maNV:currentUser.maNV}); mySchedule=(d.success&&d.schedule)?d.schedule:{}; } catch(e){mySchedule={};}
   renderTodayShift(); renderCalendar();
 }
-function renderTodayShift(){ const key=todayKey(),ca=mySchedule[key]||''; if(!ca){ document.getElementById('todayShiftCard').innerHTML='<div class="card" style="display:flex;align-items:center;gap:12px;padding:16px 18px"><div style="font-size:28px">📋</div><div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Hôm nay</div><div style="font-size:15px;font-weight:700;color:var(--text)">Chưa có lịch làm</div></div></div>'; return; } const type=getCaType(ca),cls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':'leave',name=CA_NAMES[ca]||ca,time=CA_TIMES[ca]||'',tnow=new Date(),dl=DOW_VI[tnow.getDay()]+', '+pad(tnow.getDate())+'/'+pad(tnow.getMonth()+1)+'/'+tnow.getFullYear(); document.getElementById('todayShiftCard').innerHTML='<div class="shift-card '+cls+'"><div class="shift-lbl">Ca làm việc hôm nay</div><div class="shift-name">'+name+'</div>'+(time?'<div class="shift-time">⏰ '+time+'</div>':'')+'<div class="shift-date">'+dl+'</div><div class="shift-badge">'+ca+'</div></div>'; }
+function renderTodayShift(){ const key=todayKey(),ca=mySchedule[key]||''; if(!ca){ document.getElementById('todayShiftCard').innerHTML='<div class="card" style="display:flex;align-items:center;gap:12px;padding:16px 18px"><div style="font-size:28px">📋</div><div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Hôm nay</div><div style="font-size:15px;font-weight:700;color:var(--text)">Chưa có lịch làm</div></div></div>'; return; } const type=getCaType(ca),cls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':'leave',name=CA_NAMES[ca]||ca,time=CA_TIMES[ca]||'',tnow=new Date(),dl=DOW_VI[tnow.getDay()]+', '+pad(tnow.getDate())+'/'+pad(tnow.getMonth()+1)+'/'+tnow.getFullYear(); document.getElementById('todayShiftCard').innerHTML='<div class="shift-card '+cls+'"><div class="shift-lbl">Ca làm việc hôm nay</div><div class="shift-name">'+name+'</div>'+(time?'<div class="shift-time">⏰ '+time+'</div>':'')+'<div class="shift-date">📆 '+dl+'</div><div class="shift-badge">'+ca+'</div></div>'; }
 function renderCalendar(){ document.getElementById('calTitle').textContent=MON_VI[calMonth]+' '+calYear; document.getElementById('calSub').textContent='📅 Chu kỳ: '+cycleRange(calMonth,calYear); const kToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),firstDow=(new Date(calYear,calMonth,1).getDay()+6)%7,dim=new Date(calYear,calMonth+1,0).getDate(); let html=''; for(let i=0;i<firstDow;i++)html+='<div class="dc empty"></div>'; for(let d=1;d<=dim;d++){ const key=makeKey(calYear,calMonth,d),ca=mySchedule[key]||'',dow=new Date(calYear,calMonth,d).getDay(),isToday=key===kToday,isWknd=dow===0||dow===6,isSel=key===selKey; let cls='dc'; if(isToday)cls+=' today'; else if(isSel)cls+=' selected'; if(isWknd)cls+=' weekend'; const badge=ca?'<div class="dc-ca ca-'+ca+'">'+ca+'</div>':''; html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num">'+d+'</div>'+'<div class="dc-dow">'+DOW_VI[dow]+'</div>'+badge+'</div>'; } document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey); }
 function selectDay(key){ selKey=key; document.querySelectorAll('.dc').forEach(c=>{c.classList.toggle('selected',c.onclick&&c.onclick.toString().includes("'"+key+"'"));}); renderDayDetail(key); }
 function renderDayDetail(key){ if(!key){document.getElementById('dayDetail').innerHTML='';return;} const parts=key.split('-'),y=parseInt(parts[0]),m=parseInt(parts[1])-1,d=parseInt(parts[2]),date=new Date(y,m,d),ca=mySchedule[key]||'',type=getCaType(ca),hCls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':ca?'leave':'none',caName=ca?(CA_NAMES[ca]||ca):'Chưa có lịch',caTime=CA_TIMES[ca]||'',dateStr=DOW_FULL[date.getDay()]+', '+pad(d)+'/'+pad(m+1)+'/'+y; document.getElementById('dayDetail').innerHTML='<div class="ddc"><div class="ddc-hdr '+hCls+'"><div><div class="ddc-date">'+dateStr+'</div><div class="ddc-name">'+caName+'</div></div>'+(ca?'<div class="ddc-badge">'+ca+'</div>':'')+'</div>'+(caTime?'<div class="ddc-body"><div class="ddc-row"><div class="ddc-icon">⏰</div><div><div class="ddc-lbl">Giờ làm việc</div><div class="ddc-val">'+caTime+'</div></div></div></div>':'<div class="ddc-body"><div class="empty" style="padding:10px">'+(ca?'':'Ngày này chưa có ca làm việc')+'</div></div>')+'</div>'; }
@@ -681,6 +713,9 @@ async function submitRequest(){
 /* ===== ADMIN — DUYỆT BÀI (CHỈ NV001) ===== */
 let adminAllRequests = [];
 let adminCurrentFilter = 'all';
+let adminCurrentStatusTab = 'pending'; // 'pending' = Chờ duyệt | 'done' = Đã duyệt (lịch sử)
+
+function isPendingReq(r){ return r.trangThai === 'Chờ duyệt' || r.trangThai === 'Pending' || !r.trangThai; }
 
 async function loadAdminRequests(){
   document.getElementById('adminList').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải yêu cầu...</div>';
@@ -688,15 +723,18 @@ async function loadAdminRequests(){
     const d = await callAPI({ action: 'getAdminRequests' });
     if(d.success && d.requests && d.requests.length){
       adminAllRequests = d.requests;
-      const pendingCount = d.requests.filter(r => r.trangThai === 'Chờ duyệt' || r.trangThai === 'Pending' || !r.trangThai).length;
+      const pendingCount = d.requests.filter(isPendingReq).length;
       const badge = document.getElementById('adminBadgeCount');
       const navDot = document.getElementById('adminNavDot');
+      const inline = document.getElementById('adminPendingCountInline');
       if(pendingCount > 0){
         badge.textContent = pendingCount; badge.style.display='inline-block';
         if(navDot) navDot.style.display='block';
+        if(inline) inline.textContent = '('+pendingCount+')';
       } else {
         badge.style.display='none';
         if(navDot) navDot.style.display='none';
+        if(inline) inline.textContent = '';
       }
       renderAdminList();
     } else {
@@ -704,11 +742,19 @@ async function loadAdminRequests(){
       document.getElementById('adminBadgeCount').style.display='none';
       const navDot = document.getElementById('adminNavDot');
       if(navDot) navDot.style.display='none';
+      const inline = document.getElementById('adminPendingCountInline'); if(inline) inline.textContent='';
       renderAdminList();
     }
   } catch(e){
     document.getElementById('adminList').innerHTML='<div class="empty">Lỗi kết nối. Vui lòng thử lại.</div>';
   }
+}
+
+function adminSetStatusTab(tab){
+  adminCurrentStatusTab = tab;
+  document.getElementById('adminStatusTabPending').classList.toggle('active', tab==='pending');
+  document.getElementById('adminStatusTabDone').classList.toggle('active', tab==='done');
+  renderAdminList();
 }
 
 function adminSetFilter(type, btn){
@@ -719,12 +765,21 @@ function adminSetFilter(type, btn){
 }
 
 function renderAdminList(){
+  // Bước 1: lọc theo Tab trạng thái (Chờ duyệt / Đã duyệt - lịch sử)
+  let byStatus = adminCurrentStatusTab === 'pending'
+    ? adminAllRequests.filter(isPendingReq)
+    : adminAllRequests.filter(r => !isPendingReq(r));
+
+  // Bước 2: lọc theo loại yêu cầu (chip)
   const filtered = adminCurrentFilter === 'all'
-    ? adminAllRequests
-    : adminAllRequests.filter(r => r.loaiNghi === adminCurrentFilter);
+    ? byStatus
+    : byStatus.filter(r => r.loaiNghi === adminCurrentFilter);
 
   if(!filtered.length){
-    document.getElementById('adminList').innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">🎉</div><div class="admin-empty-title">Không có yêu cầu nào</div><div class="admin-empty-sub">Tất cả yêu cầu đã được xử lý hoặc chưa có yêu cầu mới.</div></div>';
+    const emptyMsg = adminCurrentStatusTab === 'pending'
+      ? { icon:'🎉', title:'Không có yêu cầu chờ duyệt', sub:'Tất cả yêu cầu đã được xử lý.' }
+      : { icon:'📭', title:'Chưa có lịch sử', sub:'Các yêu cầu đã duyệt/từ chối sẽ hiện ở đây.' };
+    document.getElementById('adminList').innerHTML = '<div class="admin-empty"><div class="admin-empty-icon">'+emptyMsg.icon+'</div><div class="admin-empty-title">'+emptyMsg.title+'</div><div class="admin-empty-sub">'+emptyMsg.sub+'</div></div>';
     return;
   }
 
@@ -743,7 +798,7 @@ function renderAdminList(){
     const maNV   = String(r.maNV||'').trim().toUpperCase();
     const hoTen  = DANH_SACH_TEN[maNV] || r.hoTen || maNV;
     const initials = hoTen.split(' ').slice(-2).map(w=>w[0]).join('');
-    const isPending = r.trangThai === 'Chờ duyệt' || r.trangThai === 'Pending' || !r.trangThai;
+    const isPending = isPendingReq(r);
     const statusBadge = isPending
       ? '<span style="font-size:10px;font-weight:800;background:#FFF9DB;color:#E67700;padding:3px 10px;border-radius:20px;">⏳ Chờ duyệt</span>'
       : (r.trangThai === 'Đã duyệt'
@@ -824,14 +879,12 @@ function switchTab(tab){
   document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>{
     n.classList.remove('active');
-    n.querySelector('.nav-label').style.color='';
     const dot=n.querySelector('.nav-dot'); if(dot)dot.remove();
   });
   document.getElementById('tab-'+tab).classList.add('active');
   const nav=document.getElementById('nav-'+tab);
   if(nav){
     nav.classList.add('active');
-    nav.querySelector('.nav-label').style.color='#3B5BDB';
     const dot=document.createElement('div'); dot.className='nav-dot'; nav.appendChild(dot);
   }
   if(tab==='lichTong' && !ltEmployees) loadLichTong();
