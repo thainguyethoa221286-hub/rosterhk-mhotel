@@ -194,6 +194,9 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .lt-header { background:var(--primary); padding:12px 16px; display:flex; justify-content:space-between; align-items:center; }
 .lt-nav { display:flex; align-items:center; gap:10px; }
 .lt-nav button { width:30px; height:30px; border-radius:8px; border:1.5px solid rgba(255,255,255,.3); background:rgba(255,255,255,.15); cursor:pointer; font-size:16px; color:white; }
+.lt-viewmode { display:flex; gap:8px; padding:10px 16px; background:#F1F3FA; }
+.lt-vm-btn { flex:1; border:1.5px solid #D6DCEF; background:white; color:var(--muted); font-size:12px; font-weight:700; font-family:inherit; border-radius:10px; padding:8px 0; cursor:pointer; transition:all .15s ease; }
+.lt-vm-btn.active { background:var(--primary); border-color:var(--primary); color:white; }
 .lt-collapse-btn { margin-left:4px; font-size:11px!important; font-weight:800; width:auto!important; height:auto!important; padding:7px 10px; white-space:nowrap; }
 .lt-title { font-size:14px; font-weight:800; color:white; }
 .lt-range  { font-size:10px; color:rgba(255,255,255,.8); text-align:right; }
@@ -227,7 +230,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .cc-today { outline:2px solid var(--accent); outline-offset:-2px; }
 /* Trạng thái RÚT GỌN cột Nhân viên */
 .lt-table.collapsed thead th.col-name,
-.lt-table.collapsed tbody td.col-name { min-width:88px; width:88px; max-width:88px; padding:6px; text-align:center; font-size:10px; white-space:normal; overflow:visible; text-overflow:clip; }
+.lt-table.collapsed tbody td.col-name { min-width:60px; width:60px; max-width:60px; padding:6px 4px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .nv-id { font-size:9px; color:var(--muted); font-weight:500; margin-top:2px; display:block; }
 
 .legend { display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px; background:white; border-top:1px solid var(--border); }
@@ -577,6 +580,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       </div>
       <div class="lt-range" id="ltRange">—</div>
     </div>
+    <div class="lt-viewmode">
+      <button class="lt-vm-btn" id="ltVmDay" onclick="ltSetViewMode('day')">Hôm nay</button>
+      <button class="lt-vm-btn" id="ltVmWeek" onclick="ltSetViewMode('week')">Tuần này</button>
+      <button class="lt-vm-btn active" id="ltVmFull" onclick="ltSetViewMode('full')">Cả chu kỳ</button>
+    </div>
     <div class="lt-wrap">
       <div id="ltTable"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
     </div>
@@ -674,6 +682,29 @@ let ltMonth, ltYear;
 (function(){ const now=new Date(); if(now.getDate()>=24){ltMonth=now.getMonth();ltYear=now.getFullYear();}else{ltMonth=now.getMonth()===0?11:now.getMonth()-1;ltYear=now.getMonth()===0?now.getFullYear()-1:now.getFullYear();}})();
 function cycleRange(m,y){ const em=m===11?0:m+1,ey=m===11?y+1:y; return '24/'+pad(m+1)+'/'+y+' – 23/'+pad(em+1)+'/'+ey; }
 function cycleDates(m,y){ const arr=[],cur=new Date(y,m,24),em=m===11?0:m+1,ey=m===11?y+1:y,end=new Date(ey,em,23); while(cur<=end){arr.push(new Date(cur));cur.setDate(cur.getDate()+1);} return arr; }
+let ltViewMode = 'full'; // 'day' | 'week' | 'full'
+function zeroTime(d){ const c=new Date(d); c.setHours(0,0,0,0); return c; }
+function filterDatesByMode(dates){
+  if (ltViewMode === 'full') return dates;
+  const now = zeroTime(new Date());
+  if (ltViewMode === 'day') {
+    return dates.filter(d => zeroTime(d).getTime() === now.getTime());
+  }
+  if (ltViewMode === 'week') {
+    const day = now.getDay(); // 0=CN..6=T7
+    const diffToMon = day === 0 ? -6 : 1 - day;
+    const monday = new Date(now); monday.setDate(now.getDate() + diffToMon);
+    const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+    return dates.filter(d => { const t = zeroTime(d).getTime(); return t >= monday.getTime() && t <= sunday.getTime(); });
+  }
+  return dates;
+}
+function ltSetViewMode(mode){
+  ltViewMode = mode;
+  ['ltVmDay','ltVmWeek','ltVmFull'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById('ltVm'+mode.charAt(0).toUpperCase()+mode.slice(1)).classList.add('active');
+  renderLichTong();
+}
 // Bỏ dấu * khi tra màu (O*/AL*/CL* hiện màu giống hệt O/AL/CL) — chữ hiển thị vẫn giữ nguyên dấu * để phân biệt là ngày có yêu cầu
 function stripStar(ca){ return String(ca||'').replace(/\*/g,''); }
 function getCaType(ca){ const c=stripStar(ca); if(!c) return 'none'; if(['M7','M8','M9','M10'].includes(c)) return 'morning'; if(c==='A12') return 'afternoon'; if(c==='O'||c==='O2') return 'off'; return 'leave'; }
@@ -775,13 +806,6 @@ function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} loadMySch
 function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} loadMySchedule(); }
 
 /* ===== LỊCH TỔNG ===== */
-function collapsedNameHtml(tenThienThanh, ma){
-  // Thu gọn cột nhưng vẫn hiện TÊN ĐẦY ĐỦ, rõ ràng (chữ tự xuống dòng trong cột hẹp) —
-  // không dùng avatar viết tắt, không hiện mã NV.
-  return '<div style="font-size:11px;font-weight:700;color:var(--text);line-height:1.3;white-space:normal;word-break:break-word;text-align:center">'
-    + String(tenThienThanh||'')
-    + '</div>';
-}
 let ltCollapsed = false; // isCollapsed: false = mở rộng (mặc định), true = rút gọn cột Nhân viên
 const getFirstName = (fullName) => {
   if (!fullName) return '';
@@ -795,7 +819,7 @@ function ltToggleCollapse(){
   renderLichTong();
 }
 async function loadLichTong(){ document.getElementById('ltTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải...</div>'; try{ const d=await callAPI({action:'getAllSchedule',month:ltMonth+1,year:ltYear}); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees;renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';} }
-function renderLichTong(){ if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent=MON_VI[ltMonth]+' '+ltYear; document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=cycleDates(ltMonth,ltYear),keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name" rowspan="2">Nhân viên</th>',h2='<tr>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isW=dt.getDay()===0||dt.getDay()===6,isT=k===keyToday,cls=isT?'col-today':isW?'col-weekend':''; h1+='<th class="'+cls+'">'+pad(dt.getDate())+'</th>'; h2+='<th class="'+cls+'">'+DOW_VI[dt.getDay()]+'</th>'; }); h1+='</tr>'; h2+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? collapsedNameHtml(tenThienThanh, ma) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+ca+'</span>' : ''; tbody+='<td class="'+(isT?'cc-today':'')+'">'+badge+'</td>'; }); tbody+='</tr>'; }); document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+h2+'</thead><tbody>'+tbody+'</tbody></table>'; }
+function renderLichTong(){ if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent=MON_VI[ltMonth]+' '+ltYear; document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=filterDatesByMode(cycleDates(ltMonth,ltYear)); if(!dates.length){ document.getElementById('ltTable').innerHTML='<div class="empty">Khoảng thời gian này không nằm trong chu kỳ đang xem — bấm ‹ › để chuyển tháng, hoặc chọn "Cả chu kỳ"</div>'; return; } const keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name" rowspan="2">Nhân viên</th>',h2='<tr>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isW=dt.getDay()===0||dt.getDay()===6,isT=k===keyToday,cls=isT?'col-today':isW?'col-weekend':''; h1+='<th class="'+cls+'">'+pad(dt.getDate())+'</th>'; h2+='<th class="'+cls+'">'+DOW_VI[dt.getDay()]+'</th>'; }); h1+='</tr>'; h2+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? getFirstName(tenThienThanh) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+ca+'</span>' : ''; tbody+='<td class="'+(isT?'cc-today':'')+'">'+badge+'</td>'; }); tbody+='</tr>'; }); document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+h2+'</thead><tbody>'+tbody+'</tbody></table>'; }
 function ltPrev(){ ltMonth--; if(ltMonth<0){ltMonth=11;ltYear--;} loadLichTong(); }
 function ltNext(){ ltMonth++; if(ltMonth>11){ltMonth=0;ltYear++;} loadLichTong(); }
 
