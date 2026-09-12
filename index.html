@@ -709,7 +709,20 @@ function ltSetViewMode(mode){
 function stripStar(ca){ return String(ca||'').replace(/\*/g,''); }
 function getCaType(ca){ const c=stripStar(ca); if(!c) return 'none'; if(['M7','M8','M9','M10'].includes(c)) return 'morning'; if(c==='A12') return 'afternoon'; if(c==='O'||c==='O2') return 'off'; return 'leave'; }
 function fmtDate(val){ if(!val)return''; if(typeof val==='string'&&val.match(/^\d{2}\/\d{2}\/\d{4}$/))return val; const d=new Date(val); if(!isNaN(d.getTime()))return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); return String(val); }
-function callAPI(params){ return new Promise((res,rej)=>{ const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*9999); const url=API+'?'+new URLSearchParams(params)+'&callback='+cb; const s=document.createElement('script'); const t=setTimeout(()=>{cleanup();rej(new Error('Timeout'));},15000); function cleanup(){delete window[cb];s.parentNode&&document.body.removeChild(s);} window[cb]=(d)=>{clearTimeout(t);cleanup();res(d);}; s.onerror=()=>{clearTimeout(t);cleanup();rej(new Error('Network'));}; s.src=url; document.body.appendChild(s); }); }
+function callAPIOnce(params, timeoutMs){ return new Promise((res,rej)=>{ const cb='cb_'+Date.now()+'_'+Math.floor(Math.random()*9999); const url=API+'?'+new URLSearchParams(params)+'&callback='+cb; const s=document.createElement('script'); const t=setTimeout(()=>{cleanup();rej(new Error('Timeout'));},timeoutMs); function cleanup(){delete window[cb];s.parentNode&&document.body.removeChild(s);} window[cb]=(d)=>{clearTimeout(t);cleanup();res(d);}; s.onerror=()=>{clearTimeout(t);cleanup();rej(new Error('Network'));}; s.src=url; document.body.appendChild(s); }); }
+// callAPI: tự động thử lại 1 lần nếu lần đầu bị lỗi/timeout — xử lý tình huống Apps Script
+// "khởi động nguội" (cold start) sau thời gian không có ai gọi, tránh phải bấm lại thủ công.
+async function callAPI(params){
+  try {
+    return await callAPIOnce(params, 20000);
+  } catch (e) {
+    try {
+      return await callAPIOnce(params, 25000);
+    } catch (e2) {
+      throw e2;
+    }
+  }
+}
 
 /* ===== LOGIN (chỉ mật khẩu — backend tự dò maNV theo mật khẩu khớp trong sheet NhanVien) ===== */
 async function doLogin(){
