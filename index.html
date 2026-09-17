@@ -734,6 +734,24 @@ async function callAPI(params){
   }
 }
 
+// ===== ĐỌC LỊCH NHANH TỪ FILE TĨNH schedule.json (nếu có) — thay vì luôn phải hỏi qua Apps Script.
+// File này do script "Đồng Bộ Lịch" tự tạo và đẩy lên GitHub mỗi lần chị đồng bộ.
+// Nếu file chưa có / lỗi mạng / lỗi đọc → coi như không có, code gọi Apps Script như cách cũ (không vỡ app). =====
+let scheduleSnapshot = null;
+async function ensureScheduleSnapshot(forceRefresh){
+  if (scheduleSnapshot && !forceRefresh) return scheduleSnapshot;
+  try{
+    const resp = await fetch('/schedule.json?t=' + Date.now());
+    if (!resp.ok) throw new Error('not found');
+    const data = await resp.json();
+    if (!data || !data.employees) throw new Error('invalid data');
+    scheduleSnapshot = data;
+    return scheduleSnapshot;
+  } catch(e){
+    return null;
+  }
+}
+
 /* ===== LOGIN (chỉ mật khẩu — backend tự dò maNV theo mật khẩu khớp trong sheet NhanVien) ===== */
 async function doLogin(){
   const matKhau=document.getElementById('inputMatKhau').value.trim();
@@ -818,7 +836,12 @@ function calcDuration(){ const s=document.getElementById('reqTuNgay').value,e=do
 /* ===== SCHEDULE ===== */
 async function loadMySchedule(){
   document.getElementById('calGrid').innerHTML='<div class="loading"><div class="spinner"></div></div>';
-  try{ const d=await callAPI({action:'getSchedule',maNV:currentUser.maNV}); mySchedule=(d.success&&d.schedule)?d.schedule:{}; } catch(e){mySchedule={};}
+  const snap = await ensureScheduleSnapshot();
+  if (snap && snap.employees && snap.employees[currentUser.maNV]) {
+    mySchedule = snap.employees[currentUser.maNV];
+  } else {
+    try{ const d=await callAPI({action:'getSchedule',maNV:currentUser.maNV}); mySchedule=(d.success&&d.schedule)?d.schedule:{}; } catch(e){mySchedule={};}
+  }
   renderTodayShift(); renderCalendar();
 }
 function renderTodayShift(){ const key=todayKey(),ca=mySchedule[key]||''; if(!ca){ document.getElementById('todayShiftCard').innerHTML='<div class="card" style="display:flex;align-items:center;gap:12px;padding:16px 18px"><div style="font-size:28px">📋</div><div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Hôm nay</div><div style="font-size:15px;font-weight:700;color:var(--text)">Chưa có lịch làm</div></div></div>'; return; } const type=getCaType(ca),cls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':'leave',name=CA_NAMES[ca]||ca,time=CA_TIMES[ca]||'',tnow=new Date(),dl=DOW_VI[tnow.getDay()]+', '+pad(tnow.getDate())+'/'+pad(tnow.getMonth()+1)+'/'+tnow.getFullYear(); document.getElementById('todayShiftCard').innerHTML='<div class="shift-card '+cls+'"><div class="shift-lbl">Ca làm việc hôm nay</div><div class="shift-name">'+name+'</div>'+(time?'<div class="shift-time">⏰ '+time+'</div>':'')+'<div class="shift-date">📆 '+dl+'</div><div class="shift-badge">'+ca+'</div></div>'; }
@@ -841,7 +864,20 @@ function ltToggleCollapse(){
   if (btn) btn.textContent = ltCollapsed ? 'Mở rộng' : 'Thu gọn';
   renderLichTong();
 }
-async function loadLichTong(){ document.getElementById('ltTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải...</div>'; try{ const d=await callAPI({action:'getAllSchedule',month:ltMonth+1,year:ltYear}); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees;renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';} }
+async function loadLichTong(){
+  document.getElementById('ltTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải...</div>';
+  const snap = await ensureScheduleSnapshot();
+  if (snap && snap.employees && Object.keys(snap.employees).length) {
+    ltEmployees = Object.keys(snap.employees).map(ma => ({
+      maNV: ma,
+      hoTen: DANH_SACH_TEN[ma] || ma,
+      schedule: snap.employees[ma]
+    }));
+    renderLichTong();
+    return;
+  }
+  try{ const d=await callAPI({action:'getAllSchedule',month:ltMonth+1,year:ltYear}); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees;renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';}
+}
 function renderLichTong(){ if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent=MON_VI[ltMonth]+' '+ltYear; document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=filterDatesByMode(cycleDates(ltMonth,ltYear)); if(!dates.length){ document.getElementById('ltTable').innerHTML='<div class="empty">Khoảng thời gian này không nằm trong chu kỳ đang xem — bấm ‹ › để chuyển tháng, hoặc chọn "Cả chu kỳ"</div>'; return; } const keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name" rowspan="2">Nhân viên</th>',h2='<tr>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isW=dt.getDay()===0||dt.getDay()===6,isT=k===keyToday,cls=isT?'col-today':isW?'col-weekend':''; h1+='<th class="'+cls+'">'+pad(dt.getDate())+'</th>'; h2+='<th class="'+cls+'">'+DOW_VI[dt.getDay()]+'</th>'; }); h1+='</tr>'; h2+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? getFirstName(tenThienThanh) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="cc-star">★</span>':'')+'</span>' : ''; tbody+='<td class="'+(isT?'cc-today':'')+'">'+badge+'</td>'; }); tbody+='</tr>'; }); document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+h2+'</thead><tbody>'+tbody+'</tbody></table>'; }
 function ltPrev(){ ltMonth--; if(ltMonth<0){ltMonth=11;ltYear--;} loadLichTong(); }
 function ltNext(){ ltMonth++; if(ltMonth>11){ltMonth=0;ltYear++;} loadLichTong(); }
