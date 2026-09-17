@@ -115,6 +115,38 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .confirm-box p { margin:0 0 22px; font-size:14px; color:#5B6B9E; line-height:1.5; }
 .confirm-box-btns { display:flex; gap:12px; }
 .confirm-box-btns button { flex:1; border:none; border-radius:12px; padding:13px 0; font-size:14px; font-weight:800; font-family:inherit; cursor:pointer; }
+
+.sched-update-overlay { position:fixed; inset:0; background:rgba(10,8,30,0.55); display:flex; align-items:center; justify-content:center; z-index:10000; padding:24px; }
+.sched-update-box {
+  position:relative;
+  width:100%; max-width:340px;
+  border-radius:24px;
+  padding:34px 26px 28px;
+  text-align:center;
+  color:white;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.25) 0%, transparent 35%),
+    radial-gradient(circle at 85% 75%, rgba(255,255,255,0.18) 0%, transparent 40%),
+    linear-gradient(145deg, #6D28D9 0%, #4C1D95 35%, #1E1B4B 70%, #0F0C29 100%);
+  box-shadow: 0 25px 60px rgba(76,29,149,0.5), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  animation: schedPopIn .25s ease-out;
+}
+@keyframes schedPopIn { from { transform:scale(.85); opacity:0; } to { transform:scale(1); opacity:1; } }
+.sched-update-close {
+  position:absolute; top:14px; right:14px;
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(255,255,255,0.15); border:none; color:white;
+  font-size:16px; line-height:1; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.sched-update-icon { font-size:44px; margin-bottom:10px; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.35)); }
+.sched-update-title { font-size:20px; font-weight:900; margin-bottom:8px; letter-spacing:-0.3px; }
+.sched-update-text { font-size:14px; color:rgba(255,255,255,0.85); line-height:1.5; margin-bottom:22px; }
+.sched-update-ok {
+  width:100%; border:none; border-radius:14px; padding:13px 0;
+  font-size:14px; font-weight:800; font-family:inherit; cursor:pointer;
+  background:white; color:#4C1D95;
+}
 .confirm-btn-cancel { background:#9CA3AF; color:white; }
 .confirm-btn-danger { background:#E03131; color:white; }
 .status-approved { background:var(--green-light); color:var(--green); }
@@ -362,6 +394,15 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
   <div class="toast" id="toast"></div>
+  <div class="sched-update-overlay" id="schedUpdateOverlay" style="display:none">
+    <div class="sched-update-box">
+      <button class="sched-update-close" onclick="closeScheduleUpdateModal()">✕</button>
+      <div class="sched-update-icon">📅✨</div>
+      <div class="sched-update-title">Lịch làm việc đã cập nhật!</div>
+      <div class="sched-update-text">Lịch làm việc của bạn vừa có thay đổi. Vào tab "Lịch làm" để xem chi tiết nhé.</div>
+      <button class="sched-update-ok" onclick="closeScheduleUpdateModal()">Đã hiểu</button>
+    </div>
+  </div>
   <div class="confirm-overlay" id="confirmDeleteOverlay" style="display:none">
     <div class="confirm-box">
       <h3>XÁC NHẬN XOÁ</h3>
@@ -758,11 +799,13 @@ function checkScheduleChangeAndNotify(){
     // oldStr === null nghĩa là lần đầu tiên mở app trên máy này — không báo, chỉ lưu mốc để so sánh lần sau
     if (oldStr !== null && oldStr !== newStr) {
       playNotifySound();
-      showToast('📅 Lịch làm việc của bạn vừa được cập nhật!', '#2D46DB');
+      openScheduleUpdateModal();
     }
     localStorage.setItem(storeKey, newStr);
   } catch(e){ /* localStorage lỗi (hiếm gặp) — bỏ qua, không ảnh hưởng phần còn lại của app */ }
 }
+function openScheduleUpdateModal(){ const el=document.getElementById('schedUpdateOverlay'); if(el) el.style.display='flex'; }
+function closeScheduleUpdateModal(){ const el=document.getElementById('schedUpdateOverlay'); if(el) el.style.display='none'; }
 
 // ===== ĐỌC LỊCH NHANH TỪ FILE TĨNH schedule.json (nếu có) — thay vì luôn phải hỏi qua Apps Script.
 // File này do script "Đồng Bộ Lịch" tự tạo và đẩy lên GitHub mỗi lần chị đồng bộ.
