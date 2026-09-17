@@ -389,7 +389,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       </div>
       <div class="header-right">
         <div class="bell-wrap" onclick="switchTab('home')">🔔<span class="bell-dot" id="headerBellDot" style="display:none"></span></div>
-        <div class="avatar" id="headerAvatar">?</div>
+        <div class="avatar" id="headerAvatar" onclick="resetApp()" title="Làm mới app" style="cursor:pointer">🔄</div>
       </div>
     </div>
   </div>
@@ -850,12 +850,30 @@ async function doLogin(){
 }
 document.getElementById('inputMatKhau').addEventListener('keypress',e=>{if(e.key==='Enter')doLogin();});
 
+// Nút "🔄" ở góc trên-phải (thay cho avatar viết tắt tên) — mọi nhân viên đều thấy nút này.
+// CHỈ tải lại dữ liệu (lịch, phép, yêu cầu...) — KHÔNG tải lại cả trang, nên KHÔNG bị thoát về
+// màn hình đăng nhập (app hiện chưa lưu phiên đăng nhập, tải lại cả trang sẽ bắt nhập mật khẩu lại).
+async function resetApp(){
+  const icon = document.getElementById('headerAvatar');
+  if (icon) icon.style.opacity = '0.4';
+  try {
+    await ensureScheduleSnapshot(true); // bắt buộc lấy lại file lịch mới nhất, bỏ qua bản đã lưu tạm
+    await Promise.all([ loadLeave(), loadMySchedule(), loadRequests() ]);
+    if (document.getElementById('tab-lichTong').classList.contains('active')) await loadLichTong();
+    if (document.getElementById('tab-admin').classList.contains('active')) await loadAdminRequests(true);
+    showToast('🔄 Đã làm mới dữ liệu!', '#2F9E44');
+  } catch(e) {
+    showToast('❌ Làm mới thất bại, thử lại!', '#E03131');
+  } finally {
+    if (icon) icon.style.opacity = '1';
+  }
+}
+
 /* ===== INIT APP ===== */
 async function initApp(){
   const init=currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join('');
   document.getElementById('headerName').textContent=currentUser.hoTen;
   document.getElementById('headerDept').textContent=currentUser.phongBan+' · '+currentUser.maNV;
-  document.getElementById('headerAvatar').textContent=init;
   selKey=todayKey();
 
   // Chèn nút Admin vào nav nếu là NV001
