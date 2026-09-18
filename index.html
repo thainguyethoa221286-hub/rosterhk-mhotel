@@ -53,7 +53,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .header-right { display:flex; align-items:center; gap:10px; }
 .bell-wrap { position:relative; width:40px; height:40px; border-radius:14px; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer; backdrop-filter:blur(6px); }
 .bell-dot { position:absolute; top:7px; right:8px; width:7px; height:7px; border-radius:50%; background:#FF3B30; border:1.5px solid var(--gx-2); }
-.avatar { width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:white; border:2px solid rgba(255,255,255,0.4); flex-shrink:0; }
+.avatar { width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.1); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; color:white; border:1px solid rgba(255,255,255,0.1); flex-shrink:0; transition:background-color .2s ease; }
+.avatar:hover { background:rgba(255,255,255,0.2); }
+.avatar:active { transform:scale(0.95); }
+.avatar svg { transition:transform .3s ease; }
+.avatar.spinning svg { animation:avatarSpin 0.9s linear infinite; }
+@keyframes avatarSpin { from { transform:rotate(0deg); } to { transform:rotate(-360deg); } }
 
 .content { padding:16px; display:none; }
 .content.active { display:block; }
@@ -389,7 +394,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       </div>
       <div class="header-right">
         <div class="bell-wrap" onclick="switchTab('home')">🔔<span class="bell-dot" id="headerBellDot" style="display:none"></span></div>
-        <div class="avatar" id="headerAvatar" onclick="resetApp()" title="Làm mới app" style="cursor:pointer">🔄</div>
+        <div class="avatar" id="headerAvatar" onclick="resetApp()" title="Làm mới app" style="cursor:pointer">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+        </div>
       </div>
     </div>
   </div>
@@ -855,7 +865,7 @@ document.getElementById('inputMatKhau').addEventListener('keypress',e=>{if(e.key
 // màn hình đăng nhập (app hiện chưa lưu phiên đăng nhập, tải lại cả trang sẽ bắt nhập mật khẩu lại).
 async function resetApp(){
   const icon = document.getElementById('headerAvatar');
-  if (icon) icon.style.opacity = '0.4';
+  if (icon) icon.classList.add('spinning');
   try {
     await ensureScheduleSnapshot(true); // bắt buộc lấy lại file lịch mới nhất, bỏ qua bản đã lưu tạm
     await Promise.all([ loadLeave(), loadMySchedule(), loadRequests() ]);
@@ -865,7 +875,7 @@ async function resetApp(){
   } catch(e) {
     showToast('❌ Làm mới thất bại, thử lại!', '#E03131');
   } finally {
-    if (icon) icon.style.opacity = '1';
+    if (icon) icon.classList.remove('spinning');
   }
 }
 
