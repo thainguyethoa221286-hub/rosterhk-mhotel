@@ -718,8 +718,152 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fSbz-_mTWWwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
+
+// ⚠️ BẢN THỬ NGHIỆM (nhánh supabase-pilot): đọc/ghi qua Supabase thay vì Google Sheets + Apps Script.
+// Dùng CHUNG project Supabase với app Kho HK — các bảng đặt tiền tố "roster_" để không lẫn.
+const SUPABASE_URL = 'https://tppaiyzolzkafcgejzgg.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_NTS9OddWtTz0t4WLp_1Fdg_SHzqAZaD';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Chuyển 'YYYY-MM-DD' (hoặc timestamp) -> 'DD/MM/YYYY' để khớp đúng định dạng hiển thị/toISO() cũ
+function fmtDMY(v){
+  if (!v) return '';
+  const s = String(v).substring(0,10);
+  const p = s.split('-');
+  if (p.length !== 3) return s;
+  return p[2] + '/' + p[1] + '/' + p[0];
+}
+
+async function supaLogin(matKhau){
+  try{
+    const { data, error } = await sb.rpc('roster_login', { p_mat_khau: matKhau });
+    if (error) throw error;
+    if (data && data.length){
+      const row = data[0];
+      return { success:true, maNV:String(row.ma_nv||'').trim().toUpperCase(), hoTen:row.ho_ten, email:row.email, phongBan:row.phong_ban, chucVu:row.chuc_vu };
+    }
+    return { success:false, error:'Mật khẩu không chính xác, vui lòng thử lại!' };
+  } catch(e){ return { success:false, error:'Lỗi kết nối. Thử lại!' }; }
+}
+
+async function supaGetLeave(maNV){
+  try{
+    const { data, error } = await sb.from('roster_leave_balance').select('*').eq('ma_nv', maNV).maybeSingle();
+    if (error) throw error;
+    if (!data) return { success:true, phepNamTong:12, phepNamDaDung:0, phepNamConLai:12, nghiBuTong:0, nghiBuConLai:0, phepThucTeConLai:null };
+    return {
+      success:true,
+      phepNamTong: data.phep_nam_tong ?? 12,
+      phepNamDaDung: data.phep_nam_da_dung ?? 0,
+      phepNamConLai: data.phep_nam_con_lai ?? 0,
+      nghiBuTong: data.nghi_bu_tong ?? 0,
+      nghiBuConLai: data.nghi_bu_con_lai ?? 0,
+      phepThucTeConLai: data.phep_thuc_te_con_lai ?? null
+    };
+  } catch(e){ return { success:false }; }
+}
+
+async function supaGetSchedule(maNV){
+  try{
+    const { data, error } = await sb.from('roster_schedule').select('ngay, ca').eq('ma_nv', maNV);
+    if (error) throw error;
+    const schedule = {};
+    (data||[]).forEach(r => { schedule[r.ngay] = r.ca; });
+    return { success:true, schedule };
+  } catch(e){ return { success:false, schedule:{} }; }
+}
+
+async function supaGetAllSchedule(month, year){
+  try{
+    const startDate = new Date(year, month - 1, 24);
+    const endMonth = month === 12 ? 1 : month + 1;
+    const endYear = month === 12 ? year + 1 : year;
+    const endDate = new Date(endYear, endMonth - 1, 23);
+    const startStr = startDate.getFullYear()+'-'+pad(startDate.getMonth()+1)+'-'+pad(startDate.getDate());
+    const endStr = endDate.getFullYear()+'-'+pad(endDate.getMonth()+1)+'-'+pad(endDate.getDate());
+    const { data, error } = await sb.from('roster_schedule').select('ma_nv, ho_ten, ngay, ca').gte('ngay', startStr).lte('ngay', endStr);
+    if (error) throw error;
+    const empMap = {}, empOrder = [];
+    (data||[]).forEach(r => {
+      const maNV = String(r.ma_nv||'').trim().toUpperCase();
+      if (!maNV) return;
+      if (!empMap[maNV]) { empMap[maNV] = { maNV, hoTen: r.ho_ten||'', schedule:{} }; empOrder.push(maNV); }
+      empMap[maNV].schedule[r.ngay] = r.ca;
+    });
+    return { success:true, employees: empOrder.map(id => empMap[id]) };
+  } catch(e){ return { success:false, employees:[] }; }
+}
+
+async function supaGetRequests(maNV){
+  try{
+    const { data, error } = await sb.from('roster_leave_requests').select('*').eq('ma_nv', maNV).order('thoi_gian_gui', {ascending:false}).limit(10);
+    if (error) throw error;
+    const requests = (data||[]).map(r => ({
+      maYC: r.ma_yc, loaiNghi: r.loai_nghi, tuNgay: fmtDMY(r.tu_ngay), denNgay: fmtDMY(r.den_ngay),
+      soNgay: r.so_ngay, lyDo: r.ly_do, trangThai: r.trang_thai || 'Chờ duyệt', lyDoTuChoi: r.ly_do_tu_choi || ''
+    }));
+    return { success:true, requests };
+  } catch(e){ return { success:false, requests:[] }; }
+}
+
+async function supaSubmitRequest(p){
+  try{
+    const { error } = await sb.from('roster_leave_requests').insert({
+      ma_yc: p.maYC, ma_nv: String(p.maNV||'').trim().toUpperCase(), ho_ten: p.hoTen,
+      loai_nghi: p.loaiNghi, tu_ngay: p.tuNgay || null, den_ngay: p.denNgay || null,
+      so_ngay: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt'
+    });
+    if (error) throw error;
+    return { success:true };
+  } catch(e){ return { success:false }; }
+}
+
+async function supaUpdateOwnRequest(p){
+  try{
+    const { error } = await sb.from('roster_leave_requests').update({
+      loai_nghi: p.loaiNghi, tu_ngay: p.tuNgay || null, den_ngay: p.denNgay || null,
+      so_ngay: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt', ly_do_tu_choi: ''
+    }).eq('ma_yc', p.maYC);
+    if (error) throw error;
+    return { success:true };
+  } catch(e){ return { success:false }; }
+}
+
+async function supaDeleteRequest(maYC){
+  try{
+    const { error } = await sb.from('roster_leave_requests').delete().eq('ma_yc', maYC);
+    if (error) throw error;
+    return { success:true };
+  } catch(e){ return { success:false }; }
+}
+
+async function supaGetAdminRequests(){
+  try{
+    const { data, error } = await sb.from('roster_leave_requests').select('*').order('thoi_gian_gui', {ascending:false});
+    if (error) throw error;
+    let requests = (data||[]).map(r => ({
+      id: r.ma_yc, maYC: r.ma_yc, maNV: String(r.ma_nv||'').trim().toUpperCase(), hoTen: r.ho_ten||'',
+      loaiNghi: r.loai_nghi, tuNgay: fmtDMY(r.tu_ngay), denNgay: fmtDMY(r.den_ngay),
+      soNgay: r.so_ngay||1, lyDo: r.ly_do||'', trangThai: r.trang_thai||'Chờ duyệt',
+      thoiGianGui: r.thoi_gian_gui ? fmtDMY(r.thoi_gian_gui) : '', lyDoTuChoi: r.ly_do_tu_choi||''
+    }));
+    requests.sort((a,b) => { const pa=(a.trangThai==='Chờ duyệt')?0:1, pb=(b.trangThai==='Chờ duyệt')?0:1; return pa-pb; });
+    return { success:true, requests };
+  } catch(e){ return { success:false, requests:[] }; }
+}
+
+async function supaUpdateRequestStatus(id, status, lyDoTuChoi){
+  try{
+    const patch = { trang_thai: status };
+    if (status === 'Từ chối' && lyDoTuChoi) patch.ly_do_tu_choi = lyDoTuChoi;
+    const { error } = await sb.from('roster_leave_requests').update(patch).eq('ma_yc', id);
+    if (error) throw error;
+    return { success:true };
+  } catch(e){ return { success:false }; }
+}
 
 const DANH_SACH_TEN = {
   "NV001": "Thái Nguyệt Hoa", "NV002": "Hồng Tú Ngân", "NV003": "Ngô Trần Cẩm Tiên", "NV004": "Hồ Phạm Minh Châu",
@@ -817,23 +961,8 @@ function checkScheduleChangeAndNotify(){
 function openScheduleUpdateModal(){ const el=document.getElementById('schedUpdateOverlay'); if(el) el.style.display='flex'; }
 function closeScheduleUpdateModal(){ const el=document.getElementById('schedUpdateOverlay'); if(el) el.style.display='none'; }
 
-// ===== ĐỌC LỊCH NHANH TỪ FILE TĨNH schedule.json (nếu có) — thay vì luôn phải hỏi qua Apps Script.
-// File này do script "Đồng Bộ Lịch" tự tạo và đẩy lên GitHub mỗi lần chị đồng bộ.
-// Nếu file chưa có / lỗi mạng / lỗi đọc → coi như không có, code gọi Apps Script như cách cũ (không vỡ app). =====
-let scheduleSnapshot = null;
-async function ensureScheduleSnapshot(forceRefresh){
-  if (scheduleSnapshot && !forceRefresh) return scheduleSnapshot;
-  try{
-    const resp = await fetch('/schedule.json?t=' + Date.now());
-    if (!resp.ok) throw new Error('not found');
-    const data = await resp.json();
-    if (!data || !data.employees) throw new Error('invalid data');
-    scheduleSnapshot = data;
-    return scheduleSnapshot;
-  } catch(e){
-    return null;
-  }
-}
+// (Bản Supabase: không cần đọc file schedule.json tĩnh nữa — supaGetSchedule()/
+// supaGetAllSchedule() đọc thẳng từ Supabase, đã đủ nhanh.)
 
 /* ===== LOGIN (chỉ mật khẩu — backend tự dò maNV theo mật khẩu khớp trong sheet NhanVien) ===== */
 async function doLogin(){
@@ -842,7 +971,7 @@ async function doLogin(){
   const btn=document.getElementById('btnLogin'); btn.textContent='Đang kiểm tra...'; btn.disabled=true;
   document.getElementById('loginError').style.display='none';
   try{
-    const d=await callAPI({action:'login',matKhau});
+    const d=await supaLogin(matKhau);
     if(d.success){
       currentUser=d;
       document.getElementById('loginScreen').style.display='none';
@@ -867,7 +996,6 @@ async function resetApp(){
   const icon = document.getElementById('headerAvatar');
   if (icon) icon.classList.add('spinning');
   try {
-    await ensureScheduleSnapshot(true); // bắt buộc lấy lại file lịch mới nhất, bỏ qua bản đã lưu tạm
     await Promise.all([ loadLeave(), loadMySchedule(), loadRequests() ]);
     if (document.getElementById('tab-lichTong').classList.contains('active')) await loadLichTong();
     if (document.getElementById('tab-admin').classList.contains('active')) await loadAdminRequests(true);
@@ -908,7 +1036,7 @@ function injectAdminNav(){
 /* ===== LEAVE BALANCE ===== */
 async function loadLeave(){
   try{
-    const d=await callAPI({action:'getLeave',maNV:currentUser.maNV});
+    const d=await supaGetLeave(currentUser.maNV);
     if(d.success){
       const t=d.phepNamTong||12, u=d.phepNamDaDung||0, r=d.phepNamConLai||(t-u);
       const nb=d.nghiBuTong||0, nd=d.nghiBuConLai||0, nc=nb-nd;
@@ -937,12 +1065,7 @@ function calcDuration(){ const s=document.getElementById('reqTuNgay').value,e=do
 /* ===== SCHEDULE ===== */
 async function loadMySchedule(){
   document.getElementById('calGrid').innerHTML='<div class="loading"><div class="spinner"></div></div>';
-  const snap = await ensureScheduleSnapshot();
-  if (snap && snap.employees && snap.employees[currentUser.maNV]) {
-    mySchedule = snap.employees[currentUser.maNV];
-  } else {
-    try{ const d=await callAPI({action:'getSchedule',maNV:currentUser.maNV}); mySchedule=(d.success&&d.schedule)?d.schedule:{}; } catch(e){mySchedule={};}
-  }
+  try{ const d=await supaGetSchedule(currentUser.maNV); mySchedule=(d.success&&d.schedule)?d.schedule:{}; } catch(e){mySchedule={};}
   checkScheduleChangeAndNotify();
   renderTodayShift(); renderCalendar();
 }
@@ -968,17 +1091,7 @@ function ltToggleCollapse(){
 }
 async function loadLichTong(){
   document.getElementById('ltTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải...</div>';
-  const snap = await ensureScheduleSnapshot();
-  if (snap && snap.employees && Object.keys(snap.employees).length) {
-    ltEmployees = Object.keys(snap.employees).map(ma => ({
-      maNV: ma,
-      hoTen: DANH_SACH_TEN[ma] || ma,
-      schedule: snap.employees[ma]
-    }));
-    renderLichTong();
-    return;
-  }
-  try{ const d=await callAPI({action:'getAllSchedule',month:ltMonth+1,year:ltYear}); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees;renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';}
+  try{ const d=await supaGetAllSchedule(ltMonth+1,ltYear); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees;renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';}
 }
 function renderLichTong(){ if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent=MON_VI[ltMonth]+' '+ltYear; document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=filterDatesByMode(cycleDates(ltMonth,ltYear)); if(!dates.length){ document.getElementById('ltTable').innerHTML='<div class="empty">Khoảng thời gian này không nằm trong chu kỳ đang xem — bấm ‹ › để chuyển tháng, hoặc chọn "Cả chu kỳ"</div>'; return; } const keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name" rowspan="2">Nhân viên</th>',h2='<tr>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isW=dt.getDay()===0||dt.getDay()===6,isT=k===keyToday,cls=isT?'col-today':isW?'col-weekend':''; h1+='<th class="'+cls+'">'+pad(dt.getDate())+'</th>'; h2+='<th class="'+cls+'">'+DOW_VI[dt.getDay()]+'</th>'; }); h1+='</tr>'; h2+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? getFirstName(tenThienThanh) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="cc-star">★</span>':'')+'</span>' : ''; tbody+='<td class="'+(isT?'cc-today':'')+'">'+badge+'</td>'; }); tbody+='</tr>'; }); document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+h2+'</thead><tbody>'+tbody+'</tbody></table>'; }
 function ltPrev(){ ltMonth--; if(ltMonth<0){ltMonth=11;ltYear--;} loadLichTong(); }
@@ -988,7 +1101,7 @@ function ltNext(){ ltMonth++; if(ltMonth>11){ltMonth=0;ltYear++;} loadLichTong()
 let lastLeaveRequests = [];
 let editingMaYC = null;
 let pendingDeleteMaYC = null;
-async function loadRequests(){ try{ const d=await callAPI({action:'getRequests',maNV:currentUser.maNV}); const icons={XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',AL:'🏖️',CL:'🔄'}; const colors={XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',AL:'#FFF9DB',CL:'#EBFBEE'}; if(!d.success||!d.requests||!d.requests.length){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; lastLeaveRequests=[]; return; } lastLeaveRequests=d.requests; let htmlHome='',htmlLeave=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; let lblLoai=r.loaiNghi; if(lblLoai==='XIN_NGHI')lblLoai='Xin nghỉ'; if(lblLoai==='DOICA')lblLoai='Đổi ca'; if(lblLoai==='KHAC')lblLoai='Yêu cầu khác'; const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; const itemInner = '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div>'; htmlHome+='<div class="req-item">'+itemInner+'</div>'; });
+async function loadRequests(){ try{ const d=await supaGetRequests(currentUser.maNV); const icons={XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',AL:'🏖️',CL:'🔄'}; const colors={XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',AL:'#FFF9DB',CL:'#EBFBEE'}; if(!d.success||!d.requests||!d.requests.length){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; lastLeaveRequests=[]; return; } lastLeaveRequests=d.requests; let htmlHome='',htmlLeave=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; let lblLoai=r.loaiNghi; if(lblLoai==='XIN_NGHI')lblLoai='Xin nghỉ'; if(lblLoai==='DOICA')lblLoai='Đổi ca'; if(lblLoai==='KHAC')lblLoai='Yêu cầu khác'; const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; const itemInner = '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div>'; htmlHome+='<div class="req-item">'+itemInner+'</div>'; });
   d.requests.slice(0,3).forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; let lblLoai=r.loaiNghi; if(lblLoai==='XIN_NGHI')lblLoai='Xin nghỉ'; if(lblLoai==='DOICA')lblLoai='Đổi ca'; if(lblLoai==='KHAC')lblLoai='Yêu cầu khác'; const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : '';
     const leaveInner = '<div class="req-item-top"><div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày</div></div><div class="req-item-btns"><button class="req-btn-icon" title="Chỉnh sửa" onclick="editRequest(\''+r.maYC+'\')">✏️</button><button class="req-btn-icon req-btn-icon-danger" title="Xoá" onclick="openDeleteConfirm(\''+r.maYC+'\')">🗑️</button></div></div><div class="req-item-bottom"><div class="req-status '+sc+'">'+r.trangThai+'</div>'+reasonLine+'</div>';
     htmlLeave+='<div class="req-item-card">'+leaveInner+'</div>';
@@ -996,7 +1109,7 @@ async function loadRequests(){ try{ const d=await callAPI({action:'getRequests',
 
 function openDeleteConfirm(maYC){ pendingDeleteMaYC=maYC; document.getElementById('confirmDeleteOverlay').style.display='flex'; }
 function closeDeleteConfirm(){ pendingDeleteMaYC=null; document.getElementById('confirmDeleteOverlay').style.display='none'; }
-async function confirmDeleteRequest(){ if(!pendingDeleteMaYC)return; const maYC=pendingDeleteMaYC; closeDeleteConfirm(); try{ const d=await callAPI({action:'deleteRequest',maYC:maYC}); if(d.success){ showToast('🗑️ Đã xoá yêu cầu','#2F9E44'); loadRequests(); } else showToast('❌ Xoá thất bại. Thử lại!','#E03131'); } catch(e){ showToast('❌ Lỗi kết nối. Thử lại!','#E03131'); } }
+async function confirmDeleteRequest(){ if(!pendingDeleteMaYC)return; const maYC=pendingDeleteMaYC; closeDeleteConfirm(); try{ const d=await supaDeleteRequest(maYC); if(d.success){ showToast('🗑️ Đã xoá yêu cầu','#2F9E44'); loadRequests(); } else showToast('❌ Xoá thất bại. Thử lại!','#E03131'); } catch(e){ showToast('❌ Lỗi kết nối. Thử lại!','#E03131'); } }
 
 function editRequest(maYC){ const r=lastLeaveRequests.find(x=>x.maYC===maYC); if(!r)return; editingMaYC=maYC; switchTab('leave'); const map={XIN_NGHI:'Xin nghỉ',DOICA:'Đổi ca',KHAC:'Yêu cầu khác'}; lvCurrentType=r.loaiNghi||'XIN_NGHI'; const lbl=document.getElementById('lvDropLabel'); if(lbl)lbl.textContent=map[lvCurrentType]||'Xin nghỉ'; document.getElementById('lvFormNghi').style.display=lvCurrentType==='XIN_NGHI'?'block':'none'; document.getElementById('lvFormDoiCa').style.display=lvCurrentType==='DOICA'?'block':'none'; document.getElementById('lvFormKhac').style.display=lvCurrentType==='KHAC'?'block':'none'; const toISO=(s)=>{ if(!s)return ''; const p=s.split('/'); return p.length===3 ? p[2]+'-'+p[1]+'-'+p[0] : s; }; const tn=document.getElementById('reqTuNgay'),dn=document.getElementById('reqDenNgay'); if(tn)tn.value=toISO(r.tuNgay); if(dn)dn.value=toISO(r.denNgay); calcDuration(); const ly=document.getElementById('reqLyDo'); if(ly)ly.value=(r.lyDo&&r.lyDo!=='Không có lý do')?r.lyDo:''; const btn=document.getElementById('btnSubmit'); if(btn)btn.innerHTML='CẬP NHẬT YÊU CẦU'; showToast('✏️ Đang chỉnh sửa yêu cầu — chỉnh xong bấm Cập nhật','#2D46DB'); }
 
@@ -1009,9 +1122,9 @@ async function submitRequest(){
   const btn=document.getElementById('btnSubmit'); btn.textContent=editingMaYC?'Đang cập nhật...':'Đang gửi...'; btn.disabled=true;
   try{
     const payload = editingMaYC
-      ? {action:'updateOwnRequest',maYC:editingMaYC,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:ghiChuText||'Không có lý do'}
-      : {action:'submitRequest',maYC:'YC'+Date.now(),maNV:currentUser.maNV,hoTen:currentUser.hoTen,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:ghiChuText||'Không có lý do'};
-    const d=await callAPI(payload);
+      ? {maYC:editingMaYC,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:ghiChuText||'Không có lý do'}
+      : {maYC:'YC'+Date.now(),maNV:currentUser.maNV,hoTen:currentUser.hoTen,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:ghiChuText||'Không có lý do'};
+    const d=editingMaYC ? await supaUpdateOwnRequest(payload) : await supaSubmitRequest(payload);
     if(d.success){ showToast(editingMaYC?'✅ Đã cập nhật yêu cầu!':'✅ Đã gửi yêu cầu thành công!','#2F9E44'); document.getElementById('reqLyDo').value=''; editingMaYC=null; loadRequests(); }
     else showToast(editingMaYC?'❌ Cập nhật thất bại. Thử lại!':'❌ Gửi thất bại. Thử lại!','#E03131');
   } catch(e){showToast('❌ Lỗi kết nối. Thử lại!','#E03131');}
@@ -1028,7 +1141,7 @@ function isPendingReq(r){ return r.trangThai === 'Chờ duyệt' || r.trangThai 
 async function loadAdminRequests(){
   document.getElementById('adminList').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải yêu cầu...</div>';
   try{
-    const d = await callAPI({ action: 'getAdminRequests' });
+    const d = await supaGetAdminRequests();
     if(d.success && d.requests && d.requests.length){
       adminAllRequests = d.requests;
       const pendingCount = d.requests.filter(isPendingReq).length;
@@ -1167,9 +1280,7 @@ async function handleAdminAction(id, status, btnEl, lyDoTuChoi){
   if(card){ card.querySelectorAll('button').forEach(b=>{b.disabled=true; b.style.opacity='0.5';}); }
   if(btnEl) btnEl.textContent = status === 'Đã duyệt' ? '⏳ Đang duyệt...' : '⏳ Đang từ chối...';
   try{
-    const params = { action:'updateRequestStatus', id, status };
-    if(status === 'Từ chối' && lyDoTuChoi) params.lyDoTuChoi = lyDoTuChoi;
-    const d = await callAPI(params);
+    const d = await supaUpdateRequestStatus(id, status, lyDoTuChoi);
     if(d.success){
       showToast(status==='Đã duyệt' ? '✅ Đã duyệt yêu cầu!' : '✕ Đã từ chối yêu cầu.', status==='Đã duyệt' ? '#2F9E44' : '#E03131');
       // Reload danh sách
