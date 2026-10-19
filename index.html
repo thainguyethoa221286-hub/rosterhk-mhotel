@@ -161,7 +161,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .link-mini { font-size:11px; font-weight:800; color:var(--gx-gold-deep); text-decoration:none; }
 .btn-new-mini { background:linear-gradient(135deg,#FDE68A,var(--gx-gold)); color:#1E293B; border:none; border-radius:20px; padding:6px 14px; font-size:11px; font-weight:800; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px; }
 
-/* CALENDAR — TAB LỊCH LÀM (KHÔNG THAY ĐỔI) */
+/* CALENDAR — TAB LỊCH LÀM */
 .cal-wrap { background:var(--surface); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 .cal-nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
 .cal-title { font-size:17px; font-weight:800; color:var(--text); }
@@ -171,29 +171,30 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .cal-days-hdr { display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:6px; }
 .cal-hdr-cell { text-align:center; font-size:11px; font-weight:700; color:var(--muted); padding:3px 0; }
 .cal-hdr-cell.red { color:var(--red); }
-.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
-.dc { border-radius:10px; min-height:52px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; background:#F8F9FF; border:1.5px solid transparent; padding:3px 2px; transition:all .15s; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px 3px; }
+.dc { border-radius:14px; min-height:54px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; background:transparent; border:1.5px solid transparent; padding:4px 2px; transition:all .15s; }
 .dc:active { transform:scale(.95); }
 .dc.empty   { background:transparent; border:none; cursor:default; }
-.dc.today   { background:var(--primary); border-color:var(--primary); box-shadow:0 4px 12px rgba(59,91,219,.3); }
-.dc.today .dc-num { color:white; }
-.dc.today .dc-dow { color:rgba(255,255,255,.75); }
-.dc.selected { border-color:var(--primary); background:var(--primary-light); }
+.dc.today .dc-num { color:var(--gx-gold-deep); }
+.dc.selected { border-color:#A5B4FC; background:#EEF2FF; box-shadow:0 2px 8px rgba(99,102,241,.18); }
+.dc.selected .dc-num { color:#4338CA; }
 .dc.weekend .dc-num { color:var(--red); }
-.dc.today.weekend .dc-num { color:white; }
+.dc.today.weekend .dc-num { color:var(--gx-gold-deep); }
 .dc-num { font-size:14px; font-weight:800; color:var(--text); line-height:1; }
-.dc-dow { font-size:9px; color:var(--muted); font-weight:600; }
-.dc-ca { font-size:8px; font-weight:900; padding:2px 5px; border-radius:6px; line-height:1.4; letter-spacing:.3px; white-space:nowrap; }
+.dc-ca { position:relative; font-size:8.5px; font-weight:900; padding:3px 7px; border-radius:20px; line-height:1.3; letter-spacing:.2px; white-space:nowrap; }
+.dc-ca .dc-star { position:absolute; top:-5px; right:-4px; font-size:8px; line-height:1; color:#F59F00; filter:drop-shadow(0 0 2px rgba(0,0,0,.25)); }
 .ca-M7,.ca-M8,.ca-M9,.ca-M10 { background:#F76707; color:white; }
-.ca-A12 { background:#3B5BDB; color:white; }
+.ca-A12,.ca-A13 { background:#3B5BDB; color:white; }
 .ca-O   { background:#CED4DA; color:#495057; }
-.ca-AL  { background:#CCFF00; color:#2E7D32; }
+.ca-AL  { background:#FCC419; color:#5C3C00; }
 .ca-CL  { background:#2F9E44; color:white; }
 .ca-PH  { background:#E03131; color:white; }
-.ca-AL2 { background:#F4FF81; color:#33691E; }
+.ca-AL2 { background:#FFE066; color:#5C3C00; }
 .ca-CL2 { background:#C8E6C9; color:#2E7D32; }
 .ca-O2  { background:#EEEEEE; color:#757575; }
-.cal-legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+.cal-legend { display:flex; flex-wrap:nowrap; gap:8px; margin-top:14px; padding-top:12px; padding-bottom:2px; border-top:1px solid var(--border); overflow-x:auto; -ms-overflow-style:none; scrollbar-width:none; }
+.cal-legend::-webkit-scrollbar { display:none; }
+.cal-legend .leg-item { flex-shrink:0; }
 .leg-item { display:flex; align-items:center; gap:5px; font-size:10px; color:var(--muted); font-weight:600; }
 .leg-dot  { width:26px; height:16px; border-radius:5px; font-size:8px; font-weight:900; display:flex; align-items:center; justify-content:center; color:white; }
 .ddc { background:var(--surface); border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.08); margin-bottom:12px; }
@@ -205,7 +206,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .ddc-hdr.none      { background:linear-gradient(135deg,#CED4DA,#ADB5BD); }
 .ddc-date { font-size:11px; font-weight:700; color:rgba(255,255,255,.8); text-transform:uppercase; margin-bottom:3px; }
 .ddc-name { font-size:20px; font-weight:900; color:white; }
-.ddc-badge { background:rgba(255,255,255,.25); border-radius:20px; padding:5px 14px; font-size:14px; font-weight:900; color:white; align-self:center; }
+.ddc-badge { position:relative; background:rgba(255,255,255,.25); border-radius:20px; padding:5px 14px; font-size:14px; font-weight:900; color:white; align-self:center; }
+.ddc-star { margin-left:3px; color:#FFE066; font-size:12px; vertical-align:middle; }
 .ddc-body { padding:14px 16px; }
 .ddc-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
 .ddc-row:last-child { border-bottom:none; }
@@ -1070,9 +1072,9 @@ async function loadMySchedule(){
   renderTodayShift(); renderCalendar();
 }
 function renderTodayShift(){ const key=todayKey(),ca=mySchedule[key]||''; if(!ca){ document.getElementById('todayShiftCard').innerHTML='<div class="card" style="display:flex;align-items:center;gap:12px;padding:16px 18px"><div style="font-size:28px">📋</div><div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Hôm nay</div><div style="font-size:15px;font-weight:700;color:var(--text)">Chưa có lịch làm</div></div></div>'; return; } const type=getCaType(ca),cls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':'leave',name=CA_NAMES[ca]||ca,time=CA_TIMES[ca]||'',tnow=new Date(),dl=DOW_VI[tnow.getDay()]+', '+pad(tnow.getDate())+'/'+pad(tnow.getMonth()+1)+'/'+tnow.getFullYear(); document.getElementById('todayShiftCard').innerHTML='<div class="shift-card '+cls+'"><div class="shift-lbl">Ca làm việc hôm nay</div><div class="shift-name">'+name+'</div>'+(time?'<div class="shift-time">⏰ '+time+'</div>':'')+'<div class="shift-date">📆 '+dl+'</div><div class="shift-badge">'+ca+'</div></div>'; }
-function renderCalendar(){ document.getElementById('calTitle').textContent=MON_VI[calMonth]+' '+calYear; document.getElementById('calSub').textContent='📅 Chu kỳ: '+cycleRange(calMonth,calYear); const kToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),firstDow=(new Date(calYear,calMonth,1).getDay()+6)%7,dim=new Date(calYear,calMonth+1,0).getDate(); let html=''; for(let i=0;i<firstDow;i++)html+='<div class="dc empty"></div>'; for(let d=1;d<=dim;d++){ const key=makeKey(calYear,calMonth,d),ca=mySchedule[key]||'',dow=new Date(calYear,calMonth,d).getDay(),isToday=key===kToday,isWknd=dow===0||dow===6,isSel=key===selKey; let cls='dc'; if(isToday)cls+=' today'; else if(isSel)cls+=' selected'; if(isWknd)cls+=' weekend'; const badge=ca?'<div class="dc-ca ca-'+stripStar(ca)+'">'+ca+'</div>':''; html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num">'+d+'</div>'+'<div class="dc-dow">'+DOW_VI[dow]+'</div>'+badge+'</div>'; } document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey); }
+function renderCalendar(){ document.getElementById('calTitle').textContent=MON_VI[calMonth]+' '+calYear; document.getElementById('calSub').textContent='📅 Chu kỳ: '+cycleRange(calMonth,calYear); const kToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),firstDow=(new Date(calYear,calMonth,1).getDay()+6)%7,dim=new Date(calYear,calMonth+1,0).getDate(); let html=''; for(let i=0;i<firstDow;i++)html+='<div class="dc empty"></div>'; for(let d=1;d<=dim;d++){ const key=makeKey(calYear,calMonth,d),ca=mySchedule[key]||'',dow=new Date(calYear,calMonth,d).getDay(),isToday=key===kToday,isWknd=dow===0||dow===6,isSel=key===selKey; let cls='dc'; if(isToday)cls+=' today'; else if(isSel)cls+=' selected'; if(isWknd)cls+=' weekend'; const badge=ca?'<div class="dc-ca ca-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="dc-star">★</span>':'')+'</div>':''; html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num">'+d+'</div>'+badge+'</div>'; } document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey); }
 function selectDay(key){ selKey=key; document.querySelectorAll('.dc').forEach(c=>{c.classList.toggle('selected',c.onclick&&c.onclick.toString().includes("'"+key+"'"));}); renderDayDetail(key); }
-function renderDayDetail(key){ if(!key){document.getElementById('dayDetail').innerHTML='';return;} const parts=key.split('-'),y=parseInt(parts[0]),m=parseInt(parts[1])-1,d=parseInt(parts[2]),date=new Date(y,m,d),ca=mySchedule[key]||'',type=getCaType(ca),hCls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':ca?'leave':'none',caName=ca?(CA_NAMES[ca]||ca):'Chưa có lịch',caTime=CA_TIMES[ca]||'',dateStr=DOW_FULL[date.getDay()]+', '+pad(d)+'/'+pad(m+1)+'/'+y; document.getElementById('dayDetail').innerHTML='<div class="ddc"><div class="ddc-hdr '+hCls+'"><div><div class="ddc-date">'+dateStr+'</div><div class="ddc-name">'+caName+'</div></div>'+(ca?'<div class="ddc-badge">'+ca+'</div>':'')+'</div>'+(caTime?'<div class="ddc-body"><div class="ddc-row"><div class="ddc-icon">⏰</div><div><div class="ddc-lbl">Giờ làm việc</div><div class="ddc-val">'+caTime+'</div></div></div></div>':'<div class="ddc-body"><div class="empty" style="padding:10px">'+(ca?'':'Ngày này chưa có ca làm việc')+'</div></div>')+'</div>'; }
+function renderDayDetail(key){ if(!key){document.getElementById('dayDetail').innerHTML='';return;} const parts=key.split('-'),y=parseInt(parts[0]),m=parseInt(parts[1])-1,d=parseInt(parts[2]),date=new Date(y,m,d),ca=mySchedule[key]||'',type=getCaType(ca),hCls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':ca?'leave':'none',caName=ca?(CA_NAMES[stripStar(ca)]||CA_NAMES[ca]||ca):'Chưa có lịch',caTime=CA_TIMES[stripStar(ca)]||CA_TIMES[ca]||'',dateStr=DOW_FULL[date.getDay()]+', '+pad(d)+'/'+pad(m+1)+'/'+y; document.getElementById('dayDetail').innerHTML='<div class="ddc"><div class="ddc-hdr '+hCls+'"><div><div class="ddc-date">'+dateStr+'</div><div class="ddc-name">'+caName+'</div></div>'+(ca?'<div class="ddc-badge">'+stripStar(ca)+(ca.includes('*')?'<span class="ddc-star">★</span>':'')+'</div>':'')+'</div>'+(caTime?'<div class="ddc-body"><div class="ddc-row"><div class="ddc-icon">⏰</div><div><div class="ddc-lbl">Giờ làm việc</div><div class="ddc-val">'+caTime+'</div></div></div></div>':'<div class="ddc-body"><div class="empty" style="padding:10px">'+(ca?'':'Ngày này chưa có ca làm việc')+'</div></div>')+'</div>'; }
 function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} loadMySchedule(); }
 function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} loadMySchedule(); }
 
