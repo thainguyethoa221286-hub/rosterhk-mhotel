@@ -175,11 +175,14 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .dc { border-radius:14px; min-height:54px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; background:transparent; border:1.5px solid transparent; padding:4px 2px; transition:all .15s; }
 .dc:active { transform:scale(.95); }
 .dc.empty   { background:transparent; border:none; cursor:default; }
-.dc.today .dc-num { color:var(--gx-gold-deep); }
+.dc.today   { border-color:var(--primary); box-shadow:0 0 0 1.5px var(--primary) inset; background:var(--primary-light); }
+.dc.today .dc-num { color:var(--primary); }
 .dc.selected { border-color:#A5B4FC; background:#EEF2FF; box-shadow:0 2px 8px rgba(99,102,241,.18); }
 .dc.selected .dc-num { color:#4338CA; }
+.dc.today.selected { border-color:var(--primary); background:var(--primary-light); box-shadow:0 0 0 1.5px var(--primary) inset; }
+.dc.today.selected .dc-num { color:var(--primary); }
 .dc.weekend .dc-num { color:var(--red); }
-.dc.today.weekend .dc-num { color:var(--gx-gold-deep); }
+.dc.today.weekend .dc-num { color:var(--primary); }
 .dc-num { font-size:14px; font-weight:800; color:var(--text); line-height:1; }
 .dc-ca { position:relative; font-size:8.5px; font-weight:900; padding:3px 7px; border-radius:20px; line-height:1.3; letter-spacing:.2px; white-space:nowrap; }
 .dc-ca .dc-star { position:absolute; top:-5px; right:-4px; font-size:8px; line-height:1; color:#F59F00; filter:drop-shadow(0 0 2px rgba(0,0,0,.25)); }
