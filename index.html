@@ -85,6 +85,61 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .tb-icon  { width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
 .tb-lbl   { font-size:10px; font-weight:800; color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:.8px; margin-bottom:2px; }
 .tb-val   { font-size:15px; font-weight:800; color:white; }
+.tb-card { cursor:pointer; position:relative; }
+.tb-card:active { transform:scale(.98); }
+.tb-chev { margin-left:auto; font-size:20px; font-weight:800; color:rgba(255,255,255,0.85); }
+.qg-note { margin-top:10px; font-size:11px; font-weight:600; color:#8892B0; line-height:1.45; display:flex; gap:6px; }
+
+/* QUỸ GIỜ — Modal / báo cáo / xuất Excel */
+.qg-box { max-height:90vh; overflow-y:auto; }
+.qg-box.wide { max-width:100%; border-radius:24px 24px 0 0; }
+.qg-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px; }
+.qg-title { font-size:17px; font-weight:900; color:var(--text); }
+.qg-x { width:32px; height:32px; border-radius:50%; border:none; background:#F1F5F9; color:#475569; font-size:14px; font-weight:800; cursor:pointer; flex-shrink:0; }
+.qg-total { border-radius:16px; padding:14px 16px; color:white; margin-bottom:14px; }
+.qg-total.deficit { background:linear-gradient(135deg,#FB923C,#EF4444); }
+.qg-total.surplus { background:linear-gradient(135deg,#34D399,#059669); }
+.qg-total.balanced { background:linear-gradient(135deg,#94A3B8,#64748B); }
+.qg-total .l { font-size:10px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; opacity:.85; }
+.qg-total .v { font-size:20px; font-weight:900; margin-top:2px; }
+.qg-cycle { font-size:11px; font-weight:700; color:#64748B; margin-bottom:8px; }
+.qg-quota { background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+.qg-q-top { display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:#334155; margin-bottom:8px; }
+.qg-bar { height:8px; background:#E2E8F0; border-radius:8px; overflow:hidden; }
+.qg-bar-fill { height:100%; border-radius:8px; }
+.qg-bar-fill.early { background:linear-gradient(90deg,#FB923C,#EF4444); }
+.qg-bar-fill.makeup { background:linear-gradient(90deg,#34D399,#059669); }
+.qg-q-sub { font-size:11px; font-weight:700; color:#64748B; margin-top:6px; }
+.qg-sec { font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#8892B0; margin:16px 0 8px; }
+.qg-hist { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #EEF2F7; }
+.qg-hist:last-child { border-bottom:none; }
+.qg-hist .i { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.qg-hist .m { flex:1; min-width:0; }
+.qg-hist .t { font-size:13px; font-weight:800; color:var(--text); }
+.qg-hist .d { font-size:11px; color:#64748B; }
+.qg-hist .h { font-size:14px; font-weight:900; }
+.qg-hist .h.neg { color:#C2410C; } .qg-hist .h.pos { color:#047857; }
+.qg-st { font-size:10px; font-weight:800; padding:2px 8px; border-radius:20px; margin-top:2px; display:inline-block; }
+.qg-st.ok { background:#EBFBEE; color:#2F9E44; } .qg-st.wait { background:#FFF9DB; color:#E67700; } .qg-st.no { background:#FFF5F5; color:#E03131; }
+.qg-report-btn { width:100%; border:none; border-radius:14px; padding:12px; background:linear-gradient(135deg,#FDE68A,var(--gx-gold)); color:#1E293B; font-size:13px; font-weight:900; font-family:inherit; cursor:pointer; box-shadow:0 4px 12px rgba(202,138,4,.25); }
+.qg-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+.qg-toolbar .nav { display:flex; align-items:center; gap:6px; flex:1; }
+.qg-toolbar .nav button { width:30px; height:30px; border-radius:9px; border:1.5px solid #D6DCEF; background:white; font-weight:800; cursor:pointer; }
+.qg-toolbar .nav span { font-size:12px; font-weight:800; color:#334155; }
+.qg-xls { border:none; border-radius:12px; padding:9px 14px; background:#16A34A; color:white; font-size:12px; font-weight:800; font-family:inherit; cursor:pointer; }
+.qg-matrix-wrap { overflow:auto; max-height:62vh; border:1.5px solid #E2E8F0; border-radius:12px; }
+.qg-table { border-collapse:separate; border-spacing:0; width:max-content; font-size:11px; }
+.qg-table th, .qg-table td { padding:7px 6px; text-align:center; border-bottom:1px solid #EEF2F7; border-right:1px solid #F1F5F9; min-width:42px; white-space:nowrap; }
+.qg-table th { background:#F8FAFC; font-weight:800; color:#475569; position:sticky; top:0; z-index:2; }
+.qg-table th.nm, .qg-table td.nm { position:sticky; left:0; z-index:3; background:white; text-align:left; min-width:120px; font-weight:800; color:var(--text); }
+.qg-table th.nm { background:#F8FAFC; z-index:4; }
+.qg-table td.neg { background:#FFEDD5; color:#C2410C; font-weight:900; }
+.qg-table td.pos { background:#D1FAE5; color:#047857; font-weight:900; }
+.qg-table td.tot { font-weight:900; background:#F8FAFC; position:sticky; right:0; }
+.lt-export { display:flex; align-items:center; gap:6px; padding:8px 16px; background:#F1F3FA; flex-wrap:wrap; border-top:1px solid #E2E8F0; }
+.lt-export .lbl { font-size:11px; font-weight:800; color:#64748B; }
+.lt-export input[type=date] { border:1.5px solid #D6DCEF; background:white; border-radius:9px; padding:6px 8px; font-size:12px; font-family:inherit; font-weight:600; color:#1A1F36; min-width:0; flex:1; }
+.lt-export button { border:none; border-radius:10px; padding:8px 12px; background:#16A34A; color:white; font-size:12px; font-weight:800; font-family:inherit; cursor:pointer; white-space:nowrap; }
 
 /* BALANCE — Ngày phép (Phép năm = vàng, Nghỉ bù = xanh lá) */
 .balance-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
@@ -662,6 +717,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <span style="font-size:20px">⏳</span>
           <span style="font-size:15px;font-weight:800;color:#C2410C" id="veSomPreview">Sẽ ghi nhận: −0 giờ vào quỹ giờ</span>
         </div>
+        <div class="qg-note"><span>ℹ️</span><span>Hạn mức: Tối đa 3h về sớm &amp; 3h làm bù/chu kỳ Roster (24-23 hàng tháng)</span></div>
       </div>
       <!-- 5. FORM XIN TRẢ GIỜ / LÀM BÙ -->
       <div id="lvFormTraGio" style="display:none;margin-top:4px">
@@ -686,6 +742,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <span style="font-size:20px">⏱️</span>
           <span style="font-size:15px;font-weight:800;color:#047857" id="traGioPreview">Sẽ ghi nhận: +0 giờ vào quỹ giờ</span>
         </div>
+        <div class="qg-note"><span>ℹ️</span><span>Hạn mức: Tối đa 3h về sớm &amp; 3h làm bù/chu kỳ Roster (24-23 hàng tháng)</span></div>
       </div>
       <div style="margin-top:20px">
         <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px">LÝ DO XIN NGHỈ / GHI CHÚ</div>
@@ -721,6 +778,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       <button class="lt-vm-btn" id="ltVmWeek" onclick="ltSetViewMode('week')">Tuần này</button>
       <button class="lt-vm-btn active" id="ltVmFull" onclick="ltSetViewMode('full')">Cả chu kỳ</button>
     </div>
+    <div class="lt-export">
+      <span class="lbl">Xuất Excel:</span>
+      <input type="date" id="ltExpFrom"><span class="lbl">→</span><input type="date" id="ltExpTo">
+      <button onclick="exportLichTongXlsx()">⬇️ Tải Lịch Tổng</button>
+    </div>
     <div class="lt-wrap">
       <div id="ltTable"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
     </div>
@@ -755,8 +817,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
       <button class="admin-filter-btn" onclick="adminSetFilter('XIN_NGHI',this)">🏖️ Xin nghỉ</button>
       <button class="admin-filter-btn" onclick="adminSetFilter('DOICA',this)">↔️ Đổi ca</button>
       <button class="admin-filter-btn" onclick="adminSetFilter('KHAC',this)">✨ Khác</button>
-      <button class="admin-filter-btn" onclick="adminSetFilter('VE_SOM',this)">🌙 Về sớm</button>
-      <button class="admin-filter-btn" onclick="adminSetFilter('TRA_GIO',this)">⏱️ Trả giờ</button>
+      <button class="admin-filter-btn" onclick="adminSetFilter('QUY_GIO',this)">⚖️ Quỹ giờ</button>
+    </div>
+    <div style="padding:12px 16px 0">
+      <button class="qg-report-btn" onclick="openQgReport()">📊 Xem &amp; Xuất Báo Cáo Quỹ Giờ</button>
     </div>
     <div class="admin-list" id="adminList">
       <div class="loading"><div class="spinner"></div>Đang tải yêu cầu...</div>
@@ -795,7 +859,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
   </div>
 </div>
 
+<!-- MODAL: QUỸ GIỜ (chi tiết cá nhân / báo cáo ma trận admin) -->
+<div class="modal-overlay" id="qgOverlay" onclick="if(event.target===this)closeQgSheet()">
+  <div class="modal-box qg-box" id="qgBox"></div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fSbz-_mTWWwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
 
@@ -874,25 +944,53 @@ async function supaGetAllSchedule(month, year){
   } catch(e){ return { success:false, employees:[] }; }
 }
 
+/* ===== YÊU CẦU: đơn nghỉ/đổi ca/khác -> roster_leave_requests | Về sớm / Trả giờ -> time_balances ===== */
+function isTimeType(l){ return l==='VE_SOM' || l==='TRA_GIO'; }
+function mapLeaveRow(r){ return {
+  id: r.ma_yc, maYC: r.ma_yc, maNV: String(r.ma_nv||'').trim().toUpperCase(), hoTen: r.ho_ten||'',
+  loaiNghi: r.loai_nghi, tuNgay: fmtDMY(r.tu_ngay), denNgay: fmtDMY(r.den_ngay),
+  soNgay: r.so_ngay, lyDo: r.ly_do||'', trangThai: r.trang_thai||'Chờ duyệt',
+  thoiGianGui: r.thoi_gian_gui ? fmtDMY(r.thoi_gian_gui) : '', lyDoTuChoi: r.ly_do_tu_choi||'', _ts: r.thoi_gian_gui||''
+}; }
+function mapTimeRow(r){ return {
+  id: r.ma_yc, maYC: r.ma_yc, maNV: String(r.ma_nv||'').trim().toUpperCase(), hoTen: r.ho_ten||'',
+  loaiNghi: r.loai, tuNgay: fmtDMY(r.ngay), denNgay: fmtDMY(r.ngay),
+  soNgay: Number(r.gio)||0, lyDo: r.ly_do||'', trangThai: r.trang_thai||'Chờ duyệt',
+  thoiGianGui: r.thoi_gian_gui ? fmtDMY(r.thoi_gian_gui) : '', lyDoTuChoi: r.ly_do_tu_choi||'', _ts: r.thoi_gian_gui||''
+}; }
+async function supaTimeRows(maNV){ // đọc bảng time_balances; lỗi (chưa tạo bảng...) => coi như rỗng để không làm hỏng danh sách đơn nghỉ
+  try{ let q=sb.from('time_balances').select('*'); if(maNV) q=q.eq('ma_nv',maNV); const { data, error } = await q; if(error) throw error; return (data||[]).map(mapTimeRow); }
+  catch(e){ return []; }
+}
+
 async function supaGetRequests(maNV){
   try{
-    const { data, error } = await sb.from('roster_leave_requests').select('*').eq('ma_nv', maNV).order('thoi_gian_gui', {ascending:false}).limit(10);
-    if (error) throw error;
-    const requests = (data||[]).map(r => ({
-      maYC: r.ma_yc, loaiNghi: r.loai_nghi, tuNgay: fmtDMY(r.tu_ngay), denNgay: fmtDMY(r.den_ngay),
-      soNgay: r.so_ngay, lyDo: r.ly_do, trangThai: r.trang_thai || 'Chờ duyệt', lyDoTuChoi: r.ly_do_tu_choi || ''
-    }));
+    const [lv, tm] = await Promise.all([
+      sb.from('roster_leave_requests').select('*').eq('ma_nv', maNV).order('thoi_gian_gui', {ascending:false}).limit(10),
+      supaTimeRows(maNV)
+    ]);
+    if (lv.error) throw lv.error;
+    const requests = (lv.data||[]).map(mapLeaveRow).concat(tm).sort((a,b)=> String(b._ts).localeCompare(String(a._ts))).slice(0,10);
     return { success:true, requests };
   } catch(e){ return { success:false, requests:[] }; }
 }
 
 async function supaSubmitRequest(p){
   try{
-    const { error } = await sb.from('roster_leave_requests').insert({
-      ma_yc: p.maYC, ma_nv: String(p.maNV||'').trim().toUpperCase(), ho_ten: p.hoTen,
-      loai_nghi: p.loaiNghi, tu_ngay: p.tuNgay || null, den_ngay: p.denNgay || null,
-      so_ngay: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt'
-    });
+    const maNV = String(p.maNV||'').trim().toUpperCase();
+    let error;
+    if (isTimeType(p.loaiNghi)) {
+      ({ error } = await sb.from('time_balances').insert({
+        ma_yc: p.maYC, ma_nv: maNV, ho_ten: p.hoTen, loai: p.loaiNghi,
+        ngay: p.tuNgay || null, gio: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt'
+      }));
+    } else {
+      ({ error } = await sb.from('roster_leave_requests').insert({
+        ma_yc: p.maYC, ma_nv: maNV, ho_ten: p.hoTen,
+        loai_nghi: p.loaiNghi, tu_ngay: p.tuNgay || null, den_ngay: p.denNgay || null,
+        so_ngay: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt'
+      }));
+    }
     if (error) throw error;
     return { success:true };
   } catch(e){ return { success:false }; }
@@ -900,10 +998,24 @@ async function supaSubmitRequest(p){
 
 async function supaUpdateOwnRequest(p){
   try{
-    const { error } = await sb.from('roster_leave_requests').update({
-      loai_nghi: p.loaiNghi, tu_ngay: p.tuNgay || null, den_ngay: p.denNgay || null,
-      so_ngay: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt', ly_do_tu_choi: ''
-    }).eq('ma_yc', p.maYC);
+    const old = (typeof lastLeaveRequests!=='undefined' ? lastLeaveRequests : []).find(x=>x.maYC===p.maYC);
+    const oldIsTime = !!old && isTimeType(old.loaiNghi), newIsTime = isTimeType(p.loaiNghi);
+    if (old && oldIsTime !== newIsTime) { // đổi loại giữa 2 nhóm => xoá ở bảng cũ, tạo lại ở bảng mới (giữ nguyên mã YC)
+      const del = await sb.from(oldIsTime ? 'time_balances' : 'roster_leave_requests').delete().eq('ma_yc', p.maYC);
+      if (del.error) throw del.error;
+      return await supaSubmitRequest({ ...p, maNV: currentUser.maNV, hoTen: currentUser.hoTen });
+    }
+    let error;
+    if (newIsTime) {
+      ({ error } = await sb.from('time_balances').update({
+        loai: p.loaiNghi, ngay: p.tuNgay || null, gio: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt', ly_do_tu_choi: ''
+      }).eq('ma_yc', p.maYC));
+    } else {
+      ({ error } = await sb.from('roster_leave_requests').update({
+        loai_nghi: p.loaiNghi, tu_ngay: p.tuNgay || null, den_ngay: p.denNgay || null,
+        so_ngay: p.soNgay, ly_do: p.lyDo, trang_thai: 'Chờ duyệt', ly_do_tu_choi: ''
+      }).eq('ma_yc', p.maYC));
+    }
     if (error) throw error;
     return { success:true };
   } catch(e){ return { success:false }; }
@@ -911,22 +1023,23 @@ async function supaUpdateOwnRequest(p){
 
 async function supaDeleteRequest(maYC){
   try{
-    const { error } = await sb.from('roster_leave_requests').delete().eq('ma_yc', maYC);
-    if (error) throw error;
+    const a = await sb.from('roster_leave_requests').delete().eq('ma_yc', maYC);
+    if (a.error) throw a.error;
+    const b = await sb.from('time_balances').delete().eq('ma_yc', maYC);
+    if (b.error) throw b.error;
     return { success:true };
   } catch(e){ return { success:false }; }
 }
 
 async function supaGetAdminRequests(){
   try{
-    const { data, error } = await sb.from('roster_leave_requests').select('*').order('thoi_gian_gui', {ascending:false});
-    if (error) throw error;
-    let requests = (data||[]).map(r => ({
-      id: r.ma_yc, maYC: r.ma_yc, maNV: String(r.ma_nv||'').trim().toUpperCase(), hoTen: r.ho_ten||'',
-      loaiNghi: r.loai_nghi, tuNgay: fmtDMY(r.tu_ngay), denNgay: fmtDMY(r.den_ngay),
-      soNgay: r.so_ngay||1, lyDo: r.ly_do||'', trangThai: r.trang_thai||'Chờ duyệt',
-      thoiGianGui: r.thoi_gian_gui ? fmtDMY(r.thoi_gian_gui) : '', lyDoTuChoi: r.ly_do_tu_choi||''
-    }));
+    const [lv, tm] = await Promise.all([
+      sb.from('roster_leave_requests').select('*').order('thoi_gian_gui', {ascending:false}),
+      supaTimeRows(null)
+    ]);
+    if (lv.error) throw lv.error;
+    let requests = (lv.data||[]).map(r=>{ const m=mapLeaveRow(r); m.soNgay=r.so_ngay||1; return m; }).concat(tm)
+      .sort((a,b)=> String(b._ts).localeCompare(String(a._ts)));
     requests.sort((a,b) => { const pa=(a.trangThai==='Chờ duyệt')?0:1, pb=(b.trangThai==='Chờ duyệt')?0:1; return pa-pb; });
     return { success:true, requests };
   } catch(e){ return { success:false, requests:[] }; }
@@ -934,10 +1047,9 @@ async function supaGetAdminRequests(){
 
 async function supaGetMyTimeBalance(maNV){
   try{
-    const { data, error } = await sb.from('roster_leave_requests').select('so_ngay')
-      .eq('ma_nv', maNV).eq('trang_thai','Đã duyệt').in('loai_nghi',['VE_SOM','TRA_GIO']);
+    const { data, error } = await sb.from('time_balances').select('gio').eq('ma_nv', maNV).eq('trang_thai','Đã duyệt');
     if (error) throw error;
-    const total = (data||[]).reduce((s,r)=>s+(Number(r.so_ngay)||0),0);
+    const total = (data||[]).reduce((s,r)=>s+(Number(r.gio)||0),0);
     return { success:true, total };
   } catch(e){ return { success:false, total:0 }; }
 }
@@ -946,8 +1058,10 @@ async function supaUpdateRequestStatus(id, status, lyDoTuChoi){
   try{
     const patch = { trang_thai: status };
     if (status === 'Từ chối' && lyDoTuChoi) patch.ly_do_tu_choi = lyDoTuChoi;
-    const { error } = await sb.from('roster_leave_requests').update(patch).eq('ma_yc', id);
-    if (error) throw error;
+    const a = await sb.from('roster_leave_requests').update(patch).eq('ma_yc', id);
+    if (a.error) throw a.error;
+    const b = await sb.from('time_balances').update(patch).eq('ma_yc', id);
+    if (b.error) throw b.error;
     return { success:true };
   } catch(e){ return { success:false }; }
 }
@@ -1178,6 +1292,7 @@ function ltToggleCollapse(){
   renderLichTong();
 }
 async function loadLichTong(){
+  ltInitExportRange();
   document.getElementById('ltTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải...</div>';
   try{ const d=await supaGetAllSchedule(ltMonth+1,ltYear); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees.slice().sort((a,b)=>{ const na=parseInt(String(a.maNV||'').replace(/\D/g,''),10)||0, nb=parseInt(String(b.maNV||'').replace(/\D/g,''),10)||0; return na-nb; });renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';}
 }
@@ -1189,6 +1304,145 @@ function ltNext(){ ltMonth++; if(ltMonth>11){ltMonth=0;ltYear++;} loadLichTong()
 let lastLeaveRequests = [];
 let editingMaYC = null;
 let pendingDeleteMaYC = null;
+/* ===== HẠN MỨC QUỸ GIỜ: tối đa 3h về sớm + 3h làm bù / chu kỳ Roster (24 → 23) ===== */
+const TIME_LIMIT_HOURS = 3;
+function isoOf(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function cycleOfDate(iso){
+  const p=String(iso).split('-'), y=+p[0], m=+p[1]-1, d=+p[2];
+  let sy=y, sm=m; if(d<24){ sm=m-1; if(sm<0){ sm=11; sy=y-1; } }
+  const ey=sm===11?sy+1:sy, em=sm===11?0:sm+1;
+  const start=new Date(sy,sm,24), end=new Date(ey,em,23);
+  return { start, end, startISO:isoOf(start), endISO:isoOf(end), label:'24/'+pad(sm+1)+'/'+sy+' – 23/'+pad(em+1)+'/'+ey };
+}
+// Tổng giờ [đã duyệt + chờ duyệt] của 1 loại trong chu kỳ (trị tuyệt đối)
+async function supaGetTimeUsage(maNV, loai, startISO, endISO, excludeMaYC){
+  try{
+    const { data, error } = await sb.from('time_balances').select('ma_yc, so_ngay:gio')
+      .eq('ma_nv', maNV).eq('loai', loai).in('trang_thai',['Chờ duyệt','Đã duyệt'])
+      .gte('ngay', startISO).lte('ngay', endISO);
+    if (error) throw error;
+    const used=(data||[]).filter(r=>r.ma_yc!==excludeMaYC).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
+    return { success:true, used };
+  } catch(e){ return { success:false, used:0 }; }
+}
+async function validateCheckLimit(loai, ngayISO, gio, excludeMaYC){
+  const cycle=cycleOfDate(ngayISO);
+  const u=await supaGetTimeUsage(currentUser.maNV, loai, cycle.startISO, cycle.endISO, excludeMaYC);
+  if(!u.success) return { ok:false, message:'Không kiểm tra được hạn mức, vui lòng thử lại.', used:0, remaining:0, cycle };
+  const remaining=Math.max(0, TIME_LIMIT_HOURS-u.used);
+  if(u.used+Math.abs(gio) > TIME_LIMIT_HOURS+1e-9){
+    const base = loai==='VE_SOM' ? 'Vượt quá hạn mức về sớm tối đa (3h/chu kỳ Roster).' : 'Vượt quá hạn mức làm bù tối đa (3h/chu kỳ Roster).';
+    return { ok:false, message: base+' Đã dùng '+u.used+'h, còn lại '+remaining+'h (chu kỳ '+cycle.label+').', used:u.used, remaining, cycle };
+  }
+  return { ok:true, message:'', used:u.used, remaining, cycle };
+}
+
+/* ===== MODAL DÙNG CHUNG ===== */
+function openQgSheet(html, wide){ const b=document.getElementById('qgBox'); b.classList.toggle('wide',!!wide); b.innerHTML=html; document.getElementById('qgOverlay').style.display='flex'; }
+function closeQgSheet(){ document.getElementById('qgOverlay').style.display='none'; }
+
+/* ===== CHI TIẾT QUỸ GIỜ CÁ NHÂN (bấm vào widget) ===== */
+async function openTimeFundModal(){
+  openQgSheet('<div class="loading"><div class="spinner"></div>Đang tải...</div>');
+  const cyc=cycleOfDate(isoOf(new Date()));
+  try{
+    const { data, error } = await sb.from('time_balances')
+      .select('ma_yc,loai_nghi:loai,tu_ngay:ngay,so_ngay:gio,ly_do,trang_thai,ly_do_tu_choi')
+      .eq('ma_nv', currentUser.maNV).order('ngay',{ascending:false});
+    if(error) throw error;
+    const rows=data||[];
+    const total=rows.filter(r=>r.trang_thai==='Đã duyệt').reduce((s,r)=>s+(Number(r.so_ngay)||0),0);
+    const active=(r)=>r.tu_ngay>=cyc.startISO && r.tu_ngay<=cyc.endISO && (r.trang_thai==='Chờ duyệt'||r.trang_thai==='Đã duyệt');
+    const usedE=rows.filter(r=>r.loai_nghi==='VE_SOM'&&active(r)).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
+    const usedM=rows.filter(r=>r.loai_nghi==='TRA_GIO'&&active(r)).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
+    const abs=Math.abs(total).toLocaleString('vi-VN',{maximumFractionDigits:1});
+    const cls=total<0?'deficit':total>0?'surplus':'balanced';
+    const lbl=total<0?'Đang thiếu '+abs+'h':total>0?'Đang dư '+abs+'h':'Quỹ giờ cân bằng (0h)';
+    const quota=(icon,name,used,kind)=>{ const pct=Math.min(100,used/TIME_LIMIT_HOURS*100), left=Math.max(0,TIME_LIMIT_HOURS-used); return '<div class="qg-quota"><div class="qg-q-top"><span>'+icon+' '+name+'</span><span>'+used+' / '+TIME_LIMIT_HOURS+'h</span></div><div class="qg-bar"><div class="qg-bar-fill '+kind+'" style="width:'+pct+'%"></div></div><div class="qg-q-sub">Còn lại: '+left+'h trong chu kỳ</div></div>'; };
+    let hist='';
+    rows.forEach(r=>{
+      const h=Number(r.so_ngay)||0, isE=r.loai_nghi==='VE_SOM';
+      const st=r.trang_thai==='Đã duyệt'?'<span class="qg-st ok">✓ Đã duyệt</span>':r.trang_thai==='Từ chối'?'<span class="qg-st no">✕ Từ chối</span>':'<span class="qg-st wait">⏳ Chờ duyệt</span>';
+      hist+='<div class="qg-hist"><div class="i" style="background:'+(isE?'#FFF4ED':'#ECFDF5')+'">'+(isE?'🌙':'⏱️')+'</div><div class="m"><div class="t">'+(isE?'Về sớm / Thiếu giờ':'Trả giờ / Làm bù')+'</div><div class="d">'+fmtDMY(r.tu_ngay)+(r.ly_do&&r.ly_do!=='Không có lý do'?' · '+r.ly_do:'')+'</div>'+st+'</div><div class="h '+(h<0?'neg':'pos')+'">'+(h>0?'+':'')+h+'h</div></div>';
+    });
+    openQgSheet('<div class="qg-head"><div class="qg-title">⚖️ Quỹ giờ cá nhân</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div>'
+      +'<div class="qg-total '+cls+'"><div class="l">Tổng đã duyệt</div><div class="v">'+lbl+'</div></div>'
+      +'<div class="qg-cycle">📅 Chu kỳ hiện tại: '+cyc.label+' (tính cả đơn chờ duyệt)</div>'
+      +quota('🌙','Hạn mức về sớm',usedE,'early')+quota('⏱️','Hạn mức làm bù',usedM,'makeup')
+      +'<div class="qg-sec">Lịch sử nợ / trả giờ</div>'+(hist||'<div class="empty">Chưa có yêu cầu nào</div>'));
+  } catch(e){ openQgSheet('<div class="qg-head"><div class="qg-title">⚖️ Quỹ giờ cá nhân</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div><div class="empty">Lỗi tải dữ liệu. Vui lòng thử lại.</div>'); }
+}
+
+/* ===== BÁO CÁO MA TRẬN QUỸ GIỜ (ADMIN) ===== */
+let qgMonth=null, qgYear=null, qgMatrix=null;
+function nvNum(ma){ return parseInt(String(ma||'').replace(/\D/g,''),10)||0; }
+function fmtH(v){ if(!v) return ''; const a=Math.abs(v); return (v>0?'+':'-')+a+'H'; }
+function openQgReport(){ qgMonth=ltMonth; qgYear=ltYear; renderQgReport(); }
+function qgPrev(){ qgMonth--; if(qgMonth<0){qgMonth=11;qgYear--;} renderQgReport(); }
+function qgNext(){ qgMonth++; if(qgMonth>11){qgMonth=0;qgYear++;} renderQgReport(); }
+async function renderQgReport(){
+  openQgSheet('<div class="loading"><div class="spinner"></div>Đang tải báo cáo...</div>', true);
+  const dates=cycleDates(qgMonth,qgYear), sISO=isoOf(dates[0]), eISO=isoOf(dates[dates.length-1]);
+  try{
+    const { data, error } = await sb.from('time_balances').select('ma_nv,ho_ten,tu_ngay:ngay,so_ngay:gio')
+      .eq('trang_thai','Đã duyệt').gte('ngay',sISO).lte('ngay',eISO);
+    if(error) throw error;
+    const map={}, names={};
+    (data||[]).forEach(r=>{ const ma=String(r.ma_nv||'').trim().toUpperCase(); if(!ma)return; (map[ma]=map[ma]||{}); map[ma][r.tu_ngay]=(map[ma][r.tu_ngay]||0)+(Number(r.so_ngay)||0); names[ma]=r.ho_ten; });
+    const emps=Array.from(new Set(Object.keys(DANH_SACH_TEN).concat(Object.keys(map)))).sort((a,b)=>nvNum(a)-nvNum(b));
+    qgMatrix={ dates, emps, map, names };
+    let th='<tr><th class="nm">Nhân viên</th>'; dates.forEach(d=>{ th+='<th>'+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'<br><small>'+DOW_VI[d.getDay()]+'</small></th>'; }); th+='<th class="tot">Tổng</th></tr>';
+    let tb='';
+    emps.forEach(ma=>{
+      let sum=0, tr='<tr><td class="nm">'+(DANH_SACH_TEN[ma]||names[ma]||ma)+'<div style="font-size:9px;color:#94A3B8;font-weight:600">'+ma+'</div></td>';
+      dates.forEach(d=>{ const v=(map[ma]&&map[ma][isoOf(d)])||0; sum+=v; tr+='<td class="'+(v<0?'neg':v>0?'pos':'')+'">'+fmtH(v)+'</td>'; });
+      tr+='<td class="tot" style="color:'+(sum<0?'#C2410C':sum>0?'#047857':'#94A3B8')+'">'+(sum?fmtH(sum):'0')+'</td></tr>'; tb+=tr;
+    });
+    openQgSheet('<div class="qg-head"><div class="qg-title">📊 Báo cáo quỹ giờ (TRẢ GIỜ)</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div>'
+      +'<div class="qg-toolbar"><div class="nav"><button onclick="qgPrev()">‹</button><span>'+MON_VI[qgMonth]+' '+qgYear+' · '+cycleRange(qgMonth,qgYear)+'</span><button onclick="qgNext()">›</button></div><button class="qg-xls" onclick="exportQgXlsx()">⬇️ Tải Báo Cáo Excel</button></div>'
+      +'<div class="qg-matrix-wrap"><table class="qg-table"><thead>'+th+'</thead><tbody>'+tb+'</tbody></table></div>'
+      +'<div class="qg-cycle" style="margin-top:8px">Chỉ tính các yêu cầu đã duyệt · Ô trống = không có phát sinh</div>', true);
+  } catch(e){ openQgSheet('<div class="qg-head"><div class="qg-title">📊 Báo cáo quỹ giờ</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div><div class="empty">Lỗi tải báo cáo. Vui lòng thử lại.</div>', true); }
+}
+function exportQgXlsx(){
+  if(typeof XLSX==='undefined'){ showToast('❌ Chưa tải được thư viện Excel, thử lại!','#E03131'); return; }
+  if(!qgMatrix){ return; }
+  const { dates, emps, map, names }=qgMatrix;
+  const aoa=[['Mã NV','Nhân viên'].concat(dates.map(d=>pad(d.getDate())+'/'+pad(d.getMonth()+1)), ['Tổng (giờ)'])];
+  emps.forEach(ma=>{ let sum=0; const row=[ma, DANH_SACH_TEN[ma]||names[ma]||ma]; dates.forEach(d=>{ const v=(map[ma]&&map[ma][isoOf(d)])||0; sum+=v; row.push(fmtH(v)); }); row.push(sum); aoa.push(row); });
+  const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:8},{wch:22}].concat(dates.map(()=>({wch:6})),[{wch:10}]);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'TRA GIO');
+  XLSX.writeFile(wb,'Quy_gio_'+pad(qgMonth+1)+'-'+qgYear+'.xlsx');
+  showToast('✅ Đã tải báo cáo Excel','#2F9E44');
+}
+
+/* ===== XUẤT LỊCH TỔNG RA EXCEL (theo khoảng ngày) ===== */
+function ltInitExportRange(){ const ds=cycleDates(ltMonth,ltYear), f=document.getElementById('ltExpFrom'), t=document.getElementById('ltExpTo'); if(f&&ds.length)f.value=isoOf(ds[0]); if(t&&ds.length)t.value=isoOf(ds[ds.length-1]); }
+async function exportLichTongXlsx(){
+  if(typeof XLSX==='undefined'){ showToast('❌ Chưa tải được thư viện Excel, thử lại!','#E03131'); return; }
+  const from=document.getElementById('ltExpFrom').value, to=document.getElementById('ltExpTo').value;
+  if(!from||!to){ showToast('⚠️ Vui lòng chọn khoảng ngày!','#E67700'); return; }
+  if(to<from){ showToast('⚠️ Ngày kết thúc phải sau ngày bắt đầu!','#E67700'); return; }
+  showToast('⏳ Đang tạo file Excel...','#2D46DB');
+  try{
+    let rows=[], page=0; const size=1000;
+    while(true){
+      const { data, error } = await sb.from('roster_schedule').select('ma_nv,ho_ten,ngay,ca').gte('ngay',from).lte('ngay',to).order('ngay',{ascending:true}).range(page*size,page*size+size-1);
+      if(error) throw error; rows=rows.concat(data||[]); if(!data||data.length<size)break; page++;
+    }
+    const map={}, names={};
+    rows.forEach(r=>{ const ma=String(r.ma_nv||'').trim().toUpperCase(); if(!ma)return; (map[ma]=map[ma]||{})[r.ngay]=r.ca; names[ma]=r.ho_ten; });
+    const emps=Array.from(new Set(Object.keys(DANH_SACH_TEN).concat(Object.keys(map)))).sort((a,b)=>nvNum(a)-nvNum(b));
+    const dates=[]; const cur=new Date(from+'T00:00:00'), end=new Date(to+'T00:00:00'); while(cur<=end){ dates.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
+    const aoa=[['Mã NV','Nhân viên'].concat(dates.map(d=>pad(d.getDate())+'/'+pad(d.getMonth()+1))), ['',''].concat(dates.map(d=>DOW_VI[d.getDay()]))];
+    emps.forEach(ma=>{ aoa.push([ma, DANH_SACH_TEN[ma]||names[ma]||ma].concat(dates.map(d=>(map[ma]&&map[ma][isoOf(d)])||''))); });
+    const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:8},{wch:22}].concat(dates.map(()=>({wch:6})));
+    const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Lich tong');
+    XLSX.writeFile(wb,'Lich_tong_'+from+'_den_'+to+'.xlsx');
+    showToast('✅ Đã tải Lịch Tổng','#2F9E44');
+  } catch(e){ showToast('❌ Xuất Excel thất bại. Thử lại!','#E03131'); }
+}
+
 async function loadTimeBalance(){
   const el=document.getElementById('timeBalanceCard'); if(!el||!currentUser)return;
   try{
@@ -1198,7 +1452,7 @@ async function loadTimeBalance(){
     let cls='balanced',icon='⚖️',label='Quỹ giờ cân bằng (0h)';
     if(total<0){ cls='deficit'; icon='⏳'; label='Bạn đang thiếu '+abs+' giờ'; }
     else if(total>0){ cls='surplus'; icon='✅'; label='Bạn đang dư '+abs+' giờ'; }
-    el.innerHTML='<div class="tb-card '+cls+'"><div class="tb-icon">'+icon+'</div><div><div class="tb-lbl">Quỹ giờ cá nhân</div><div class="tb-val">'+label+'</div></div></div>';
+    el.innerHTML='<div class="tb-card '+cls+'" onclick="openTimeFundModal()"><div class="tb-icon">'+icon+'</div><div><div class="tb-lbl">Quỹ giờ cá nhân · chạm để xem chi tiết</div><div class="tb-val">'+label+'</div></div><div class="tb-chev">›</div></div>';
   } catch(e){ el.innerHTML=''; }
 }
 
@@ -1224,8 +1478,8 @@ async function submitRequest(){
   if(loai==='XIN_NGHI'){ tuNgay=document.getElementById('reqTuNgay').value; denNgay=document.getElementById('reqDenNgay').value; if(!tuNgay||!denNgay){showToast('⚠️ Vui lòng chọn ngày nghỉ!','#E67700');return;} const d1=new Date(tuNgay),d2=new Date(denNgay); if(d2<d1){showToast('⚠️ Ngày kết thúc phải sau ngày bắt đầu!','#E67700');return;} soNgay=Math.round((d2-d1)/86400000)+1; }
   else if(loai==='DOICA'){ const doiNgay=document.getElementById('reqDoiCaNgay').value,caHT=document.getElementById('reqCaHienTai').value,caMD=document.getElementById('reqCaMuonDoi').value; if(!doiNgay||!caHT||!caMD){showToast('⚠️ Vui lòng điền đủ thông tin đổi ca!','#E67700');return;} tuNgay=doiNgay; denNgay=doiNgay; ghiChuText='[Đổi ca: '+fmtDate(doiNgay)+' từ '+caHT+' → '+caMD+'] '+ghiChuText; }
   else if(loai==='KHAC'){ const kNgay=document.getElementById('reqKhacNgay').value; if(!kNgay){showToast('⚠️ Vui lòng chọn ngày xử lý!','#E67700');return;} tuNgay=kNgay; denNgay=kNgay; }
-  else if(loai==='VE_SOM'){ const ngay=document.getElementById('reqVeSomNgay').value,gio=parseFloat(document.getElementById('reqVeSomGio').value); if(!ngay){showToast('⚠️ Vui lòng chọn ngày về sớm!','#E67700');return;} if(!gio||gio<=0){showToast('⚠️ Vui lòng nhập số giờ thiếu hợp lệ!','#E67700');return;} tuNgay=ngay; denNgay=ngay; soNgay=-Math.abs(gio); }
-  else if(loai==='TRA_GIO'){ const ngay=document.getElementById('reqTraGioNgay').value,gio=parseFloat(document.getElementById('reqTraGioGio').value); if(!ngay){showToast('⚠️ Vui lòng chọn ngày làm bù!','#E67700');return;} if(!gio||gio<=0){showToast('⚠️ Vui lòng nhập số giờ bù hợp lệ!','#E67700');return;} tuNgay=ngay; denNgay=ngay; soNgay=Math.abs(gio); }
+  else if(loai==='VE_SOM'){ const ngay=document.getElementById('reqVeSomNgay').value,gio=parseFloat(document.getElementById('reqVeSomGio').value); if(!ngay){showToast('⚠️ Vui lòng chọn ngày về sớm!','#E67700');return;} if(!gio||gio<=0){showToast('⚠️ Vui lòng nhập số giờ thiếu hợp lệ!','#E67700');return;} const chk=await validateCheckLimit('VE_SOM',ngay,gio,editingMaYC); if(!chk.ok){showToast('⚠️ '+chk.message,'#E03131');return;} tuNgay=ngay; denNgay=ngay; soNgay=-Math.abs(gio); }
+  else if(loai==='TRA_GIO'){ const ngay=document.getElementById('reqTraGioNgay').value,gio=parseFloat(document.getElementById('reqTraGioGio').value); if(!ngay){showToast('⚠️ Vui lòng chọn ngày làm bù!','#E67700');return;} if(!gio||gio<=0){showToast('⚠️ Vui lòng nhập số giờ bù hợp lệ!','#E67700');return;} const chk=await validateCheckLimit('TRA_GIO',ngay,gio,editingMaYC); if(!chk.ok){showToast('⚠️ '+chk.message,'#E03131');return;} tuNgay=ngay; denNgay=ngay; soNgay=Math.abs(gio); }
   const btn=document.getElementById('btnSubmit'); btn.textContent=editingMaYC?'Đang cập nhật...':'Đang gửi...'; btn.disabled=true;
   try{
     const payload = editingMaYC
@@ -1301,7 +1555,9 @@ function renderAdminList(){
   // Bước 2: lọc theo loại yêu cầu (chip)
   const filtered = adminCurrentFilter === 'all'
     ? byStatus
-    : byStatus.filter(r => r.loaiNghi === adminCurrentFilter);
+    : adminCurrentFilter === 'QUY_GIO'
+      ? byStatus.filter(r => r.loaiNghi === 'VE_SOM' || r.loaiNghi === 'TRA_GIO')
+      : byStatus.filter(r => r.loaiNghi === adminCurrentFilter);
 
   if(!filtered.length){
     const emptyMsg = adminCurrentStatusTab === 'pending'
