@@ -1085,7 +1085,7 @@ async function supaGetAdminRequests(){
 
 async function supaGetMyTimeBalance(maNV){
   try{
-    const { data, error } = await sb.from('time_balances').select('gio').eq('ma_nv', maNV).eq('trang_thai','Đã duyệt');
+    const { data, error } = await sb.from('time_balances').select('gio').eq('ma_nv', maNV).eq('trang_thai','Đã duyệt').neq('loai','TRA_PHEP');
     if (error) throw error;
     const total = (data||[]).reduce((s,r)=>s+(Number(r.gio)||0),0);
     return { success:true, total };
@@ -1389,7 +1389,7 @@ async function openTimeFundModal(){
       .eq('ma_nv', currentUser.maNV).order('ngay',{ascending:false});
     if(error) throw error;
     const rows=data||[];
-    const total=rows.filter(r=>r.trang_thai==='Đã duyệt').reduce((s,r)=>s+(Number(r.so_ngay)||0),0);
+    const total=rows.filter(r=>r.trang_thai==='Đã duyệt'&&r.loai_nghi!=='TRA_PHEP').reduce((s,r)=>s+(Number(r.so_ngay)||0),0);
     const active=(r)=>r.tu_ngay>=cyc.startISO && r.tu_ngay<=cyc.endISO && (r.trang_thai==='Chờ duyệt'||r.trang_thai==='Đã duyệt');
     const usedE=rows.filter(r=>r.loai_nghi==='VE_SOM'&&active(r)).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
     const usedM=rows.filter(r=>r.loai_nghi==='TRA_GIO'&&active(r)).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
@@ -1407,7 +1407,7 @@ async function openTimeFundModal(){
     openQgSheet('<div class="qg-head"><div class="qg-title">⚖️ Quỹ giờ cá nhân</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div>'
       +'<div class="qg-total '+cls+'"><div class="l">Tổng đã duyệt</div><div class="v">'+lbl+'</div></div>'
       +'<div class="qg-cycle">📅 Chu kỳ hiện tại: '+cyc.label+' (tính cả đơn chờ duyệt)</div>'
-      +quota('🌙','Hạn mức về sớm',usedE,'early')+quota('⏱️','Hạn mức làm bù',usedM,'makeup')+'<div class="qg-quota"><div class="qg-q-top"><span>🏖️ Trả giờ bằng phép</span><span>'+usedP+'h</span></div><div class="qg-q-sub" style="margin-top:0">Không giới hạn số giờ · tính vào quỹ giờ khi được duyệt</div></div>'
+      +quota('🌙','Hạn mức về sớm',usedE,'early')+quota('⏱️','Hạn mức làm bù',usedM,'makeup')+'<div class="qg-quota"><div class="qg-q-top"><span>🏖️ Trả giờ bằng phép</span><span>'+usedP+'h</span></div><div class="qg-q-sub" style="margin-top:0">Không giới hạn số giờ · chỉ để theo dõi, không tính vào Tổng đã duyệt</div></div>'
       +'<div class="qg-sec">Lịch sử nợ / trả giờ</div>'+(hist||'<div class="empty">Chưa có yêu cầu nào</div>'));
   } catch(e){ openQgSheet('<div class="qg-head"><div class="qg-title">⚖️ Quỹ giờ cá nhân</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div><div class="empty">Lỗi tải dữ liệu. Vui lòng thử lại.</div>'); }
 }
