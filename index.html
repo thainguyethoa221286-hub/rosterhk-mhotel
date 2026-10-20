@@ -742,7 +742,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <span style="font-size:20px">⏳</span>
           <span style="font-size:15px;font-weight:800;color:#C2410C" id="veSomPreview">Sẽ ghi nhận: −0 giờ vào quỹ giờ</span>
         </div>
-        <div class="qg-note"><span>ℹ️</span><span>Hạn mức: Tối đa 3h về sớm &amp; 3h làm bù/chu kỳ Roster (24-23 hàng tháng)</span></div>
+        <div class="qg-note"><span>ℹ️</span><span>Hạn mức: Tối đa 2h về sớm &amp; 2h làm bù/chu kỳ Roster (24-23 hàng tháng)</span></div>
       </div>
       <!-- 5. FORM XIN TRẢ GIỜ / LÀM BÙ -->
       <div id="lvFormTraGio" style="display:none;margin-top:4px">
@@ -767,7 +767,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <span style="font-size:20px">⏱️</span>
           <span style="font-size:15px;font-weight:800;color:#047857" id="traGioPreview">Sẽ ghi nhận: +0 giờ vào quỹ giờ</span>
         </div>
-        <div class="qg-note"><span>ℹ️</span><span>Hạn mức: Tối đa 3h về sớm &amp; 3h làm bù/chu kỳ Roster (24-23 hàng tháng)</span></div>
+        <div class="qg-note"><span>ℹ️</span><span>Hạn mức: Tối đa 2h về sớm &amp; 2h làm bù/chu kỳ Roster (24-23 hàng tháng)</span></div>
       </div>
       <!-- 6. FORM TRẢ GIỜ BẰNG PHÉP -->
       <div id="lvFormTraPhep" style="display:none;margin-top:4px">
@@ -1356,8 +1356,8 @@ function ltNext(){ ltMonth++; if(ltMonth>11){ltMonth=0;ltYear++;} loadLichTong()
 let lastLeaveRequests = [];
 let editingMaYC = null;
 let pendingDeleteMaYC = null;
-/* ===== HẠN MỨC QUỸ GIỜ: tối đa 3h về sớm + 3h làm bù / chu kỳ Roster (24 → 23) ===== */
-const TIME_LIMIT_HOURS = 3;
+/* ===== HẠN MỨC QUỸ GIỜ: tối đa 2h về sớm + 2h làm bù / chu kỳ Roster (24 → 23) ===== */
+const TIME_LIMIT_HOURS = 2;
 function isoOf(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function cycleOfDate(iso){
   const p=String(iso).split('-'), y=+p[0], m=+p[1]-1, d=+p[2];
@@ -1383,7 +1383,7 @@ async function validateCheckLimit(loai, ngayISO, gio, excludeMaYC){
   if(!u.success) return { ok:false, message:'Không kiểm tra được hạn mức, vui lòng thử lại.', used:0, remaining:0, cycle };
   const remaining=Math.max(0, TIME_LIMIT_HOURS-u.used);
   if(u.used+Math.abs(gio) > TIME_LIMIT_HOURS+1e-9){
-    const base = loai==='VE_SOM' ? 'Vượt quá hạn mức về sớm tối đa (3h/chu kỳ Roster).' : 'Vượt quá hạn mức làm bù tối đa (3h/chu kỳ Roster).';
+    const base = loai==='VE_SOM' ? 'Vượt quá hạn mức về sớm tối đa (2h/chu kỳ Roster).' : 'Vượt quá hạn mức làm bù tối đa (2h/chu kỳ Roster).';
     return { ok:false, message: base+' Đã dùng '+u.used+'h, còn lại '+remaining+'h (chu kỳ '+cycle.label+').', used:u.used, remaining, cycle };
   }
   return { ok:true, message:'', used:u.used, remaining, cycle };
