@@ -447,6 +447,19 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .modal-btn-cancel { background:var(--bg); color:var(--muted); border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; }
 .modal-btn-confirm { background:linear-gradient(135deg,#E03131,#C92A2A); color:white; border:none; border-radius:12px; padding:13px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; }
 .modal-btn-confirm:disabled { opacity:0.6; cursor:not-allowed; }
+.bd-open-btn{width:100%;margin-top:8px;border:1.5px solid #FECACA;border-radius:14px;padding:11px;background:#FFF5F5;color:#C92A2A;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer}
+#bdOverlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+#bdOverlay .bd-box{background:#fff;border-radius:20px;width:100%;max-width:380px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);max-height:90vh;overflow:auto}
+.bd-box h3{margin:0 0 4px;font-size:16px;font-weight:900;color:#1E293B}
+.bd-box .sub{font-size:12px;color:#64748B;margin-bottom:14px}
+.bd-box label{display:block;font-size:12px;font-weight:800;color:#475569;margin:10px 0 4px}
+.bd-box input,.bd-box select{width:100%;box-sizing:border-box;padding:10px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;font-family:inherit}
+.bd-box .row{display:flex;gap:8px}.bd-box .row>div{flex:1}
+.bd-box .res{margin-top:14px;padding:10px 12px;border-radius:12px;background:#F1F5F9;font-size:13px;font-weight:700;color:#334155;min-height:20px}
+.bd-box .res.warn{background:#FFF5F5;color:#C92A2A}
+.bd-box .acts{display:flex;gap:8px;margin-top:14px}
+.bd-box .acts button{flex:1;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer}
+.bd-box .b-cancel{background:#F1F5F9;color:#475569}.bd-box .b-prev{background:#E0E7FF;color:#3730A3}.bd-box .b-del{background:#E03131;color:#fff}.bd-box .b-del:disabled{opacity:.4;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -858,6 +871,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
     <div style="padding:12px 16px 0">
       <button class="qg-report-btn" onclick="openQgReport()">📊 Xem &amp; Xuất Báo Cáo Quỹ Giờ</button>
+      <button class="bd-open-btn" onclick="openBulkDelete()">🗑️ Xoá yêu cầu hàng loạt</button>
     </div>
     <div class="admin-list" id="adminList">
       <div class="loading"><div class="spinner"></div>Đang tải yêu cầu...</div>
@@ -1863,6 +1877,61 @@ function switchTab(tab){
   }
   if(tab==='lichTong' && !ltEmployees) loadLichTong();
   if(tab==='admin') loadAdminRequests();
+}
+
+/* ===== ADMIN — XOÁ YÊU CẦU HÀNG LOẠT (CHỈ NV001) ===== */
+let bdIds=[];
+function openBulkDelete(){
+  if(!currentUser||currentUser.maNV!=='NV001')return;
+  let o=document.getElementById('bdOverlay');
+  if(!o){ o=document.createElement('div'); o.id='bdOverlay'; document.body.appendChild(o); }
+  const t=isoOf(new Date());
+  o.innerHTML='<div class="bd-box"><h3>🗑️ Xoá yêu cầu hàng loạt</h3><div class="sub">Chọn khoảng ngày, xem trước số lượng rồi mới xoá. Không thể khôi phục.</div>'
+   +'<div class="row"><div><label>Từ ngày</label><input type="date" id="bdFrom" value="'+t+'" oninput="bdReset()"></div><div><label>Đến ngày</label><input type="date" id="bdTo" value="'+t+'" oninput="bdReset()"></div></div>'
+   +'<label>Tính theo</label><select id="bdBy" onchange="bdReset()"><option value="send">Ngày gửi yêu cầu</option><option value="date">Ngày của yêu cầu (ngày nghỉ / về sớm...)</option></select>'
+   +'<label>Trạng thái</label><select id="bdSt" onchange="bdReset()"><option value="done">Đã duyệt + Từ chối (khuyến nghị)</option><option value="ok">Chỉ Đã duyệt</option><option value="no">Chỉ Từ chối</option><option value="all">Tất cả, kể cả Chờ duyệt</option></select>'
+   +'<label>Nhân viên</label><select id="bdEmp" onchange="bdReset()"><option value="">Tất cả nhân viên</option>'+Array.from(new Set(adminAllRequests.map(r=>r.maNV))).sort().map(m=>'<option value="'+m+'">'+m+' – '+((adminAllRequests.find(r=>r.maNV===m)||{}).hoTen||'')+'</option>').join('')+'</select>'
+   +'<div class="res" id="bdRes">Bấm "Xem trước" để đếm số yêu cầu sẽ bị xoá.</div>'
+   +'<div class="acts"><button class="b-cancel" onclick="closeBulkDelete()">Đóng</button><button class="b-prev" onclick="bdPreview()">Xem trước</button><button class="b-del" id="bdDel" disabled onclick="bdConfirm()">Xoá</button></div></div>';
+  o.style.display='flex';
+}
+function closeBulkDelete(){ const o=document.getElementById('bdOverlay'); if(o)o.style.display='none'; }
+function bdReset(){ bdIds=[]; const d=document.getElementById('bdDel'); if(d)d.disabled=true; const r=document.getElementById('bdRes'); if(r){r.className='res';r.textContent='Bấm "Xem trước" để đếm số yêu cầu sẽ bị xoá.';} }
+function bdPreview(){
+  const from=document.getElementById('bdFrom').value, to=document.getElementById('bdTo').value;
+  const by=document.getElementById('bdBy').value, st=document.getElementById('bdSt').value, emp=document.getElementById('bdEmp').value;
+  const res=document.getElementById('bdRes');
+  if(!from||!to||from>to){ res.className='res warn'; res.textContent='⚠️ Khoảng ngày không hợp lệ.'; return; }
+  const toIso=(dmy)=>{ const p=String(dmy||'').split('/'); return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:''; };
+  const list=adminAllRequests.filter(r=>{
+    const stt=r.trangThai||'Chờ duyệt';
+    if(st==='done'&&!(stt==='Đã duyệt'||stt==='Từ chối'))return false;
+    if(st==='ok'&&stt!=='Đã duyệt')return false;
+    if(st==='no'&&stt!=='Từ chối')return false;
+    if(emp&&r.maNV!==emp)return false;
+    let d; if(by==='send'){ d=r._ts?isoOf(new Date(r._ts)):''; } else { d=toIso(r.tuNgay); }
+    return d&&d>=from&&d<=to;
+  });
+  bdIds=list.map(r=>r.maYC);
+  const pend=list.filter(isPendingReq).length;
+  if(!bdIds.length){ res.className='res'; res.textContent='Không có yêu cầu nào khớp điều kiện.'; document.getElementById('bdDel').disabled=true; return; }
+  res.className='res warn';
+  res.textContent='Sẽ xoá '+bdIds.length+' yêu cầu'+(pend?' (trong đó '+pend+' đang chờ duyệt)':'')+' từ '+fmtDMY(from)+' đến '+fmtDMY(to)+'.';
+  document.getElementById('bdDel').disabled=false;
+}
+async function bdConfirm(){
+  if(!bdIds.length)return;
+  if(!confirm('Xác nhận XOÁ vĩnh viễn '+bdIds.length+' yêu cầu?'))return;
+  const btn=document.getElementById('bdDel'); btn.disabled=true; btn.textContent='Đang xoá...';
+  try{
+    for(let i=0;i<bdIds.length;i+=100){
+      const chunk=bdIds.slice(i,i+100);
+      const a=await sb.from('roster_leave_requests').delete().in('ma_yc',chunk); if(a.error)throw a.error;
+      const b=await sb.from('time_balances').delete().in('ma_yc',chunk); if(b.error)throw b.error;
+    }
+    showToast('🗑️ Đã xoá '+bdIds.length+' yêu cầu','#2F9E44');
+    bdIds=[]; closeBulkDelete(); loadAdminRequests();
+  }catch(e){ showToast('❌ Xoá thất bại. Thử lại!','#E03131'); btn.textContent='Xoá'; btn.disabled=false; }
 }
 
 function showToast(msg,bg='#2F9E44'){ const t=document.getElementById('toast'); t.textContent=msg; t.style.background=bg; t.style.display='block'; setTimeout(()=>t.style.display='none',3000); }
