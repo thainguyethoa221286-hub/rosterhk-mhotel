@@ -404,6 +404,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .type-badge-khac  { background:#F3F0FF; color:#7950F2; }
 .type-badge-vesom { background:#FFEDD5; color:#C2410C; }
 .type-badge-tragio{ background:#D1FAE5; color:#047857; }
+.type-badge-traphep{ background:#EDE9FE; color:#6D28D9; }
+.admin-avatar.type-traphep{ background:linear-gradient(135deg,#A78BFA,#6D28D9); }
+.qg-table td.phep { background:#E1D5F5; color:#6D28D9; font-weight:900; }
+.qg-hist .h.phep { color:#6D28D9; }
+.qg-bar-fill.phep { background:linear-gradient(90deg,#A78BFA,#6D28D9); }
 .admin-card-divider { height:1px; background:var(--border); margin:0 16px; }
 .admin-card-meta { padding:12px 16px; display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; }
 .admin-meta-item { }
@@ -631,6 +636,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
             <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div>
             <span>5. Xin trả giờ / Làm bù</span>
           </div>
+          <div onclick="lvSelectOpt(this,'TRA_PHEP','🏖️ 6. Trả giờ bằng phép')" class="lv-dropdown-item">
+            <div class="lv-radio-circle"><div class="lv-radio-dot-inner"></div></div>
+            <span>6. Trả giờ bằng phép</span>
+          </div>
         </div>
       </div>
       <!-- 1. FORM XIN NGHỈ -->
@@ -743,6 +752,31 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <span style="font-size:15px;font-weight:800;color:#047857" id="traGioPreview">Sẽ ghi nhận: +0 giờ vào quỹ giờ</span>
         </div>
         <div class="qg-note"><span>ℹ️</span><span>Hạn mức: Tối đa 3h về sớm &amp; 3h làm bù/chu kỳ Roster (24-23 hàng tháng)</span></div>
+      </div>
+      <!-- 6. FORM TRẢ GIỜ BẰNG PHÉP -->
+      <div id="lvFormTraPhep" style="display:none;margin-top:4px">
+        <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px">NGÀY DÙNG PHÉP & SỐ GIỜ TRẢ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#8892B0;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Ngày trả giờ</div>
+            <div style="display:flex;align-items:center;background:#F7F8FC;border:1.5px solid #E8EAF2;border-radius:12px;padding:11px 12px;gap:8px">
+              <span style="font-size:14px">📅</span>
+              <input type="date" id="reqTraPhepNgay" style="border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:#1A1F36;font-family:inherit;width:100%">
+            </div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#8892B0;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Số giờ trả bằng phép</div>
+            <div style="display:flex;align-items:center;background:#F7F8FC;border:1.5px solid #E8EAF2;border-radius:12px;padding:11px 12px;gap:8px">
+              <span style="font-size:14px">🏖️</span>
+              <input type="number" step="0.5" min="0.5" id="reqTraPhepGio" oninput="calcHourPreview()" placeholder="VD: 4" style="border:none;outline:none;background:transparent;font-size:13px;font-weight:600;color:#1A1F36;font-family:inherit;width:100%">
+            </div>
+          </div>
+        </div>
+        <div style="background:#F5F3FF;border:1.5px solid #C4B5FD;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px">🏖️</span>
+          <span style="font-size:15px;font-weight:800;color:#6D28D9" id="traPhepPreview">Sẽ ghi nhận: +0 giờ vào quỹ giờ</span>
+        </div>
+        <div class="qg-note"><span>ℹ️</span><span>Trả giờ bằng phép: không giới hạn số giờ, được cộng vào quỹ giờ khi quản lý duyệt.</span></div>
       </div>
       <div style="margin-top:20px">
         <div style="font-size:10px;font-weight:800;color:#8892B0;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px">LÝ DO XIN NGHỈ / GHI CHÚ</div>
@@ -865,7 +899,8 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyyYNs-mlEvwBY8oy_bvKS7z0FqmQEX-5fSbz-_mTWWwPnqcrU2g7EghX2Pr9xLXjbrNA/exec';
 
@@ -945,7 +980,7 @@ async function supaGetAllSchedule(month, year){
 }
 
 /* ===== YÊU CẦU: đơn nghỉ/đổi ca/khác -> roster_leave_requests | Về sớm / Trả giờ -> time_balances ===== */
-function isTimeType(l){ return l==='VE_SOM' || l==='TRA_GIO'; }
+function isTimeType(l){ return l==='VE_SOM' || l==='TRA_GIO' || l==='TRA_PHEP'; }
 function mapLeaveRow(r){ return {
   id: r.ma_yc, maYC: r.ma_yc, maNV: String(r.ma_nv||'').trim().toUpperCase(), hoTen: r.ho_ten||'',
   loaiNghi: r.loai_nghi, tuNgay: fmtDMY(r.tu_ngay), denNgay: fmtDMY(r.den_ngay),
@@ -1258,11 +1293,11 @@ async function loadLeave(){
 /* ===== DROPDOWN CHUYÊN NGHIỆP ===== */
 let lvCurrentType='XIN_NGHI';
 function lvToggleDrop(){ const menu=document.getElementById('lvDropMenu'),arrow=document.getElementById('lvDropArrow'),isOpen=menu.style.display==='block'; menu.style.display=isOpen?'none':'block'; arrow.style.transform=isOpen?'rotate(0)':'rotate(180deg)'; }
-function lvSelectOpt(el,val,label){ document.querySelectorAll('#lvDropMenu .lv-dropdown-item').forEach(r=>{r.classList.remove('selected');}); el.classList.add('selected'); document.getElementById('lvDropLabel').textContent=label; lvCurrentType=val; document.getElementById('lvDropMenu').style.display='none'; document.getElementById('lvDropArrow').style.transform='rotate(0)'; document.getElementById('lvFormNghi').style.display=val==='XIN_NGHI'?'block':'none'; document.getElementById('lvFormDoiCa').style.display=val==='DOICA'?'block':'none'; document.getElementById('lvFormKhac').style.display=val==='KHAC'?'block':'none'; document.getElementById('lvFormVeSom').style.display=val==='VE_SOM'?'block':'none'; document.getElementById('lvFormTraGio').style.display=val==='TRA_GIO'?'block':'none'; }
+function lvSelectOpt(el,val,label){ document.querySelectorAll('#lvDropMenu .lv-dropdown-item').forEach(r=>{r.classList.remove('selected');}); el.classList.add('selected'); document.getElementById('lvDropLabel').textContent=label; lvCurrentType=val; document.getElementById('lvDropMenu').style.display='none'; document.getElementById('lvDropArrow').style.transform='rotate(0)'; document.getElementById('lvFormNghi').style.display=val==='XIN_NGHI'?'block':'none'; document.getElementById('lvFormDoiCa').style.display=val==='DOICA'?'block':'none'; document.getElementById('lvFormKhac').style.display=val==='KHAC'?'block':'none'; document.getElementById('lvFormVeSom').style.display=val==='VE_SOM'?'block':'none'; document.getElementById('lvFormTraGio').style.display=val==='TRA_GIO'?'block':'none'; document.getElementById('lvFormTraPhep').style.display=val==='TRA_PHEP'?'block':'none'; }
 document.addEventListener('click',function(e){ const wrap=document.getElementById('lvDropWrap'); if(wrap&&!wrap.contains(e.target)){ const menu=document.getElementById('lvDropMenu'); if(menu)menu.style.display='none'; const arrow=document.getElementById('lvDropArrow'); if(arrow)arrow.style.transform='rotate(0)'; } });
 
 function calcDuration(){ const s=document.getElementById('reqTuNgay').value,e=document.getElementById('reqDenNgay').value; if(!s||!e)return; const d1=new Date(s),d2=new Date(e); if(isNaN(d1)||isNaN(d2))return; const days=Math.max(1,Math.round((d2-d1)/86400000)+1); const el=document.getElementById('durVal'); if(el)el.textContent='Tổng thời gian: '+days+' Ngày'; }
-function calcHourPreview(){ const gVS=parseFloat(document.getElementById('reqVeSomGio').value)||0,pVS=document.getElementById('veSomPreview'); if(pVS)pVS.textContent='Sẽ ghi nhận: −'+gVS+' giờ vào quỹ giờ'; const gTG=parseFloat(document.getElementById('reqTraGioGio').value)||0,pTG=document.getElementById('traGioPreview'); if(pTG)pTG.textContent='Sẽ ghi nhận: +'+gTG+' giờ vào quỹ giờ'; }
+function calcHourPreview(){ const gVS=parseFloat(document.getElementById('reqVeSomGio').value)||0,pVS=document.getElementById('veSomPreview'); if(pVS)pVS.textContent='Sẽ ghi nhận: −'+gVS+' giờ vào quỹ giờ'; const gTG=parseFloat(document.getElementById('reqTraGioGio').value)||0,pTG=document.getElementById('traGioPreview'); if(pTG)pTG.textContent='Sẽ ghi nhận: +'+gTG+' giờ vào quỹ giờ'; const gTP=parseFloat(document.getElementById('reqTraPhepGio').value)||0,pTP=document.getElementById('traPhepPreview'); if(pTP)pTP.textContent='Sẽ ghi nhận: +'+gTP+' giờ vào quỹ giờ'; }
 
 /* ===== SCHEDULE ===== */
 async function loadMySchedule(){
@@ -1355,20 +1390,21 @@ async function openTimeFundModal(){
     const active=(r)=>r.tu_ngay>=cyc.startISO && r.tu_ngay<=cyc.endISO && (r.trang_thai==='Chờ duyệt'||r.trang_thai==='Đã duyệt');
     const usedE=rows.filter(r=>r.loai_nghi==='VE_SOM'&&active(r)).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
     const usedM=rows.filter(r=>r.loai_nghi==='TRA_GIO'&&active(r)).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
+    const usedP=rows.filter(r=>r.loai_nghi==='TRA_PHEP'&&active(r)).reduce((s,r)=>s+Math.abs(Number(r.so_ngay)||0),0);
     const abs=Math.abs(total).toLocaleString('vi-VN',{maximumFractionDigits:1});
     const cls=total<0?'deficit':total>0?'surplus':'balanced';
     const lbl=total<0?'Đang thiếu '+abs+'h':total>0?'Đang dư '+abs+'h':'Quỹ giờ cân bằng (0h)';
     const quota=(icon,name,used,kind)=>{ const pct=Math.min(100,used/TIME_LIMIT_HOURS*100), left=Math.max(0,TIME_LIMIT_HOURS-used); return '<div class="qg-quota"><div class="qg-q-top"><span>'+icon+' '+name+'</span><span>'+used+' / '+TIME_LIMIT_HOURS+'h</span></div><div class="qg-bar"><div class="qg-bar-fill '+kind+'" style="width:'+pct+'%"></div></div><div class="qg-q-sub">Còn lại: '+left+'h trong chu kỳ</div></div>'; };
     let hist='';
     rows.forEach(r=>{
-      const h=Number(r.so_ngay)||0, isE=r.loai_nghi==='VE_SOM';
+      const h=Number(r.so_ngay)||0, isE=r.loai_nghi==='VE_SOM', isP=r.loai_nghi==='TRA_PHEP';
       const st=r.trang_thai==='Đã duyệt'?'<span class="qg-st ok">✓ Đã duyệt</span>':r.trang_thai==='Từ chối'?'<span class="qg-st no">✕ Từ chối</span>':'<span class="qg-st wait">⏳ Chờ duyệt</span>';
-      hist+='<div class="qg-hist"><div class="i" style="background:'+(isE?'#FFF4ED':'#ECFDF5')+'">'+(isE?'🌙':'⏱️')+'</div><div class="m"><div class="t">'+(isE?'Về sớm / Thiếu giờ':'Trả giờ / Làm bù')+'</div><div class="d">'+fmtDMY(r.tu_ngay)+(r.ly_do&&r.ly_do!=='Không có lý do'?' · '+r.ly_do:'')+'</div>'+st+'</div><div class="h '+(h<0?'neg':'pos')+'">'+(h>0?'+':'')+h+'h</div></div>';
+      hist+='<div class="qg-hist"><div class="i" style="background:'+(isE?'#FFF4ED':isP?'#EDE9FE':'#ECFDF5')+'">'+(isE?'🌙':isP?'🏖️':'⏱️')+'</div><div class="m"><div class="t">'+(isE?'Về sớm / Thiếu giờ':isP?'Trả giờ bằng phép':'Trả giờ / Làm bù')+'</div><div class="d">'+fmtDMY(r.tu_ngay)+(r.ly_do&&r.ly_do!=='Không có lý do'?' · '+r.ly_do:'')+'</div>'+st+'</div><div class="h '+(h<0?'neg':isP?'phep':'pos')+'">'+(h>0?'+':'')+h+'h</div></div>';
     });
     openQgSheet('<div class="qg-head"><div class="qg-title">⚖️ Quỹ giờ cá nhân</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div>'
       +'<div class="qg-total '+cls+'"><div class="l">Tổng đã duyệt</div><div class="v">'+lbl+'</div></div>'
       +'<div class="qg-cycle">📅 Chu kỳ hiện tại: '+cyc.label+' (tính cả đơn chờ duyệt)</div>'
-      +quota('🌙','Hạn mức về sớm',usedE,'early')+quota('⏱️','Hạn mức làm bù',usedM,'makeup')
+      +quota('🌙','Hạn mức về sớm',usedE,'early')+quota('⏱️','Hạn mức làm bù',usedM,'makeup')+'<div class="qg-quota"><div class="qg-q-top"><span>🏖️ Trả giờ bằng phép</span><span>'+usedP+'h</span></div><div class="qg-q-sub" style="margin-top:0">Không giới hạn số giờ · tính vào quỹ giờ khi được duyệt</div></div>'
       +'<div class="qg-sec">Lịch sử nợ / trả giờ</div>'+(hist||'<div class="empty">Chưa có yêu cầu nào</div>'));
   } catch(e){ openQgSheet('<div class="qg-head"><div class="qg-title">⚖️ Quỹ giờ cá nhân</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div><div class="empty">Lỗi tải dữ liệu. Vui lòng thử lại.</div>'); }
 }
@@ -1384,42 +1420,144 @@ async function renderQgReport(){
   openQgSheet('<div class="loading"><div class="spinner"></div>Đang tải báo cáo...</div>', true);
   const dates=cycleDates(qgMonth,qgYear), sISO=isoOf(dates[0]), eISO=isoOf(dates[dates.length-1]);
   try{
-    const { data, error } = await sb.from('time_balances').select('ma_nv,ho_ten,tu_ngay:ngay,so_ngay:gio')
+    const { data, error } = await sb.from('time_balances').select('ma_nv,ho_ten,loai,tu_ngay:ngay,so_ngay:gio')
       .eq('trang_thai','Đã duyệt').gte('ngay',sISO).lte('ngay',eISO);
     if(error) throw error;
-    const map={}, names={};
-    (data||[]).forEach(r=>{ const ma=String(r.ma_nv||'').trim().toUpperCase(); if(!ma)return; (map[ma]=map[ma]||{}); map[ma][r.tu_ngay]=(map[ma][r.tu_ngay]||0)+(Number(r.so_ngay)||0); names[ma]=r.ho_ten; });
+    const map={}, mapP={}, names={};
+    (data||[]).forEach(r=>{ const ma=String(r.ma_nv||'').trim().toUpperCase(); if(!ma)return; (map[ma]=map[ma]||{}); const h=Number(r.so_ngay)||0; map[ma][r.tu_ngay]=(map[ma][r.tu_ngay]||0)+h; if(r.loai==='TRA_PHEP'){ (mapP[ma]=mapP[ma]||{}); mapP[ma][r.tu_ngay]=(mapP[ma][r.tu_ngay]||0)+h; } names[ma]=r.ho_ten; });
     const emps=Array.from(new Set(Object.keys(DANH_SACH_TEN).concat(Object.keys(map)))).sort((a,b)=>nvNum(a)-nvNum(b));
-    qgMatrix={ dates, emps, map, names };
+    qgMatrix={ dates, emps, map, mapP, names };
     let th='<tr><th class="nm">Nhân viên</th>'; dates.forEach(d=>{ th+='<th>'+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'<br><small>'+DOW_VI[d.getDay()]+'</small></th>'; }); th+='<th class="tot">Tổng</th></tr>';
     let tb='';
     emps.forEach(ma=>{
       let sum=0, tr='<tr><td class="nm">'+(DANH_SACH_TEN[ma]||names[ma]||ma)+'<div style="font-size:9px;color:#94A3B8;font-weight:600">'+ma+'</div></td>';
-      dates.forEach(d=>{ const v=(map[ma]&&map[ma][isoOf(d)])||0; sum+=v; tr+='<td class="'+(v<0?'neg':v>0?'pos':'')+'">'+fmtH(v)+'</td>'; });
+      dates.forEach(d=>{ const v=(map[ma]&&map[ma][isoOf(d)])||0; sum+=v; const pv=(mapP[ma]&&mapP[ma][isoOf(d)])||0; tr+='<td class="'+(v<0?'neg':(pv>0&&v-pv<=1e-9)?'phep':v>0?'pos':'')+'">'+fmtH(v)+'</td>'; });
       tr+='<td class="tot" style="color:'+(sum<0?'#C2410C':sum>0?'#047857':'#94A3B8')+'">'+(sum?fmtH(sum):'0')+'</td></tr>'; tb+=tr;
     });
     openQgSheet('<div class="qg-head"><div class="qg-title">📊 Báo cáo quỹ giờ (TRẢ GIỜ)</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div>'
       +'<div class="qg-toolbar"><div class="nav"><button onclick="qgPrev()">‹</button><span>'+MON_VI[qgMonth]+' '+qgYear+' · '+cycleRange(qgMonth,qgYear)+'</span><button onclick="qgNext()">›</button></div><button class="qg-xls" onclick="exportQgXlsx()">⬇️ Tải Báo Cáo Excel</button></div>'
       +'<div class="qg-matrix-wrap"><table class="qg-table"><thead>'+th+'</thead><tbody>'+tb+'</tbody></table></div>'
-      +'<div class="qg-cycle" style="margin-top:8px">Chỉ tính các yêu cầu đã duyệt · Ô trống = không có phát sinh</div>', true);
+      +'<div class="qg-cycle" style="margin-top:8px">Chỉ tính các yêu cầu đã duyệt · <b style="color:#C2410C">cam</b>: về sớm · <b style="color:#1155CC">xanh dương</b>: làm bù · <b style="color:#6D28D9">tím</b>: trả bằng phép</div>', true);
   } catch(e){ openQgSheet('<div class="qg-head"><div class="qg-title">📊 Báo cáo quỹ giờ</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div><div class="empty">Lỗi tải báo cáo. Vui lòng thử lại.</div>', true); }
 }
-function exportQgXlsx(){
-  if(typeof XLSX==='undefined'){ showToast('❌ Chưa tải được thư viện Excel, thử lại!','#E03131'); return; }
+/* ===== XUẤT EXCEL (ExcelJS + FileSaver) — giữ màu sắc & định dạng cell ===== */
+const XL_COMPANY = 'GROUP COMPANY LIMITED / M HOTEL SAIGON';
+const XL_FONT = 'Arial';
+function xlBorder(argb){ const s={style:'thin',color:{argb}}; return {top:s,left:s,bottom:s,right:s}; }
+function xlFill(argb){ return {type:'pattern',pattern:'solid',fgColor:{argb}}; }
+// Màu ô lịch ca làm (khớp giao diện app)
+function xlShiftStyle(ca){
+  const raw=stripStar(ca).toUpperCase().replace(/\s/g,''); if(!raw) return {};
+  if(raw==='AL2'||raw==='AL/2') return {fill:'FFFFF2CC',bold:true};
+  if(raw==='AL')                return {fill:'FFFFE599',bold:true};
+  if(raw==='CL2'||raw==='CL/2') return {fill:'FFD9EAD3',bold:true};
+  if(raw==='CL')                return {fill:'FFB6D7A8',bold:true};
+  if(raw==='PH')                return {fill:'FFF4CCCC',color:'FF990000',bold:true};
+  if(raw==='O'||raw==='O2')     return {fill:'FFEFEFEF',color:'FF666666'};
+  return {color:'FF000000'};               // ca làm việc thường (M7, M8, A12, A14...)
+}
+// Màu ô quỹ giờ
+function xlHoursStyle(text){
+  if(!text) return {};
+  return text.charAt(0)==='-' ? {fill:'FFFCE5CD',color:'FFCC4125',bold:true} : {fill:'FFC9DAF8',color:'FF1155CC',bold:true};
+}
+/* o = { sheetName, fileName, year, monthText, subtext, dates:[Date], emps:[ma], nameOf(ma), cellText(ma,iso), cellStyle(text),
+         totalHeader, totalOf(ma)->{text,fill?,color?} } */
+async function buildAttendanceXlsx(o){
+  if(typeof ExcelJS==='undefined') throw new Error('ExcelJS chưa tải');
+  const wb=new ExcelJS.Workbook(); wb.creator='HK Roster';
+  const ws=wb.addWorksheet(o.sheetName,{
+    views:[{state:'frozen',xSplit:2,ySplit:5}],
+    pageSetup:{orientation:'landscape',paperSize:9,fitToPage:true,fitToWidth:1,fitToHeight:0}
+  });
+  const nd=o.dates.length, firstDate=3, lastDate=2+nd, totalCol=3+nd;
+  ws.getColumn(1).width=5; ws.getColumn(2).width=26;
+  for(let c=firstDate;c<=lastDate;c++) ws.getColumn(c).width=5.6;
+  ws.getColumn(totalCol).width=13;
+
+  // Row 1: tên công ty
+  ws.mergeCells(1,1,1,Math.min(totalCol,12));
+  const r1=ws.getCell(1,1); r1.value=o.company||XL_COMPANY; r1.font={name:XL_FONT,size:10,bold:true}; r1.alignment={vertical:'middle',horizontal:'left'};
+  ws.getRow(1).height=18;
+  // Row 2: tiêu đề + subtext chu kỳ
+  ws.mergeCells(2,1,2,totalCol);
+  const r2=ws.getCell(2,1);
+  const titleTxt='ATTENDANCE RECORD '+o.year+' ( THÁNG '+o.monthText+' )';
+  r2.value = o.subtext
+    ? { richText:[ {text:titleTxt.toUpperCase()+'\n',font:{name:XL_FONT,size:14,bold:true}}, {text:o.subtext,font:{name:XL_FONT,size:10,italic:true,color:{argb:'FF444444'}}} ] }
+    : titleTxt.toUpperCase();
+  if(!o.subtext) r2.font={name:XL_FONT,size:14,bold:true};
+  r2.alignment={vertical:'middle',horizontal:'center',wrapText:true};
+  ws.getRow(2).height=o.subtext?40:26;
+
+  // Header lưới: Row 3 (tháng), Row 4 (thứ), Row 5 (ngày)
+  const hdrStyle=(cell)=>{ cell.fill=xlFill('FFE0E0E0'); cell.border=xlBorder('FFA0A0A0'); cell.font={name:XL_FONT,size:10,bold:true}; cell.alignment={vertical:'middle',horizontal:'center',wrapText:true}; };
+  const vmerge=(col,text)=>{ ws.mergeCells(3,col,5,col); const c=ws.getCell(3,col); c.value=text; hdrStyle(c); for(let r=3;r<=5;r++) hdrStyle(ws.getCell(r,col)); };
+  vmerge(1,'No'); vmerge(2,'Name'); vmerge(totalCol,o.totalHeader);
+  let i=0;
+  while(i<nd){
+    let j=i; const mKey=o.dates[i].getFullYear()+'-'+o.dates[i].getMonth();
+    while(j+1<nd && (o.dates[j+1].getFullYear()+'-'+o.dates[j+1].getMonth())===mKey) j++;
+    if(j>i) ws.mergeCells(3,firstDate+i,3,firstDate+j);
+    const c=ws.getCell(3,firstDate+i); c.value=o.dates[i].getMonth()+1;
+    for(let k=i;k<=j;k++) hdrStyle(ws.getCell(3,firstDate+k));
+    i=j+1;
+  }
+  o.dates.forEach((d,k)=>{
+    const c4=ws.getCell(4,firstDate+k), c5=ws.getCell(5,firstDate+k);
+    c4.value=DOW_VI[d.getDay()]; c5.value=d.getDate(); hdrStyle(c4); hdrStyle(c5);
+  });
+  ws.getRow(3).height=18; ws.getRow(4).height=18; ws.getRow(5).height=18;
+
+  // Dữ liệu
+  const dataBorder=xlBorder('FFC0C0C0');
+  o.emps.forEach((ma,idx)=>{
+    const row=6+idx;
+    const cA=ws.getCell(row,1), cB=ws.getCell(row,2);
+    cA.value=idx+1; cB.value=o.nameOf(ma);
+    [cA,cB].forEach(c=>{ c.border=dataBorder; c.font={name:XL_FONT,size:10,bold:c===cB}; });
+    cA.alignment={vertical:'middle',horizontal:'center'}; cB.alignment={vertical:'middle',horizontal:'left',indent:1};
+    o.dates.forEach((d,k)=>{
+      const text=o.cellText(ma,isoOf(d))||'', st=o.cellStyle(text,ma,isoOf(d))||{}, c=ws.getCell(row,firstDate+k);
+      c.value=text; c.border=dataBorder;
+      c.font={name:XL_FONT,size:10,bold:!!st.bold,color:{argb:st.color||'FF000000'}};
+      if(st.fill) c.fill=xlFill(st.fill);
+      c.alignment={vertical:'middle',horizontal:'center'};
+    });
+    const t=o.totalOf(ma), ct=ws.getCell(row,totalCol);
+    ct.value=t.text; ct.border=dataBorder; ct.fill=xlFill(t.fill||'FFC9DAF8');
+    ct.font={name:XL_FONT,size:10,bold:true,color:{argb:t.color||'FF000000'}}; ct.alignment={vertical:'middle',horizontal:'center'};
+    ws.getRow(row).height=19;
+  });
+
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  if(typeof saveAs==='function') saveAs(blob,o.fileName);
+  else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=o.fileName; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500); }
+}
+
+async function exportQgXlsx(){
   if(!qgMatrix){ return; }
-  const { dates, emps, map, names }=qgMatrix;
-  const aoa=[['Mã NV','Nhân viên'].concat(dates.map(d=>pad(d.getDate())+'/'+pad(d.getMonth()+1)), ['Tổng (giờ)'])];
-  emps.forEach(ma=>{ let sum=0; const row=[ma, DANH_SACH_TEN[ma]||names[ma]||ma]; dates.forEach(d=>{ const v=(map[ma]&&map[ma][isoOf(d)])||0; sum+=v; row.push(fmtH(v)); }); row.push(sum); aoa.push(row); });
-  const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:8},{wch:22}].concat(dates.map(()=>({wch:6})),[{wch:10}]);
-  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'TRA GIO');
-  XLSX.writeFile(wb,'Quy_gio_'+pad(qgMonth+1)+'-'+qgYear+'.xlsx');
-  showToast('✅ Đã tải báo cáo Excel','#2F9E44');
+  const { dates, emps, map, mapP, names }=qgMatrix;
+  const em=qgMonth===11?0:qgMonth+1;
+  try{
+    showToast('⏳ Đang tạo file Excel...','#2D46DB');
+    await buildAttendanceXlsx({
+      sheetName:'TRA GIO', fileName:'Bao_cao_quy_gio_'+pad(qgMonth+1)+'-'+qgYear+'.xlsx',
+      year:qgYear, monthText:String(qgMonth+1), subtext:'Chu kỳ: 24/'+pad(qgMonth+1)+' - 23/'+pad(em+1),
+      dates, emps, nameOf:ma=>DANH_SACH_TEN[ma]||names[ma]||ma,
+      cellText:(ma,iso)=>fmtH((map[ma]&&map[ma][iso])||0), cellStyle:(tx,ma,iso)=>{ const v=(map[ma]&&map[ma][iso])||0, pv=(mapP&&mapP[ma]&&mapP[ma][iso])||0; return (pv>0&&v-pv<=1e-9)?{fill:'FFE1D5F5',color:'FF6D28D9',bold:true}:xlHoursStyle(tx); },
+      totalHeader:'Tổng cộng',
+      totalOf:ma=>{ const sum=dates.reduce((s,d)=>s+((map[ma]&&map[ma][isoOf(d)])||0),0);
+        return { text: sum?fmtH(sum):'0H', fill: sum<0?'FFFCE5CD':sum>0?'FFC9DAF8':'FFEAF1FB', color: sum<0?'FFCC4125':sum>0?'FF1155CC':'FF666666' }; }
+    });
+    showToast('✅ Đã tải báo cáo Excel','#2F9E44');
+  } catch(e){ showToast('❌ Xuất Excel thất bại. Thử lại!','#E03131'); }
 }
 
 /* ===== XUẤT LỊCH TỔNG RA EXCEL (theo khoảng ngày) ===== */
 function ltInitExportRange(){ const ds=cycleDates(ltMonth,ltYear), f=document.getElementById('ltExpFrom'), t=document.getElementById('ltExpTo'); if(f&&ds.length)f.value=isoOf(ds[0]); if(t&&ds.length)t.value=isoOf(ds[ds.length-1]); }
 async function exportLichTongXlsx(){
-  if(typeof XLSX==='undefined'){ showToast('❌ Chưa tải được thư viện Excel, thử lại!','#E03131'); return; }
   const from=document.getElementById('ltExpFrom').value, to=document.getElementById('ltExpTo').value;
   if(!from||!to){ showToast('⚠️ Vui lòng chọn khoảng ngày!','#E67700'); return; }
   if(to<from){ showToast('⚠️ Ngày kết thúc phải sau ngày bắt đầu!','#E67700'); return; }
@@ -1434,11 +1572,17 @@ async function exportLichTongXlsx(){
     rows.forEach(r=>{ const ma=String(r.ma_nv||'').trim().toUpperCase(); if(!ma)return; (map[ma]=map[ma]||{})[r.ngay]=r.ca; names[ma]=r.ho_ten; });
     const emps=Array.from(new Set(Object.keys(DANH_SACH_TEN).concat(Object.keys(map)))).sort((a,b)=>nvNum(a)-nvNum(b));
     const dates=[]; const cur=new Date(from+'T00:00:00'), end=new Date(to+'T00:00:00'); while(cur<=end){ dates.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
-    const aoa=[['Mã NV','Nhân viên'].concat(dates.map(d=>pad(d.getDate())+'/'+pad(d.getMonth()+1))), ['',''].concat(dates.map(d=>DOW_VI[d.getDay()]))];
-    emps.forEach(ma=>{ aoa.push([ma, DANH_SACH_TEN[ma]||names[ma]||ma].concat(dates.map(d=>(map[ma]&&map[ma][isoOf(d)])||''))); });
-    const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:8},{wch:22}].concat(dates.map(()=>({wch:6})));
-    const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Lich tong');
-    XLSX.writeFile(wb,'Lich_tong_'+from+'_den_'+to+'.xlsx');
+    const c1=cycleOfDate(from).start, c2=cycleOfDate(to).start;
+    const monthText = (c1.getFullYear()===c2.getFullYear()&&c1.getMonth()===c2.getMonth()) ? String(c1.getMonth()+1) : (c1.getMonth()+1)+' - '+(c2.getMonth()+1);
+    const f=dates[0], l=dates[dates.length-1];
+    await buildAttendanceXlsx({
+      sheetName:'Lich tong', fileName:'Lich_tong_'+from+'_den_'+to+'.xlsx',
+      year:c1.getFullYear(), monthText, subtext:'Chu kỳ: '+pad(f.getDate())+'/'+pad(f.getMonth()+1)+' - '+pad(l.getDate())+'/'+pad(l.getMonth()+1),
+      dates, emps, nameOf:ma=>DANH_SACH_TEN[ma]||names[ma]||ma,
+      cellText:(ma,iso)=>(map[ma]&&map[ma][iso])||'', cellStyle:xlShiftStyle,
+      totalHeader:'Tổng ngày làm',
+      totalOf:ma=>{ const n=dates.reduce((s,d)=>{ const b=stripStar((map[ma]&&map[ma][isoOf(d)])||'').toUpperCase(); return s+(/^[MA]\d+$/.test(b)?1:0); },0); return { text:n, fill:'FFC9DAF8' }; }
+    });
     showToast('✅ Đã tải Lịch Tổng','#2F9E44');
   } catch(e){ showToast('❌ Xuất Excel thất bại. Thử lại!','#E03131'); }
 }
@@ -1456,10 +1600,10 @@ async function loadTimeBalance(){
   } catch(e){ el.innerHTML=''; }
 }
 
-const REQ_ICONS  = {XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',VE_SOM:'🌙',TRA_GIO:'⏱️',AL:'🏖️',CL:'🔄'};
-const REQ_COLORS = {XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',VE_SOM:'#FFF4ED',TRA_GIO:'#ECFDF5',AL:'#FFF9DB',CL:'#EBFBEE'};
-function reqLabel(loai){ if(loai==='XIN_NGHI')return 'Xin nghỉ'; if(loai==='DOICA')return 'Đổi ca'; if(loai==='KHAC')return 'Yêu cầu khác'; if(loai==='VE_SOM')return 'Về sớm / Thiếu giờ'; if(loai==='TRA_GIO')return 'Trả giờ / Làm bù'; return loai; }
-function reqDateLine(r){ if(r.loaiNghi==='VE_SOM'||r.loaiNghi==='TRA_GIO'){ const gio=Number(r.soNgay)||0; return fmtDate(r.tuNgay)+' · '+(gio>0?'+':'')+gio+' giờ'; } return fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày'; }
+const REQ_ICONS  = {XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',VE_SOM:'🌙',TRA_GIO:'⏱️',TRA_PHEP:'🏖️',AL:'🏖️',CL:'🔄'};
+const REQ_COLORS = {XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',VE_SOM:'#FFF4ED',TRA_GIO:'#ECFDF5',TRA_PHEP:'#EDE9FE',AL:'#FFF9DB',CL:'#EBFBEE'};
+function reqLabel(loai){ if(loai==='XIN_NGHI')return 'Xin nghỉ'; if(loai==='DOICA')return 'Đổi ca'; if(loai==='KHAC')return 'Yêu cầu khác'; if(loai==='VE_SOM')return 'Về sớm / Thiếu giờ'; if(loai==='TRA_GIO')return 'Trả giờ / Làm bù'; if(loai==='TRA_PHEP')return 'Trả giờ bằng phép'; return loai; }
+function reqDateLine(r){ if(isTimeType(r.loaiNghi)){ const gio=Number(r.soNgay)||0; return fmtDate(r.tuNgay)+' · '+(gio>0?'+':'')+gio+' giờ'; } return fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày'; }
 async function loadRequests(){ try{ const d=await supaGetRequests(currentUser.maNV); const icons=REQ_ICONS, colors=REQ_COLORS; if(!d.success||!d.requests||!d.requests.length){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; lastLeaveRequests=[]; return; } lastLeaveRequests=d.requests; let htmlHome='',htmlLeave=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; const itemInner = '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div>'; htmlHome+='<div class="req-item">'+itemInner+'</div>'; });
   d.requests.slice(0,3).forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : '';
     const leaveInner = '<div class="req-item-top"><div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div></div><div class="req-item-btns"><button class="req-btn-icon" title="Chỉnh sửa" onclick="editRequest(\''+r.maYC+'\')">✏️</button><button class="req-btn-icon req-btn-icon-danger" title="Xoá" onclick="openDeleteConfirm(\''+r.maYC+'\')">🗑️</button></div></div><div class="req-item-bottom"><div class="req-status '+sc+'">'+r.trangThai+'</div>'+reasonLine+'</div>';
@@ -1470,7 +1614,7 @@ function openDeleteConfirm(maYC){ pendingDeleteMaYC=maYC; document.getElementByI
 function closeDeleteConfirm(){ pendingDeleteMaYC=null; document.getElementById('confirmDeleteOverlay').style.display='none'; }
 async function confirmDeleteRequest(){ if(!pendingDeleteMaYC)return; const maYC=pendingDeleteMaYC; closeDeleteConfirm(); try{ const d=await supaDeleteRequest(maYC); if(d.success){ showToast('🗑️ Đã xoá yêu cầu','#2F9E44'); loadRequests(); } else showToast('❌ Xoá thất bại. Thử lại!','#E03131'); } catch(e){ showToast('❌ Lỗi kết nối. Thử lại!','#E03131'); } }
 
-function editRequest(maYC){ const r=lastLeaveRequests.find(x=>x.maYC===maYC); if(!r)return; editingMaYC=maYC; switchTab('leave'); const map={XIN_NGHI:'Xin nghỉ',DOICA:'Đổi ca',KHAC:'Yêu cầu khác',VE_SOM:'🌙 Về sớm / Thiếu giờ',TRA_GIO:'⏱️ Trả giờ / Làm bù'}; lvCurrentType=r.loaiNghi||'XIN_NGHI'; const lbl=document.getElementById('lvDropLabel'); if(lbl)lbl.textContent=map[lvCurrentType]||'Xin nghỉ'; document.getElementById('lvFormNghi').style.display=lvCurrentType==='XIN_NGHI'?'block':'none'; document.getElementById('lvFormDoiCa').style.display=lvCurrentType==='DOICA'?'block':'none'; document.getElementById('lvFormKhac').style.display=lvCurrentType==='KHAC'?'block':'none'; document.getElementById('lvFormVeSom').style.display=lvCurrentType==='VE_SOM'?'block':'none'; document.getElementById('lvFormTraGio').style.display=lvCurrentType==='TRA_GIO'?'block':'none'; const toISO=(s)=>{ if(!s)return ''; const p=s.split('/'); return p.length===3 ? p[2]+'-'+p[1]+'-'+p[0] : s; }; const tn=document.getElementById('reqTuNgay'),dn=document.getElementById('reqDenNgay'); if(tn)tn.value=toISO(r.tuNgay); if(dn)dn.value=toISO(r.denNgay); calcDuration(); if(lvCurrentType==='VE_SOM'){ const vn=document.getElementById('reqVeSomNgay'),vg=document.getElementById('reqVeSomGio'); if(vn)vn.value=toISO(r.tuNgay); if(vg)vg.value=Math.abs(Number(r.soNgay)||0); calcHourPreview(); } if(lvCurrentType==='TRA_GIO'){ const tgn=document.getElementById('reqTraGioNgay'),tgg=document.getElementById('reqTraGioGio'); if(tgn)tgn.value=toISO(r.tuNgay); if(tgg)tgg.value=Math.abs(Number(r.soNgay)||0); calcHourPreview(); } const ly=document.getElementById('reqLyDo'); if(ly)ly.value=(r.lyDo&&r.lyDo!=='Không có lý do')?r.lyDo:''; const btn=document.getElementById('btnSubmit'); if(btn)btn.innerHTML='CẬP NHẬT YÊU CẦU'; showToast('✏️ Đang chỉnh sửa yêu cầu — chỉnh xong bấm Cập nhật','#2D46DB'); }
+function editRequest(maYC){ const r=lastLeaveRequests.find(x=>x.maYC===maYC); if(!r)return; editingMaYC=maYC; switchTab('leave'); const map={XIN_NGHI:'Xin nghỉ',DOICA:'Đổi ca',KHAC:'Yêu cầu khác',VE_SOM:'🌙 Về sớm / Thiếu giờ',TRA_GIO:'⏱️ Trả giờ / Làm bù',TRA_PHEP:'🏖️ Trả giờ bằng phép'}; lvCurrentType=r.loaiNghi||'XIN_NGHI'; const lbl=document.getElementById('lvDropLabel'); if(lbl)lbl.textContent=map[lvCurrentType]||'Xin nghỉ'; document.getElementById('lvFormNghi').style.display=lvCurrentType==='XIN_NGHI'?'block':'none'; document.getElementById('lvFormDoiCa').style.display=lvCurrentType==='DOICA'?'block':'none'; document.getElementById('lvFormKhac').style.display=lvCurrentType==='KHAC'?'block':'none'; document.getElementById('lvFormVeSom').style.display=lvCurrentType==='VE_SOM'?'block':'none'; document.getElementById('lvFormTraGio').style.display=lvCurrentType==='TRA_GIO'?'block':'none'; document.getElementById('lvFormTraPhep').style.display=lvCurrentType==='TRA_PHEP'?'block':'none'; const toISO=(s)=>{ if(!s)return ''; const p=s.split('/'); return p.length===3 ? p[2]+'-'+p[1]+'-'+p[0] : s; }; const tn=document.getElementById('reqTuNgay'),dn=document.getElementById('reqDenNgay'); if(tn)tn.value=toISO(r.tuNgay); if(dn)dn.value=toISO(r.denNgay); calcDuration(); if(lvCurrentType==='VE_SOM'){ const vn=document.getElementById('reqVeSomNgay'),vg=document.getElementById('reqVeSomGio'); if(vn)vn.value=toISO(r.tuNgay); if(vg)vg.value=Math.abs(Number(r.soNgay)||0); calcHourPreview(); } if(lvCurrentType==='TRA_PHEP'){ const tpn=document.getElementById('reqTraPhepNgay'),tpg=document.getElementById('reqTraPhepGio'); if(tpn)tpn.value=toISO(r.tuNgay); if(tpg)tpg.value=Math.abs(Number(r.soNgay)||0); calcHourPreview(); } if(lvCurrentType==='TRA_GIO'){ const tgn=document.getElementById('reqTraGioNgay'),tgg=document.getElementById('reqTraGioGio'); if(tgn)tgn.value=toISO(r.tuNgay); if(tgg)tgg.value=Math.abs(Number(r.soNgay)||0); calcHourPreview(); } const ly=document.getElementById('reqLyDo'); if(ly)ly.value=(r.lyDo&&r.lyDo!=='Không có lý do')?r.lyDo:''; const btn=document.getElementById('btnSubmit'); if(btn)btn.innerHTML='CẬP NHẬT YÊU CẦU'; showToast('✏️ Đang chỉnh sửa yêu cầu — chỉnh xong bấm Cập nhật','#2D46DB'); }
 
 /* ===== SUBMIT REQUEST ===== */
 async function submitRequest(){
@@ -1480,13 +1624,14 @@ async function submitRequest(){
   else if(loai==='KHAC'){ const kNgay=document.getElementById('reqKhacNgay').value; if(!kNgay){showToast('⚠️ Vui lòng chọn ngày xử lý!','#E67700');return;} tuNgay=kNgay; denNgay=kNgay; }
   else if(loai==='VE_SOM'){ const ngay=document.getElementById('reqVeSomNgay').value,gio=parseFloat(document.getElementById('reqVeSomGio').value); if(!ngay){showToast('⚠️ Vui lòng chọn ngày về sớm!','#E67700');return;} if(!gio||gio<=0){showToast('⚠️ Vui lòng nhập số giờ thiếu hợp lệ!','#E67700');return;} const chk=await validateCheckLimit('VE_SOM',ngay,gio,editingMaYC); if(!chk.ok){showToast('⚠️ '+chk.message,'#E03131');return;} tuNgay=ngay; denNgay=ngay; soNgay=-Math.abs(gio); }
   else if(loai==='TRA_GIO'){ const ngay=document.getElementById('reqTraGioNgay').value,gio=parseFloat(document.getElementById('reqTraGioGio').value); if(!ngay){showToast('⚠️ Vui lòng chọn ngày làm bù!','#E67700');return;} if(!gio||gio<=0){showToast('⚠️ Vui lòng nhập số giờ bù hợp lệ!','#E67700');return;} const chk=await validateCheckLimit('TRA_GIO',ngay,gio,editingMaYC); if(!chk.ok){showToast('⚠️ '+chk.message,'#E03131');return;} tuNgay=ngay; denNgay=ngay; soNgay=Math.abs(gio); }
+  else if(loai==='TRA_PHEP'){ const ngay=document.getElementById('reqTraPhepNgay').value,gio=parseFloat(document.getElementById('reqTraPhepGio').value); if(!ngay){showToast('⚠️ Vui lòng chọn ngày trả giờ!','#E67700');return;} if(!gio||gio<=0){showToast('⚠️ Vui lòng nhập số giờ trả bằng phép hợp lệ!','#E67700');return;} tuNgay=ngay; denNgay=ngay; soNgay=Math.abs(gio); }
   const btn=document.getElementById('btnSubmit'); btn.textContent=editingMaYC?'Đang cập nhật...':'Đang gửi...'; btn.disabled=true;
   try{
     const payload = editingMaYC
       ? {maYC:editingMaYC,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:ghiChuText||'Không có lý do'}
       : {maYC:'YC'+Date.now(),maNV:currentUser.maNV,hoTen:currentUser.hoTen,loaiNghi:loai,tuNgay,denNgay,soNgay,lyDo:ghiChuText||'Không có lý do'};
     const d=editingMaYC ? await supaUpdateOwnRequest(payload) : await supaSubmitRequest(payload);
-    if(d.success){ showToast(editingMaYC?'✅ Đã cập nhật yêu cầu!':'✅ Đã gửi yêu cầu thành công!','#2F9E44'); document.getElementById('reqLyDo').value=''; const vg=document.getElementById('reqVeSomGio'),tg=document.getElementById('reqTraGioGio'); if(vg)vg.value=''; if(tg)tg.value=''; calcHourPreview(); editingMaYC=null; loadRequests(); }
+    if(d.success){ showToast(editingMaYC?'✅ Đã cập nhật yêu cầu!':'✅ Đã gửi yêu cầu thành công!','#2F9E44'); document.getElementById('reqLyDo').value=''; const vg=document.getElementById('reqVeSomGio'),tg=document.getElementById('reqTraGioGio'); const tp=document.getElementById('reqTraPhepGio'); if(vg)vg.value=''; if(tg)tg.value=''; if(tp)tp.value=''; calcHourPreview(); editingMaYC=null; loadRequests(); }
     else showToast(editingMaYC?'❌ Cập nhật thất bại. Thử lại!':'❌ Gửi thất bại. Thử lại!','#E03131');
   } catch(e){showToast('❌ Lỗi kết nối. Thử lại!','#E03131');}
   btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> GỬI YÊU CẦU'; btn.disabled=false;
@@ -1556,7 +1701,7 @@ function renderAdminList(){
   const filtered = adminCurrentFilter === 'all'
     ? byStatus
     : adminCurrentFilter === 'QUY_GIO'
-      ? byStatus.filter(r => r.loaiNghi === 'VE_SOM' || r.loaiNghi === 'TRA_GIO')
+      ? byStatus.filter(r => isTimeType(r.loaiNghi))
       : byStatus.filter(r => r.loaiNghi === adminCurrentFilter);
 
   if(!filtered.length){
@@ -1567,10 +1712,10 @@ function renderAdminList(){
     return;
   }
 
-  const typeIcon  = { XIN_NGHI:'🏖️', DOICA:'↔️', KHAC:'✨', VE_SOM:'🌙', TRA_GIO:'⏱️' };
-  const typeLabel = { XIN_NGHI:'Xin nghỉ', DOICA:'Đổi ca', KHAC:'Yêu cầu khác', VE_SOM:'Về sớm / Thiếu giờ', TRA_GIO:'Trả giờ / Làm bù' };
-  const typeCls   = { XIN_NGHI:'type-nghi', DOICA:'type-doica', KHAC:'type-khac', VE_SOM:'type-vesom', TRA_GIO:'type-tragio' };
-  const badgeCls  = { XIN_NGHI:'type-badge-nghi', DOICA:'type-badge-doica', KHAC:'type-badge-khac', VE_SOM:'type-badge-vesom', TRA_GIO:'type-badge-tragio' };
+  const typeIcon  = { XIN_NGHI:'🏖️', DOICA:'↔️', KHAC:'✨', VE_SOM:'🌙', TRA_GIO:'⏱️', TRA_PHEP:'🏖️' };
+  const typeLabel = { XIN_NGHI:'Xin nghỉ', DOICA:'Đổi ca', KHAC:'Yêu cầu khác', VE_SOM:'Về sớm / Thiếu giờ', TRA_GIO:'Trả giờ / Làm bù', TRA_PHEP:'Trả giờ bằng phép' };
+  const typeCls   = { XIN_NGHI:'type-nghi', DOICA:'type-doica', KHAC:'type-khac', VE_SOM:'type-vesom', TRA_GIO:'type-tragio', TRA_PHEP:'type-traphep' };
+  const badgeCls  = { XIN_NGHI:'type-badge-nghi', DOICA:'type-badge-doica', KHAC:'type-badge-khac', VE_SOM:'type-badge-vesom', TRA_GIO:'type-badge-tragio', TRA_PHEP:'type-badge-traphep' };
 
   let html = '';
   filtered.forEach(r => {
@@ -1611,14 +1756,14 @@ function renderAdminList(){
       </div>
       <div class="admin-card-divider"></div>
       <div class="admin-card-meta">
-        ${(loai==='VE_SOM'||loai==='TRA_GIO') ? `
+        ${isTimeType(loai) ? `
         <div class="admin-meta-item">
           <div class="admin-meta-label">📅 Ngày</div>
           <div class="admin-meta-val">${fmtDate(r.tuNgay)||'—'}</div>
         </div>
         <div class="admin-meta-item">
-          <div class="admin-meta-label">${loai==='VE_SOM'?'⏳':'⏱️'} Số giờ</div>
-          <div class="admin-meta-val" style="color:${Number(r.soNgay)<0?'#C2410C':'#047857'}">${Number(r.soNgay)>0?'+':''}${r.soNgay} giờ</div>
+          <div class="admin-meta-label">${loai==='VE_SOM'?'⏳':loai==='TRA_PHEP'?'🏖️':'⏱️'} Số giờ</div>
+          <div class="admin-meta-val" style="color:${Number(r.soNgay)<0?'#C2410C':loai==='TRA_PHEP'?'#6D28D9':'#047857'}">${Number(r.soNgay)>0?'+':''}${r.soNgay} giờ</div>
         </div>
         <div class="admin-meta-item">
           <div class="admin-meta-label">🕐 Gửi lúc</div>
