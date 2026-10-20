@@ -460,6 +460,28 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .bd-box .acts{display:flex;gap:8px;margin-top:14px}
 .bd-box .acts button{flex:1;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer}
 .bd-box .b-cancel{background:#F1F5F9;color:#475569}.bd-box .b-prev{background:#E0E7FF;color:#3730A3}.bd-box .b-del{background:#E03131;color:#fff}.bd-box .b-del:disabled{opacity:.4;cursor:not-allowed}
+.ann-card{position:relative;margin:0 0 14px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;box-shadow:0 8px 20px rgba(249,115,22,.30);cursor:pointer;display:flex;gap:12px;align-items:flex-start}
+.ann-card.empty{background:#FFF7ED;color:#C2410C;border:1.5px dashed #FDBA74;box-shadow:none}
+.ann-ico{font-size:24px;line-height:1;animation:annPulse 1.6s ease-in-out infinite}
+@keyframes annPulse{0%,100%{transform:scale(1) rotate(0);opacity:1}25%{transform:scale(1.15) rotate(-12deg)}50%{transform:scale(1.05) rotate(10deg);opacity:.8}}
+.ann-body{flex:1;min-width:0}
+.ann-tag{font-size:10px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;opacity:.9}
+.ann-title{font-size:15px;font-weight:900;margin-top:2px}
+.ann-text{font-size:12.5px;margin-top:3px;opacity:.95;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.ann-edit{border:none;background:rgba(255,255,255,.25);color:#fff;border-radius:10px;padding:6px 9px;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit}
+.ann-card.empty .ann-edit{background:#FFEDD5;color:#C2410C}
+.ann-off{font-size:10px;font-weight:900;background:rgba(0,0,0,.25);border-radius:8px;padding:2px 6px;margin-left:6px}
+#annOverlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+#annOverlay .ann-box{background:#fff;border-radius:20px;width:100%;max-width:400px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);max-height:88vh;overflow:auto}
+.ann-box h3{margin:0 0 10px;font-size:16px;font-weight:900;color:#1E293B}
+.ann-box .body{font-size:14px;color:#334155;white-space:pre-wrap;line-height:1.55}
+.ann-box label{display:block;font-size:12px;font-weight:800;color:#475569;margin:10px 0 4px}
+.ann-box input[type=text],.ann-box textarea{width:100%;box-sizing:border-box;padding:10px;border:1.5px solid #E2E8F0;border-radius:10px;font-size:14px;font-family:inherit}
+.ann-box textarea{min-height:140px;resize:vertical}
+.ann-box .tg{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;font-weight:800;color:#334155}
+.ann-box .acts{display:flex;gap:8px;margin-top:16px}
+.ann-box .acts button{flex:1;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer}
+.ann-box .b1{background:#F1F5F9;color:#475569}.ann-box .b2{background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff}
 </style>
 </head>
 <body>
@@ -523,6 +545,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     <div style="margin-top:8px"></div>
     <div id="todayShiftCard"></div>
     <div id="timeBalanceCard"></div>
+    <div id="announceCard"></div>
     <div class="card">
       <div class="card-title">Ngày phép</div>
       <div class="balance-grid">
@@ -542,13 +565,6 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
           <div class="bal-row danger"><span class="bal-row-label">Còn lại</span><span class="bal-row-val" id="homeNghiBu">—</span></div>
         </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-title-row">
-        <div class="card-title" style="margin-bottom:0">Yêu cầu gần đây</div>
-        <button class="btn-new-mini" onclick="switchTab('leave')">+ Tạo mới</button>
-      </div>
-      <div id="homeRequests"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
     </div>
   </div>
 
@@ -1249,7 +1265,7 @@ async function resetApp(){
   const icon = document.getElementById('headerAvatar');
   if (icon) icon.classList.add('spinning');
   try {
-    await Promise.all([ loadLeave(), loadMySchedule(), loadRequests(), loadTimeBalance() ]);
+    await Promise.all([ loadLeave(), loadMySchedule(), loadRequests(), loadTimeBalance(), loadAnnouncement() ]);
     if (document.getElementById('tab-lichTong').classList.contains('active')) await loadLichTong();
     if (document.getElementById('tab-admin').classList.contains('active')) await loadAdminRequests(true);
     showToast('🔄 Đã làm mới dữ liệu!', '#2F9E44');
@@ -1272,7 +1288,7 @@ async function initApp(){
     injectAdminNav();
   }
 
-  await Promise.all([loadLeave(),loadMySchedule(),loadRequests(),loadTimeBalance()]);
+  await Promise.all([loadLeave(),loadMySchedule(),loadRequests(),loadTimeBalance(),loadAnnouncement()]);
 }
 
 /* ===== INJECT ADMIN NAV (CHỈ NV001) ===== */
@@ -1623,11 +1639,11 @@ const REQ_ICONS  = {XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',VE_SOM:'🌙',T
 const REQ_COLORS = {XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',VE_SOM:'#FFF4ED',TRA_GIO:'#ECFDF5',TRA_PHEP:'#EDE9FE',AL:'#FFF9DB',CL:'#EBFBEE'};
 function reqLabel(loai){ if(loai==='XIN_NGHI')return 'Xin nghỉ'; if(loai==='DOICA')return 'Đổi ca'; if(loai==='KHAC')return 'Yêu cầu khác'; if(loai==='VE_SOM')return 'Về sớm / Thiếu giờ'; if(loai==='TRA_GIO')return 'Trả giờ / Làm bù'; if(loai==='TRA_PHEP')return 'Trả giờ bằng phép'; return loai; }
 function reqDateLine(r){ if(isTimeType(r.loaiNghi)){ const gio=Number(r.soNgay)||0; return fmtDate(r.tuNgay)+' · '+(gio>0?'+':'')+gio+' giờ'; } return fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày'; }
-async function loadRequests(){ try{ const d=await supaGetRequests(currentUser.maNV); const icons=REQ_ICONS, colors=REQ_COLORS; if(!d.success||!d.requests||!d.requests.length){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; lastLeaveRequests=[]; return; } lastLeaveRequests=d.requests; let htmlHome='',htmlLeave=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; const itemInner = '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div>'; htmlHome+='<div class="req-item">'+itemInner+'</div>'; });
+async function loadRequests(){ try{ const d=await supaGetRequests(currentUser.maNV); const icons=REQ_ICONS, colors=REQ_COLORS; if(!d.success||!d.requests||!d.requests.length){ const hr0=document.getElementById('homeRequests'); if(hr0)hr0.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; lastLeaveRequests=[]; return; } lastLeaveRequests=d.requests; let htmlHome='',htmlLeave=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; const itemInner = '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div>'; htmlHome+='<div class="req-item">'+itemInner+'</div>'; });
   d.requests.slice(0,3).forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : '';
     const leaveInner = '<div class="req-item-top"><div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div></div><div class="req-item-btns"><button class="req-btn-icon" title="Chỉnh sửa" onclick="editRequest(\''+r.maYC+'\')">✏️</button><button class="req-btn-icon req-btn-icon-danger" title="Xoá" onclick="openDeleteConfirm(\''+r.maYC+'\')">🗑️</button></div></div><div class="req-item-bottom"><div class="req-status '+sc+'">'+r.trangThai+'</div>'+reasonLine+'</div>';
     htmlLeave+='<div class="req-item-card">'+leaveInner+'</div>';
-  }); document.getElementById('homeRequests').innerHTML=htmlHome; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML=htmlLeave; } catch(e){ document.getElementById('homeRequests').innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; } }
+  }); const hr=document.getElementById('homeRequests'); if(hr)hr.innerHTML=htmlHome; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML=htmlLeave; } catch(e){ const hr=document.getElementById('homeRequests'); if(hr)hr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; } }
 
 function openDeleteConfirm(maYC){ pendingDeleteMaYC=maYC; document.getElementById('confirmDeleteOverlay').style.display='flex'; }
 function closeDeleteConfirm(){ pendingDeleteMaYC=null; document.getElementById('confirmDeleteOverlay').style.display='none'; }
@@ -1932,6 +1948,47 @@ async function bdConfirm(){
     showToast('🗑️ Đã xoá '+bdIds.length+' yêu cầu','#2F9E44');
     bdIds=[]; closeBulkDelete(); loadAdminRequests();
   }catch(e){ showToast('❌ Xoá thất bại. Thử lại!','#E03131'); btn.textContent='Xoá'; btn.disabled=false; }
+}
+
+/* ===== THẺ THÔNG BÁO NỔI BẬT (bảng announcements) ===== */
+let annCur=null;
+const annEsc=(t)=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function supaGetLatestAnnouncement(){
+  try{ const {data,error}=await sb.from('announcements').select('*').order('created_at',{ascending:false}).limit(1); if(error)throw error; return (data&&data[0])||null; }
+  catch(e){ return null; }
+}
+async function supaSaveAnnouncement({id,title,content,is_active,updated_by}){
+  const row={title,content,is_active,updated_by,updated_at:new Date().toISOString()};
+  const q=id?sb.from('announcements').update(row).eq('id',id):sb.from('announcements').insert(row);
+  const {error}=await q; if(error)throw error; return true;
+}
+async function loadAnnouncement(){
+  const el=document.getElementById('announceCard'); if(!el||!currentUser)return;
+  const isAdmin=currentUser.maNV==='NV001';
+  annCur=await supaGetLatestAnnouncement();
+  const a=annCur, show=a&&a.is_active;
+  if(!show&&!isAdmin){ el.innerHTML=''; return; }
+  if(!show){ el.innerHTML='<div class="ann-card empty" onclick="openAnnEdit()"><div class="ann-ico">📢</div><div class="ann-body"><div class="ann-title">'+(a?'Thông báo đang tắt':'Chưa có thông báo')+'</div><div class="ann-text">Bấm để tạo / bật thông báo cho nhân viên</div></div><button class="ann-edit" onclick="event.stopPropagation();openAnnEdit()">✏️</button></div>'; return; }
+  el.innerHTML='<div class="ann-card" onclick="openAnnView()"><div class="ann-ico">📢</div><div class="ann-body"><div class="ann-tag">Thông báo</div><div class="ann-title">'+annEsc(a.title)+'</div><div class="ann-text">'+annEsc(a.content)+'</div></div>'+(isAdmin?'<button class="ann-edit" onclick="event.stopPropagation();openAnnEdit()">⚙️ Cập nhật</button>':'')+'</div>';
+}
+function annOverlay(html){ let o=document.getElementById('annOverlay'); if(!o){ o=document.createElement('div'); o.id='annOverlay'; o.onclick=(e)=>{ if(e.target===o)closeAnn(); }; document.body.appendChild(o); } o.innerHTML='<div class="ann-box">'+html+'</div>'; o.style.display='flex'; }
+function closeAnn(){ const o=document.getElementById('annOverlay'); if(o)o.style.display='none'; }
+function openAnnView(){ if(!annCur)return; annOverlay('<h3>📢 '+annEsc(annCur.title)+'</h3><div class="body">'+annEsc(annCur.content)+'</div><div class="acts"><button class="b2" onclick="closeAnn()">Đã hiểu</button></div>'); }
+function openAnnEdit(){
+  if(!currentUser||currentUser.maNV!=='NV001')return;
+  const a=annCur||{title:'',content:'',is_active:true};
+  annOverlay('<h3>📢 '+(annCur?'Cập nhật thông báo':'Tạo thông báo mới')+'</h3>'
+   +'<label>Tiêu đề</label><input type="text" id="annTitle" maxlength="120" value="'+annEsc(a.title)+'">'
+   +'<label>Nội dung</label><textarea id="annContent">'+annEsc(a.content)+'</textarea>'
+   +'<label class="tg"><input type="checkbox" id="annActive" '+(a.is_active?'checked':'')+'> Mở thông báo (hiện cho nhân viên)</label>'
+   +'<div class="acts"><button class="b1" onclick="closeAnn()">Huỷ</button><button class="b2" id="annSaveBtn" onclick="saveAnnouncement()">Lưu</button></div>');
+}
+async function saveAnnouncement(){
+  const title=document.getElementById('annTitle').value.trim(), content=document.getElementById('annContent').value.trim(), act=document.getElementById('annActive').checked;
+  if(!title){ showToast('⚠️ Vui lòng nhập tiêu đề!','#E67700'); return; }
+  const b=document.getElementById('annSaveBtn'); b.disabled=true; b.textContent='Đang lưu...';
+  try{ await supaSaveAnnouncement({id:annCur?annCur.id:null,title,content,is_active:act,updated_by:currentUser.maNV}); showToast('✅ Đã lưu thông báo','#2F9E44'); closeAnn(); loadAnnouncement(); }
+  catch(e){ showToast('❌ Lưu thất bại. Kiểm tra đã tạo bảng announcements chưa.','#E03131'); b.disabled=false; b.textContent='Lưu'; }
 }
 
 function showToast(msg,bg='#2F9E44'){ const t=document.getElementById('toast'); t.textContent=msg; t.style.background=bg; t.style.display='block'; setTimeout(()=>t.style.display='none',3000); }
