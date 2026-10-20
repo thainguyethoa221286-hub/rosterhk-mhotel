@@ -135,7 +135,10 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .qg-table th.nm { background:#F8FAFC; z-index:4; }
 .qg-table td.neg { background:#FFEDD5; color:#C2410C; font-weight:900; }
 .qg-table td.pos { background:#D1FAE5; color:#047857; font-weight:900; }
-.qg-table td.tot { font-weight:900; background:#F8FAFC; position:sticky; right:0; }
+.qg-table td.tot { font-weight:900; background:#F8FAFC; position:sticky; right:92px; min-width:70px; }
+.qg-table th.tot { position:sticky; right:92px; z-index:4; min-width:70px; }
+.qg-table td.tot2 { font-weight:900; background:#F5F3FF; position:sticky; right:0; min-width:92px; }
+.qg-table th.tot2 { position:sticky; right:0; z-index:4; min-width:92px; background:#EDE9FE; color:#6D28D9; }
 .lt-export { display:flex; align-items:center; gap:6px; padding:8px 16px; background:#F1F3FA; flex-wrap:wrap; border-top:1px solid #E2E8F0; }
 .lt-export .lbl { font-size:11px; font-weight:800; color:#64748B; }
 .lt-export input[type=date] { border:1.5px solid #D6DCEF; background:white; border-radius:9px; padding:6px 8px; font-size:12px; font-family:inherit; font-weight:600; color:#1A1F36; min-width:0; flex:1; }
@@ -1427,17 +1430,17 @@ async function renderQgReport(){
     (data||[]).forEach(r=>{ const ma=String(r.ma_nv||'').trim().toUpperCase(); if(!ma)return; (map[ma]=map[ma]||{}); const h=Number(r.so_ngay)||0; map[ma][r.tu_ngay]=(map[ma][r.tu_ngay]||0)+h; if(r.loai==='TRA_PHEP'){ (mapP[ma]=mapP[ma]||{}); mapP[ma][r.tu_ngay]=(mapP[ma][r.tu_ngay]||0)+h; } names[ma]=r.ho_ten; });
     const emps=Array.from(new Set(Object.keys(DANH_SACH_TEN).concat(Object.keys(map)))).sort((a,b)=>nvNum(a)-nvNum(b));
     qgMatrix={ dates, emps, map, mapP, names };
-    let th='<tr><th class="nm">Nhân viên</th>'; dates.forEach(d=>{ th+='<th>'+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'<br><small>'+DOW_VI[d.getDay()]+'</small></th>'; }); th+='<th class="tot">Tổng</th></tr>';
+    let th='<tr><th class="nm">Nhân viên</th>'; dates.forEach(d=>{ th+='<th>'+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'<br><small>'+DOW_VI[d.getDay()]+'</small></th>'; }); th+='<th class="tot">Tổng cộng</th><th class="tot2">Trả bằng phép</th></tr>';
     let tb='';
     emps.forEach(ma=>{
-      let sum=0, tr='<tr><td class="nm">'+(DANH_SACH_TEN[ma]||names[ma]||ma)+'<div style="font-size:9px;color:#94A3B8;font-weight:600">'+ma+'</div></td>';
-      dates.forEach(d=>{ const v=(map[ma]&&map[ma][isoOf(d)])||0; sum+=v; const pv=(mapP[ma]&&mapP[ma][isoOf(d)])||0; tr+='<td class="'+(v<0?'neg':(pv>0&&v-pv<=1e-9)?'phep':v>0?'pos':'')+'">'+fmtH(v)+'</td>'; });
-      tr+='<td class="tot" style="color:'+(sum<0?'#C2410C':sum>0?'#047857':'#94A3B8')+'">'+(sum?fmtH(sum):'0')+'</td></tr>'; tb+=tr;
+      let sum=0, sumP=0, tr='<tr><td class="nm">'+(DANH_SACH_TEN[ma]||names[ma]||ma)+'<div style="font-size:9px;color:#94A3B8;font-weight:600">'+ma+'</div></td>';
+      dates.forEach(d=>{ const v=(map[ma]&&map[ma][isoOf(d)])||0; const pv=(mapP[ma]&&mapP[ma][isoOf(d)])||0; sum+=v-pv; sumP+=pv; tr+='<td class="'+(v<0?'neg':(pv>0&&v-pv<=1e-9)?'phep':v>0?'pos':'')+'">'+fmtH(v)+'</td>'; });
+      tr+='<td class="tot" style="color:'+(sum<0?'#C2410C':sum>0?'#047857':'#94A3B8')+'">'+(sum?fmtH(sum):'0H')+'</td><td class="tot2" style="color:'+(sumP>0?'#6D28D9':'#94A3B8')+'">'+(sumP?fmtH(sumP):'0H')+'</td></tr>'; tb+=tr;
     });
     openQgSheet('<div class="qg-head"><div class="qg-title">📊 Báo cáo quỹ giờ (TRẢ GIỜ)</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div>'
       +'<div class="qg-toolbar"><div class="nav"><button onclick="qgPrev()">‹</button><span>'+MON_VI[qgMonth]+' '+qgYear+' · '+cycleRange(qgMonth,qgYear)+'</span><button onclick="qgNext()">›</button></div><button class="qg-xls" onclick="exportQgXlsx()">⬇️ Tải Báo Cáo Excel</button></div>'
       +'<div class="qg-matrix-wrap"><table class="qg-table"><thead>'+th+'</thead><tbody>'+tb+'</tbody></table></div>'
-      +'<div class="qg-cycle" style="margin-top:8px">Chỉ tính các yêu cầu đã duyệt · <b style="color:#C2410C">cam</b>: về sớm · <b style="color:#1155CC">xanh dương</b>: làm bù · <b style="color:#6D28D9">tím</b>: trả bằng phép</div>', true);
+      +'<div class="qg-cycle" style="margin-top:8px">Chỉ tính các yêu cầu đã duyệt · <b style="color:#C2410C">cam</b>: về sớm · <b style="color:#1155CC">xanh dương</b>: làm bù · <b style="color:#6D28D9">tím</b>: trả bằng phép (tính riêng ở cột bên phải, không cộng vào Tổng cộng)</div>', true);
   } catch(e){ openQgSheet('<div class="qg-head"><div class="qg-title">📊 Báo cáo quỹ giờ</div><button class="qg-x" onclick="closeQgSheet()">✕</button></div><div class="empty">Lỗi tải báo cáo. Vui lòng thử lại.</div>', true); }
 }
 /* ===== XUẤT EXCEL (ExcelJS + FileSaver) — giữ màu sắc & định dạng cell ===== */
@@ -1470,17 +1473,17 @@ async function buildAttendanceXlsx(o){
     views:[{state:'frozen',xSplit:2,ySplit:5}],
     pageSetup:{orientation:'landscape',paperSize:9,fitToPage:true,fitToWidth:1,fitToHeight:0}
   });
-  const nd=o.dates.length, firstDate=3, lastDate=2+nd, totalCol=3+nd;
+  const nd=o.dates.length, firstDate=3, lastDate=2+nd, totalCol=3+nd, extras=o.extraTotals||[], lastCol=totalCol+extras.length;
   ws.getColumn(1).width=5; ws.getColumn(2).width=26;
   for(let c=firstDate;c<=lastDate;c++) ws.getColumn(c).width=5.6;
-  ws.getColumn(totalCol).width=13;
+  ws.getColumn(totalCol).width=13; extras.forEach((x,i)=>{ ws.getColumn(totalCol+1+i).width=x.width||14; });
 
   // Row 1: tên công ty
   ws.mergeCells(1,1,1,Math.min(totalCol,12));
   const r1=ws.getCell(1,1); r1.value=o.company||XL_COMPANY; r1.font={name:XL_FONT,size:10,bold:true}; r1.alignment={vertical:'middle',horizontal:'left'};
   ws.getRow(1).height=18;
   // Row 2: tiêu đề + subtext chu kỳ
-  ws.mergeCells(2,1,2,totalCol);
+  ws.mergeCells(2,1,2,lastCol);
   const r2=ws.getCell(2,1);
   const titleTxt='ATTENDANCE RECORD '+o.year+' ( THÁNG '+o.monthText+' )';
   r2.value = o.subtext
@@ -1493,7 +1496,7 @@ async function buildAttendanceXlsx(o){
   // Header lưới: Row 3 (tháng), Row 4 (thứ), Row 5 (ngày)
   const hdrStyle=(cell)=>{ cell.fill=xlFill('FFE0E0E0'); cell.border=xlBorder('FFA0A0A0'); cell.font={name:XL_FONT,size:10,bold:true}; cell.alignment={vertical:'middle',horizontal:'center',wrapText:true}; };
   const vmerge=(col,text)=>{ ws.mergeCells(3,col,5,col); const c=ws.getCell(3,col); c.value=text; hdrStyle(c); for(let r=3;r<=5;r++) hdrStyle(ws.getCell(r,col)); };
-  vmerge(1,'No'); vmerge(2,'Name'); vmerge(totalCol,o.totalHeader);
+  vmerge(1,'No'); vmerge(2,'Name'); vmerge(totalCol,o.totalHeader); extras.forEach((x,i)=>vmerge(totalCol+1+i,x.header));
   let i=0;
   while(i<nd){
     let j=i; const mKey=o.dates[i].getFullYear()+'-'+o.dates[i].getMonth();
@@ -1527,6 +1530,7 @@ async function buildAttendanceXlsx(o){
     const t=o.totalOf(ma), ct=ws.getCell(row,totalCol);
     ct.value=t.text; ct.border=dataBorder; ct.fill=xlFill(t.fill||'FFC9DAF8');
     ct.font={name:XL_FONT,size:10,bold:true,color:{argb:t.color||'FF000000'}}; ct.alignment={vertical:'middle',horizontal:'center'};
+    extras.forEach((x,i)=>{ const v=x.valueOf(ma), cx=ws.getCell(row,totalCol+1+i); cx.value=v.text; cx.border=dataBorder; cx.fill=xlFill(v.fill||'FFE1D5F5'); cx.font={name:XL_FONT,size:10,bold:true,color:{argb:v.color||'FF6D28D9'}}; cx.alignment={vertical:'middle',horizontal:'center'}; });
     ws.getRow(row).height=19;
   });
 
@@ -1548,7 +1552,8 @@ async function exportQgXlsx(){
       dates, emps, nameOf:ma=>DANH_SACH_TEN[ma]||names[ma]||ma,
       cellText:(ma,iso)=>fmtH((map[ma]&&map[ma][iso])||0), cellStyle:(tx,ma,iso)=>{ const v=(map[ma]&&map[ma][iso])||0, pv=(mapP&&mapP[ma]&&mapP[ma][iso])||0; return (pv>0&&v-pv<=1e-9)?{fill:'FFE1D5F5',color:'FF6D28D9',bold:true}:xlHoursStyle(tx); },
       totalHeader:'Tổng cộng',
-      totalOf:ma=>{ const sum=dates.reduce((s,d)=>s+((map[ma]&&map[ma][isoOf(d)])||0),0);
+      extraTotals:[{ header:'Trả bằng phép', width:14, valueOf:ma=>{ const sp=dates.reduce((s,d)=>s+((mapP&&mapP[ma]&&mapP[ma][isoOf(d)])||0),0); return { text: sp?fmtH(sp):'0H', fill:'FFE1D5F5', color: sp>0?'FF6D28D9':'FF666666' }; } }],
+      totalOf:ma=>{ const sum=dates.reduce((s,d)=>s+((map[ma]&&map[ma][isoOf(d)])||0)-((mapP&&mapP[ma]&&mapP[ma][isoOf(d)])||0),0);
         return { text: sum?fmtH(sum):'0H', fill: sum<0?'FFFCE5CD':sum>0?'FFC9DAF8':'FFEAF1FB', color: sum<0?'FFCC4125':sum>0?'FF1155CC':'FF666666' }; }
     });
     showToast('✅ Đã tải báo cáo Excel','#2F9E44');
