@@ -975,7 +975,7 @@ async function supaGetLeave(maNV){
       phepNamDaDung: data.phep_nam_da_dung ?? 0,
       phepNamConLai: data.phep_nam_con_lai ?? 0,
       nghiBuTong: data.nghi_bu_tong ?? 0,
-      nghiBuConLai: data.nghi_bu_con_lai ?? 0,
+      nghiBuConLai: data.nghi_bu_da_dung ?? data.nghi_bu_con_lai ?? 0, // số ĐÃ DÙNG (cột cũ nghi_bu_con_lai thực chất chứa số đã dùng; sau khi chạy SQL sẽ là nghi_bu_da_dung)
       phepThucTeConLai: data.phep_thuc_te_con_lai ?? null
     };
   } catch(e){ return { success:false }; }
