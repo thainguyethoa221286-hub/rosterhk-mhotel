@@ -90,19 +90,20 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .card-title { font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:12px; }
 
 /* TODAY SHIFT — Dashboard (Galaxy Deep Navy glass) */
-.shift-card { border-radius:22px; padding:20px; margin-bottom:12px; position:relative; overflow:hidden; }
+.shift-card { border-radius:18px; padding:12px 16px; margin-bottom:10px; position:relative; overflow:hidden; }
 .shift-card.morning   { background:linear-gradient(135deg,#475569,#1E293B 55%,#0F172A); box-shadow:0 12px 30px rgba(15,23,42,0.32); }
 .shift-card.afternoon { background:linear-gradient(135deg,#3B4A6B,#1E2440); box-shadow:0 12px 30px rgba(30,36,64,0.28); }
 .shift-card.off       { background:linear-gradient(135deg,#64748B,#475569); }
 .shift-card.leave     { background:linear-gradient(135deg,#FBBF24,#B45309); }
-.shift-lbl  { font-size:10px; font-weight:800; color:rgba(255,255,255,0.85); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
-.shift-name { font-size:26px; font-weight:900; color:white; margin-bottom:10px; }
+.shift-lbl  { font-size:10px; font-weight:800; color:rgba(255,255,255,0.8); text-transform:uppercase; letter-spacing:.8px; margin-bottom:2px; }
+.shift-name { font-size:20px; font-weight:900; color:white; display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.shift-name .st { font-size:14px; font-weight:700; opacity:.95; }
 .shift-time { font-size:17px; font-weight:700; color:white; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
 .shift-date { font-size:12px; color:rgba(255,255,255,0.8); display:flex; align-items:center; gap:6px; }
-.shift-badge { position:absolute; top:18px; right:18px; background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:5px 15px; font-size:14px; font-weight:900; color:white; backdrop-filter:blur(6px); }
+.shift-badge { position:absolute; top:50%; right:14px; transform:translateY(-50%); background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.35); border-radius:20px; padding:4px 13px; font-size:13px; font-weight:900; color:white; backdrop-filter:blur(6px); }
 
 /* QUỸ GIỜ — Widget xin trả giờ / xin về sớm */
-.tb-card { border-radius:18px; padding:14px 16px; margin-bottom:12px; display:flex; align-items:center; gap:12px; color:white; box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+.tb-card { border-radius:16px; padding:10px 14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; color:white; box-shadow:0 8px 20px rgba(0,0,0,0.12); }
 .tb-card.deficit  { background:linear-gradient(135deg,#FB923C,#EF4444); }
 .tb-card.surplus  { background:linear-gradient(135deg,#34D399,#059669); }
 .tb-card.balanced { background:linear-gradient(135deg,#94A3B8,#64748B); }
@@ -259,10 +260,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .cal-sub   { font-size:10px; color:var(--muted); margin-bottom:14px; }
 .cal-btns  { display:flex; gap:8px; }
 .cal-btn   { width:32px; height:32px; border-radius:10px; border:1.5px solid var(--border); background:var(--bg); cursor:pointer; font-size:16px; font-weight:700; color:var(--text); }
-.cal-days-hdr { display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:6px; }
+.cal-days-hdr { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); margin-bottom:6px; }
 .cal-hdr-cell { text-align:center; font-size:11px; font-weight:700; color:var(--muted); padding:3px 0; }
 .cal-hdr-cell.red { color:var(--red); }
-.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px 3px; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px 3px; }
+.cal-grid .dc { min-width:0; box-sizing:border-box; }
+.dc-num-m { font-size:11px !important; }
 .dc { border-radius:14px; min-height:54px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; background:transparent; border:1.5px solid transparent; padding:4px 2px; transition:all .15s; }
 .dc:active { transform:scale(.95); }
 .dc.empty   { background:transparent; border:none; cursor:default; }
@@ -286,7 +289,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .ca-AL2 { background:#FFE066; color:#5C3C00; }
 .ca-CL2 { background:#C8E6C9; color:#2E7D32; }
 .ca-O2  { background:#EEEEEE; color:#757575; }
-.cal-legend { display:flex; flex-wrap:nowrap; gap:8px; margin-top:14px; padding-top:12px; padding-bottom:2px; border-top:1px solid var(--border); overflow-x:auto; -ms-overflow-style:none; scrollbar-width:none; }
+.cal-legend { display:flex; flex-wrap:wrap; gap:8px 12px; margin-top:14px; padding-top:12px; padding-bottom:2px; border-top:1px solid var(--border); }
 .cal-legend::-webkit-scrollbar { display:none; }
 .cal-legend .leg-item { flex-shrink:0; }
 .leg-item { display:flex; align-items:center; gap:5px; font-size:10px; color:var(--muted); font-weight:600; }
@@ -484,7 +487,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .bd-box .acts{display:flex;gap:8px;margin-top:14px}
 .bd-box .acts button{flex:1;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer}
 .bd-box .b-cancel{background:#F1F5F9;color:#475569}.bd-box .b-prev{background:#E0E7FF;color:#3730A3}.bd-box .b-del{background:#E03131;color:#fff}.bd-box .b-del:disabled{opacity:.4;cursor:not-allowed}
-.ann-card{position:relative;margin:0 0 14px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;box-shadow:0 8px 20px rgba(249,115,22,.30);cursor:pointer;display:flex;gap:12px;align-items:flex-start}
+.ann-card{position:relative;margin:0 0 10px;padding:11px 14px;border-radius:20px;background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;box-shadow:0 8px 20px rgba(249,115,22,.30);cursor:pointer;display:flex;gap:12px;align-items:flex-start}
 .ann-card.empty{background:#FFF7ED;color:#C2410C;border:1.5px dashed #FDBA74;box-shadow:none}
 .ann-ico{font-size:24px;line-height:1;animation:annPulse 1.6s ease-in-out infinite}
 @keyframes annPulse{0%,100%{transform:scale(1) rotate(0);opacity:1}25%{transform:scale(1.15) rotate(-12deg)}50%{transform:scale(1.05) rotate(10deg);opacity:.8}}
@@ -506,7 +509,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .ann-box .acts{display:flex;gap:8px;margin-top:16px}
 .ann-box .acts button{flex:1;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer}
 .ann-box .b1{background:#F1F5F9;color:#475569}.ann-box .b2{background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff}
-.train-card{margin:0 0 14px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,#10B981,#0F766E);color:#fff;box-shadow:0 8px 20px rgba(15,118,110,.28);cursor:pointer;display:flex;gap:12px;align-items:center}
+.train-card{margin:0 0 10px;padding:10px 14px;border-radius:20px;background:linear-gradient(135deg,#10B981,#0F766E);color:#fff;box-shadow:0 8px 20px rgba(15,118,110,.28);cursor:pointer;display:flex;gap:12px;align-items:center}
 .train-ico{font-size:26px;line-height:1}.train-body{flex:1;min-width:0}
 .train-tag{font-size:10px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;opacity:.9}
 .train-title{font-size:15px;font-weight:900;margin-top:2px}.train-text{font-size:12.5px;margin-top:3px;opacity:.95}
@@ -519,6 +522,13 @@ body.in-train .header{display:none}
 .sop-wait-box .spinner{margin:0 auto 14px}
 .sop-wait-t{font-size:16px;font-weight:900;color:#1E293B}
 .sop-wait-s{font-size:12.5px;color:#64748B;margin-top:6px;line-height:1.5}
+.hdr-shift{position:relative;z-index:1;margin-top:14px;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);cursor:pointer}
+.hdr-shift .hs-badge{flex-shrink:0;min-width:48px;height:40px;border-radius:12px;background:#F97316;color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.hdr-shift .hs-badge.off{background:#94A3B8}.hdr-shift .hs-badge.leave{background:#CA8A04}.hdr-shift .hs-badge.afternoon{background:#6366F1}.hdr-shift .hs-badge.none{background:rgba(255,255,255,.18);font-size:20px}
+.hdr-shift .hs-body{flex:1;min-width:0}.hdr-shift .hs-lbl{font-size:10.5px;font-weight:800;letter-spacing:.08em;color:#94A3B8;text-transform:uppercase}
+.hdr-shift .hs-main{font-size:15px;font-weight:800;color:#fff;margin-top:2px}
+.hdr-shift .hs-go{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#E2E8F0}
+body.not-home .hdr-shift{display:none}
 </style>
 </head>
 <body>
@@ -555,6 +565,7 @@ body.in-train .header{display:none}
         </div>
       </div>
     </div>
+    <div class="hdr-shift" id="headerShift" onclick="switchTab('schedule')"></div>
   </div>
   <div class="toast" id="toast"></div>
   <div class="sched-update-overlay" id="schedUpdateOverlay" style="display:none">
@@ -580,7 +591,6 @@ body.in-train .header{display:none}
   <!-- TAB TỔNG QUAN -->
   <div class="content active" id="tab-home">
     <div style="margin-top:8px"></div>
-    <div id="todayShiftCard"></div>
     <div id="timeBalanceCard"></div>
     <div id="announceCard"></div>
     <div class="train-card" onclick="switchTab('train')">
@@ -1044,12 +1054,8 @@ async function supaGetSchedule(maNV){
 
 async function supaGetAllSchedule(month, year){
   try{
-    const startDate = new Date(year, month - 1, 24);
-    const endMonth = month === 12 ? 1 : month + 1;
-    const endYear = month === 12 ? year + 1 : year;
-    const endDate = new Date(endYear, endMonth - 1, 23);
-    const startStr = startDate.getFullYear()+'-'+pad(startDate.getMonth()+1)+'-'+pad(startDate.getDate());
-    const endStr = endDate.getFullYear()+'-'+pad(endDate.getMonth()+1)+'-'+pad(endDate.getDate());
+    const cyc = rosterCycle(month - 1, year); // month = tháng của chu kỳ (1-12), theo ngày kết thúc 23
+    const startStr = cyc.startISO, endStr = cyc.endISO;
     const { data, error } = await sb.from('roster_schedule').select('ma_nv, ho_ten, ngay, ca').gte('ngay', startStr).lte('ngay', endStr);
     if (error) throw error;
     const empMap = {}, empOrder = [];
@@ -1205,11 +1211,22 @@ let loginPw = ''; // chỉ giữ trong bộ nhớ, không lưu ra trình duyệt
 function pad(n){ return String(n).padStart(2,'0'); }
 function makeKey(y,m0,d){ return y+'-'+pad(m0+1)+'-'+pad(d); }
 function todayKey(){ const n=new Date(); return makeKey(n.getFullYear(),n.getMonth(),n.getDate()); }
-let calMonth=new Date().getMonth(), calYear=new Date().getFullYear(), selKey=todayKey();
-let ltMonth, ltYear;
-(function(){ const now=new Date(); if(now.getDate()>=24){ltMonth=now.getMonth();ltYear=now.getFullYear();}else{ltMonth=now.getMonth()===0?11:now.getMonth()-1;ltYear=now.getMonth()===0?now.getFullYear()-1:now.getFullYear();}})();
-function cycleRange(m,y){ const em=m===11?0:m+1,ey=m===11?y+1:y; return '24/'+pad(m+1)+'/'+y+' – 23/'+pad(em+1)+'/'+ey; }
-function cycleDates(m,y){ const arr=[],cur=new Date(y,m,24),em=m===11?0:m+1,ey=m===11?y+1:y,end=new Date(ey,em,23); while(cur<=end){arr.push(new Date(cur));cur.setDate(cur.getDate()+1);} return arr; }
+let selKey=todayKey();
+/* ===== CHU KỲ ROSTER — MỘT CÁCH TÍNH DUY NHẤT (Lịch làm, Lịch tổng, nút ‹ ›, "Cả chu kỳ", báo cáo quỹ giờ, Excel) =====
+   Roster tháng N chạy từ ngày 24 của tháng trước đến ngày 23 của tháng N.
+   Tên tháng / năm của chu kỳ = tháng / năm của ngày KẾT THÚC (ngày 23). Ví dụ: Tháng 11/2026 = 24/10/2026 – 23/11/2026.
+   m = tháng của chu kỳ (0-11), y = năm của chu kỳ. */
+function rosterCycle(m,y){
+  const start=new Date(y,m-1,24), end=new Date(y,m,23), dates=[], cur=new Date(start);
+  while(cur<=end){ dates.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
+  const f=(d)=>pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
+  return { month:end.getMonth(), year:end.getFullYear(), start, end, startISO:isoOf(start), endISO:isoOf(end), dates, title:MON_VI[end.getMonth()]+' '+end.getFullYear(), label:f(start)+' – '+f(end) };
+}
+function rosterCycleOfDate(iso){ const p=String(iso).split('-'), y=+p[0], m=+p[1]-1, d=+p[2]; return d>=24 ? rosterCycle(m+1,y) : rosterCycle(m,y); }
+function cycleRange(m,y){ return rosterCycle(m,y).label; }
+function cycleDates(m,y){ return rosterCycle(m,y).dates; }
+let calMonth, calYear, ltMonth, ltYear;
+(function(){ const c=rosterCycleOfDate(isoOf(new Date())); calMonth=ltMonth=c.month; calYear=ltYear=c.year; })();
 let ltViewMode = 'full'; // 'day' | 'week' | 'full'
 function zeroTime(d){ const c=new Date(d); c.setHours(0,0,0,0); return c; }
 function filterDatesByMode(dates){
@@ -1393,8 +1410,30 @@ async function loadMySchedule(){
   checkScheduleChangeAndNotify();
   renderTodayShift(); renderCalendar();
 }
-function renderTodayShift(){ const key=todayKey(),ca=mySchedule[key]||''; if(!ca){ document.getElementById('todayShiftCard').innerHTML='<div class="card" style="display:flex;align-items:center;gap:12px;padding:16px 18px"><div style="font-size:28px">📋</div><div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Hôm nay</div><div style="font-size:15px;font-weight:700;color:var(--text)">Chưa có lịch làm</div></div></div>'; return; } const type=getCaType(ca),cls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':'leave',name=CA_NAMES[ca]||ca,time=CA_TIMES[ca]||'',tnow=new Date(),dl=DOW_VI[tnow.getDay()]+', '+pad(tnow.getDate())+'/'+pad(tnow.getMonth()+1)+'/'+tnow.getFullYear(); document.getElementById('todayShiftCard').innerHTML='<div class="shift-card '+cls+'"><div class="shift-lbl">Ca làm việc hôm nay</div><div class="shift-name">'+name+'</div>'+(time?'<div class="shift-time">⏰ '+time+'</div>':'')+'<div class="shift-date">📆 '+dl+'</div><div class="shift-badge">'+ca+'</div></div>'; }
-function renderCalendar(){ document.getElementById('calTitle').textContent=MON_VI[calMonth]+' '+calYear; document.getElementById('calSub').textContent='📅 Chu kỳ: '+cycleRange(calMonth,calYear); const kToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),firstDow=(new Date(calYear,calMonth,1).getDay()+6)%7,dim=new Date(calYear,calMonth+1,0).getDate(); let html=''; for(let i=0;i<firstDow;i++)html+='<div class="dc empty"></div>'; for(let d=1;d<=dim;d++){ const key=makeKey(calYear,calMonth,d),ca=mySchedule[key]||'',dow=new Date(calYear,calMonth,d).getDay(),isToday=key===kToday,isWknd=dow===0||dow===6,isSel=key===selKey; let cls='dc'; if(isToday)cls+=' today'; else if(isSel)cls+=' selected'; if(isWknd)cls+=' weekend'; const badge=ca?'<div class="dc-ca ca-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="dc-star">★</span>':'')+'</div>':''; html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num">'+d+'</div>'+badge+'</div>'; } document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey); }
+function renderTodayShift(){
+  const el=document.getElementById('headerShift'); if(!el)return;
+  const key=todayKey(), ca=mySchedule[key]||'', n=new Date(), dl=DOW_VI[n.getDay()]+', '+pad(n.getDate())+'/'+pad(n.getMonth()+1);
+  const go='<div class="hs-go">›</div>';
+  if(!ca){ el.innerHTML='<div class="hs-badge none">📋</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">Chưa có lịch làm</div></div>'+go; return; }
+  const b=stripStar(ca), type=getCaType(ca), name=CA_NAMES[b]||CA_NAMES[ca]||b, time=CA_TIMES[b]||CA_TIMES[ca]||'';
+  el.innerHTML='<div class="hs-badge '+(type==='afternoon'?'afternoon':type==='off'?'off':type==='morning'?'':'leave')+'">'+b+(ca.includes('*')?'★':'')+'</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">'+name+(time?' · '+time:'')+'</div></div>'+go;
+}
+function renderCalendar(){
+  const cyc=rosterCycle(calMonth,calYear);
+  document.getElementById('calTitle').textContent=cyc.title;
+  document.getElementById('calSub').textContent='📅 Chu kỳ: '+cyc.label;
+  const now=new Date(), kToday=makeKey(now.getFullYear(),now.getMonth(),now.getDate());
+  let html='';
+  for(let i=0;i<(cyc.dates[0].getDay()+6)%7;i++) html+='<div class="dc empty"></div>';
+  cyc.dates.forEach((dt,idx)=>{
+    const d=dt.getDate(), key=makeKey(dt.getFullYear(),dt.getMonth(),d), ca=mySchedule[key]||'', dow=dt.getDay(), isToday=key===kToday, isWknd=dow===0||dow===6, isSel=key===selKey;
+    let cls='dc'; if(isToday)cls+=' today'; else if(isSel)cls+=' selected'; if(isWknd)cls+=' weekend';
+    const numTxt=(idx===0||d===1)?d+'/'+(dt.getMonth()+1):String(d); // ngày đầu chu kỳ & ngày mùng 1 ghi kèm tháng để dễ nhận biết
+    const badge=ca?'<div class="dc-ca ca-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="dc-star">★</span>':'')+'</div>':'';
+    html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num'+(numTxt.length>2?' dc-num-m':'')+'">'+numTxt+'</div>'+badge+'</div>';
+  });
+  document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey);
+}
 function selectDay(key){ selKey=key; document.querySelectorAll('.dc').forEach(c=>{c.classList.toggle('selected',c.onclick&&c.onclick.toString().includes("'"+key+"'"));}); renderDayDetail(key); }
 function renderDayDetail(key){ if(!key){document.getElementById('dayDetail').innerHTML='';return;} const parts=key.split('-'),y=parseInt(parts[0]),m=parseInt(parts[1])-1,d=parseInt(parts[2]),date=new Date(y,m,d),ca=mySchedule[key]||'',type=getCaType(ca),hCls=type==='morning'?'morning':type==='afternoon'?'afternoon':type==='off'?'off':ca?'leave':'none',caName=ca?(CA_NAMES[stripStar(ca)]||CA_NAMES[ca]||ca):'Chưa có lịch',caTime=CA_TIMES[stripStar(ca)]||CA_TIMES[ca]||'',dateStr=DOW_FULL[date.getDay()]+', '+pad(d)+'/'+pad(m+1)+'/'+y; document.getElementById('dayDetail').innerHTML='<div class="ddc"><div class="ddc-hdr '+hCls+'"><div><div class="ddc-date">'+dateStr+'</div><div class="ddc-name">'+caName+'</div></div>'+(ca?'<div class="ddc-badge">'+stripStar(ca)+(ca.includes('*')?'<span class="ddc-star">★</span>':'')+'</div>':'')+'</div>'+(caTime?'<div class="ddc-body"><div class="ddc-row"><div class="ddc-icon">⏰</div><div><div class="ddc-lbl">Giờ làm việc</div><div class="ddc-val">'+caTime+'</div></div></div></div>':'<div class="ddc-body"><div class="empty" style="padding:10px">'+(ca?'':'Ngày này chưa có ca làm việc')+'</div></div>')+'</div>'; }
 function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} loadMySchedule(); }
@@ -1429,13 +1468,7 @@ let pendingDeleteMaYC = null;
 /* ===== HẠN MỨC QUỸ GIỜ: tối đa 2h về sớm + 2h làm bù / chu kỳ Roster (24 → 23) ===== */
 const TIME_LIMIT_HOURS = 2;
 function isoOf(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
-function cycleOfDate(iso){
-  const p=String(iso).split('-'), y=+p[0], m=+p[1]-1, d=+p[2];
-  let sy=y, sm=m; if(d<24){ sm=m-1; if(sm<0){ sm=11; sy=y-1; } }
-  const ey=sm===11?sy+1:sy, em=sm===11?0:sm+1;
-  const start=new Date(sy,sm,24), end=new Date(ey,em,23);
-  return { start, end, startISO:isoOf(start), endISO:isoOf(end), label:'24/'+pad(sm+1)+'/'+sy+' – 23/'+pad(em+1)+'/'+ey };
-}
+function cycleOfDate(iso){ return rosterCycleOfDate(iso); }
 // Tổng giờ [đã duyệt + chờ duyệt] của 1 loại trong chu kỳ (trị tuyệt đối)
 async function supaGetTimeUsage(maNV, loai, startISO, endISO, excludeMaYC){
   try{
@@ -1627,12 +1660,11 @@ async function buildAttendanceXlsx(o){
 async function exportQgXlsx(){
   if(!qgMatrix){ return; }
   const { dates, emps, map, mapP, names }=qgMatrix;
-  const em=qgMonth===11?0:qgMonth+1;
   try{
     showToast('⏳ Đang tạo file Excel...','#2D46DB');
     await buildAttendanceXlsx({
       sheetName:'TRA GIO', fileName:'Bao_cao_quy_gio_'+pad(qgMonth+1)+'-'+qgYear+'.xlsx',
-      year:qgYear, monthText:String(qgMonth+1), subtext:'Chu kỳ: 24/'+pad(qgMonth+1)+' - 23/'+pad(em+1),
+      year:qgYear, monthText:String(qgMonth+1), subtext:'Chu kỳ: 24/'+pad(rosterCycle(qgMonth,qgYear).start.getMonth()+1)+' - 23/'+pad(qgMonth+1),
       dates, emps, nameOf:ma=>DANH_SACH_TEN[ma]||names[ma]||ma,
       cellText:(ma,iso)=>fmtH((map[ma]&&map[ma][iso])||0), cellStyle:(tx,ma,iso)=>{ const v=(map[ma]&&map[ma][iso])||0, pv=(mapP&&mapP[ma]&&mapP[ma][iso])||0; return (pv>0&&v-pv<=1e-9)?{fill:'FFE1D5F5',color:'FF6D28D9',bold:true}:xlHoursStyle(tx); },
       totalHeader:'Tổng cộng',
@@ -1661,12 +1693,12 @@ async function exportLichTongXlsx(){
     rows.forEach(r=>{ const ma=String(r.ma_nv||'').trim().toUpperCase(); if(!ma)return; (map[ma]=map[ma]||{})[r.ngay]=r.ca; names[ma]=r.ho_ten; });
     const emps=Array.from(new Set(Object.keys(DANH_SACH_TEN).concat(Object.keys(map)))).sort((a,b)=>nvNum(a)-nvNum(b));
     const dates=[]; const cur=new Date(from+'T00:00:00'), end=new Date(to+'T00:00:00'); while(cur<=end){ dates.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
-    const c1=cycleOfDate(from).start, c2=cycleOfDate(to).start;
-    const monthText = (c1.getFullYear()===c2.getFullYear()&&c1.getMonth()===c2.getMonth()) ? String(c1.getMonth()+1) : (c1.getMonth()+1)+' - '+(c2.getMonth()+1);
+    const c1=cycleOfDate(from), c2=cycleOfDate(to);
+    const monthText = (c1.year===c2.year&&c1.month===c2.month) ? String(c1.month+1) : (c1.month+1)+' - '+(c2.month+1);
     const f=dates[0], l=dates[dates.length-1];
     await buildAttendanceXlsx({
       sheetName:'Lich tong', fileName:'Lich_tong_'+from+'_den_'+to+'.xlsx',
-      year:c1.getFullYear(), monthText, subtext:'Chu kỳ: '+pad(f.getDate())+'/'+pad(f.getMonth()+1)+' - '+pad(l.getDate())+'/'+pad(l.getMonth()+1),
+      year:c1.year, monthText, subtext:'Chu kỳ: '+pad(f.getDate())+'/'+pad(f.getMonth()+1)+' - '+pad(l.getDate())+'/'+pad(l.getMonth()+1),
       dates, emps, nameOf:ma=>DANH_SACH_TEN[ma]||names[ma]||ma,
       cellText:(ma,iso)=>(map[ma]&&map[ma][iso])||'', cellStyle:xlShiftStyle,
       totalHeader:'Tổng ngày làm',
@@ -1945,7 +1977,7 @@ function switchTab(tab){
     nav.classList.add('active');
     const dot=document.createElement('div'); dot.className='nav-dot'; nav.appendChild(dot);
   }
-  document.body.classList.toggle('in-train', tab==='train');
+  document.body.classList.toggle('in-train', tab==='train'); document.body.classList.toggle('not-home', tab!=='home');
   if(tab==='lichTong' && !ltEmployees) loadLichTong();
   if(tab==='admin') loadAdminRequests();
   if(tab==='train') loadSopFrame();
