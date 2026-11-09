@@ -673,92 +673,6 @@ body.not-home .hdr-shift{display:none}
 .lt-table tbody td.cc-today .cc-badge { z-index:1; }
 @keyframes ltPulseH { 0%,100%{ opacity:0; } 50%{ opacity:.45; } }
 @keyframes ltPulseB { 0%,100%{ opacity:0; } 50%{ opacity:.32; } }
-
-/* ===== MÁY TÍNH (>=1024px): Tổng quan / Xin nghỉ / Duyệt bài thiết kế lại — điện thoại KHÔNG đổi ===== */
-.d-only { display:none; }
-@media (min-width: 1024px) {
-  .hdr-shift { display:none !important; }
-  .d-hide { display:none; }
-
-  /* --- Tổng quan --- */
-  #tab-home { display:none; }
-  #tab-home.active { display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); gap:18px; align-content:start; max-width:1200px; padding:22px 28px 110px; }
-  #tab-home.active > .d-only { display:block; }
-  #homeShiftTile { grid-column:span 3; order:1; background:#fff; border-radius:20px; padding:20px 22px; box-shadow:0 2px 10px rgba(15,23,42,.07); border-top:5px solid #F76707; cursor:pointer; }
-  .stt-lbl { font-size:12px; font-weight:800; letter-spacing:.8px; color:#9A3412; text-transform:uppercase; }
-  .stt-row { display:flex; align-items:center; gap:14px; margin-top:14px; }
-  .stt-badge { background:#F76707; color:#fff; font-size:28px; font-weight:800; padding:8px 18px; border-radius:16px; line-height:1.15; }
-  .stt-badge.afternoon { background:#3B5BDB; } .stt-badge.off { background:#CED4DA; color:#333; } .stt-badge.leave { background:#CA8A04; } .stt-badge.none { background:#E2E8F0; color:#64748B; }
-  .stt-name { font-size:20px; font-weight:800; color:#0B1F3A; } .stt-time { font-size:15px; font-weight:600; color:#475569; margin-top:2px; }
-  #homePhepCard, #homePhepCard .balance-grid { display:contents; }
-  #homePhepCard > .card-title { display:none; }
-  #homePhepCard .balance-item { grid-column:span 3; padding:20px 22px; border-radius:20px; margin:0; }
-  #homePhepCard .balance-item.annual { order:2; } #homePhepCard .balance-item.comp { order:3; }
-  #timeBalanceCard { grid-column:span 3; order:4; display:flex; }
-  #timeBalanceCard .tb-card { margin:0; width:100%; border-radius:20px; padding:20px 22px; flex-direction:column; align-items:flex-start; justify-content:center; gap:8px; }
-  #timeBalanceCard .tb-chev { display:none; }
-  #announceCard { grid-column:span 7; order:5; display:flex; } #announceCard:empty { display:none; }
-  #announceCard .ann-card { margin:0; padding:20px 24px; border-radius:20px; flex:1; display:flex; align-items:center; gap:16px; }
-  #tab-home .train-card { grid-column:span 7; order:6; margin:0; padding:20px 24px; border-radius:20px; align-items:center; }
-  #homeRecentCard { grid-column:span 5; grid-row:span 2; order:5; margin:0; padding:20px 24px; border-radius:20px; background:#fff; border:0; box-shadow:0 2px 10px rgba(15,23,42,.07); }
-  #homeRecentCard .card-title { font-size:12px; letter-spacing:1px; }
-
-  /* --- Xin nghỉ --- */
-  #tab-leave { display:none; }
-  #tab-leave.active { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); column-gap:22px; row-gap:18px; align-content:start; max-width:1200px !important; padding:0 28px 110px !important; background:transparent !important; }
-  #tab-leave > :nth-child(1) { grid-column:1 / -1; padding:26px 0 0 !important; background:transparent !important; }
-  #tab-leave > :nth-child(2) { grid-column:2; grid-row:2; margin:0 !important; padding:0 !important; }
-  #tab-leave > :nth-child(3) { grid-column:1; grid-row:2 / span 2; margin:0 !important; padding:26px 28px !important; box-shadow:0 2px 10px rgba(15,23,42,.07) !important; align-self:start; }
-  #tab-leave > :nth-child(4) { grid-column:2; grid-row:3; margin:0 !important; background:#fff !important; border:0 !important; border-radius:20px !important; box-shadow:0 2px 10px rgba(15,23,42,.07) !important; align-self:start; }
-  #tab-leave > :nth-child(2) > div { padding:18px 18px !important; }
-  #lvDropBtn { display:none; }
-  #lvDropMenu { display:grid !important; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; position:static; border:0; box-shadow:none; background:transparent; padding:0; overflow:visible; }
-  .lv-dropdown-container { margin-bottom:26px; }
-  #lvDropMenu .lv-dropdown-item { height:56px; box-sizing:border-box; border:1.5px solid #E2E8F0; border-radius:16px; background:#fff; padding:0 14px; font-size:14px; }
-  #lvDropMenu .lv-dropdown-item.selected { border-color:#3B5BDB; background:#EEF2FF; box-shadow:0 0 0 3px rgba(59,91,219,.15); }
-
-  /* --- Duyệt bài --- */
-  #tab-admin { display:none; }
-  #tab-admin.active { display:grid; grid-template-columns:minmax(0,1fr) auto; align-content:start; max-width:1200px; margin-left:auto; margin-right:auto; padding:0 28px 110px; }
-  #tab-admin > * { grid-column:1 / -1; }
-  #tab-admin > .admin-filter-row { grid-column:1; padding:0 0 18px; align-items:center; }
-  #tab-admin > div[style*="padding:12px 16px 0"] { grid-column:2; padding:0 0 18px !important; max-width:none; }
-  #tab-admin .qg-report-btn, #tab-admin .bd-open-btn { flex:none; width:auto; height:40px; padding:0 18px; margin:0; font-size:14px; border-radius:12px; }
-  #tab-admin .admin-header { background:transparent; display:grid; grid-template-columns:1fr auto; align-items:end; padding:26px 0 18px; overflow:visible; }
-  #tab-admin .admin-header-eyebrow { grid-column:1; grid-row:1; } #tab-admin .admin-header-title { grid-column:1; grid-row:2; } #tab-admin .admin-tab-switch { grid-column:2; grid-row:1 / span 2; }
-  #tab-admin .admin-header::after { display:none; }
-  #tab-admin .admin-header-eyebrow { color:#92400E; font-size:12px; }
-  #tab-admin .admin-header-title { color:#1A1F36; font-size:32px; }
-  #tab-admin .admin-badge-count { background:#92400E; color:#fff; font-size:15px; padding:3px 14px; }
-  #tab-admin .admin-tab-switch { padding:4px; gap:0; background:#E2E8F0; border-radius:14px; flex:none; }
-  #tab-admin .admin-tab-btn { flex:none; padding:10px 24px; border:0; background:transparent; color:#475569; border-radius:11px; font-size:14px; }
-  #tab-admin .admin-tab-btn.active { background:#fff; color:#92400E; box-shadow:0 1px 4px rgba(0,0,0,.1); }
-  #tab-admin .admin-filter-btn { font-size:14px; padding:0 16px; height:40px; border-radius:12px; border-color:#CBD5E1; color:#334155; font-weight:800; }
-  #tab-admin .admin-filter-btn.active { background:#92400E; border-color:#92400E; color:#fff; }
-  #tab-admin .admin-list { grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:18px; padding:0; align-items:stretch; }
-  #tab-admin .admin-card { border:0; border-radius:20px; box-shadow:0 2px 10px rgba(15,23,42,.07); display:flex; flex-direction:column; }
-  #tab-admin .admin-card-actions { margin-top:auto; border-top:1px solid #EEF2F7; }
-  #tab-admin .admin-card-name { font-size:16px; } #tab-admin .admin-meta-val { font-size:13px; } #tab-admin .admin-reason-box { font-size:13px; }
-}
-
-/* ===== Chống giật khi lướt (điện thoại): bỏ làm mờ nền khi cuộn, đẩy phần cố định lên GPU ===== */
-.bottomnav { background:rgba(255,255,255,0.97) !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; will-change:transform; box-shadow:0 8px 24px rgba(15,23,42,0.16) !important; }
-.avatar { -webkit-backdrop-filter:none; backdrop-filter:none; }
-.lt-table thead th.col-today::after, .lt-table tbody td.cc-today::after { will-change:opacity; }
-.lt-wrap, .cal-wrap, #ltTable { -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; }
-.lt-table tbody td.col-name, .lt-table tbody tr:nth-child(even) td.col-name { box-shadow:none; border-right:1px solid #B9C9E6!important; }
-.ann-ico { will-change:transform; }
-html { scroll-behavior:auto; }
-
-/* Điện thoại: cột TODAY giữ màu nổi bật nhưng KHÔNG chạy hiệu ứng nhấp nháy liên tục (tránh giật khi lướt). Máy tính vẫn giữ hiệu ứng */
-@media (max-width: 1023px) {
-  .lt-table thead th.col-today::after, .lt-table tbody td.cc-today::after { animation:none !important; opacity:.16; will-change:auto; }
-  .lt-table thead th.col-today::after { opacity:.1; }
-  .ann-ico { animation:none; will-change:auto; }
-}
-
-/* Cột TODAY: bỏ hiệu ứng nhấp nháy ở mọi thiết bị, giữ màu nổi bật đứng yên */
-.lt-table thead th.col-today::after, .lt-table tbody td.cc-today::after { animation:none !important; will-change:auto; opacity:0 !important; display:none; }
 </style>
 </head>
 <body>
@@ -820,8 +734,7 @@ html { scroll-behavior:auto; }
 
   <!-- TAB TỔNG QUAN -->
   <div class="content active" id="tab-home">
-    <div style="margin-top:8px" class="d-hide"></div>
-    <div id="homeShiftTile" class="d-only" onclick="switchTab('schedule')"></div>
+    <div style="margin-top:8px"></div>
     <div id="timeBalanceCard"></div>
     <div id="announceCard"></div>
     <div class="train-card" onclick="switchTab('train')">
@@ -829,11 +742,7 @@ html { scroll-behavior:auto; }
       <div class="train-body"><div class="train-tag">Đào tạo</div><div class="train-title">Học SOP · Xem video · Thi đua</div><div class="train-text">Bấm để vào học và làm bài ngay trong Roster</div></div>
       <div class="train-chev">›</div>
     </div>
-    <div class="card d-only" id="homeRecentCard">
-      <div class="card-title">Yêu cầu gần đây</div>
-      <div id="homeRequests"><div class="empty">Chưa có yêu cầu nào</div></div>
-    </div>
-    <div class="card" id="homePhepCard">
+    <div class="card">
       <div class="card-title">Ngày phép</div>
       <div class="balance-grid">
         <div class="balance-item annual">
@@ -910,10 +819,6 @@ html { scroll-behavior:auto; }
         <div style="display:flex;justify-content:space-between">
           <span style="font-size:10px;color:#8892B0">Tổng</span>
           <span style="font-size:13px;font-weight:800;color:#1A1F36" id="lv-phepTong">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(146,64,14,.3)">
-          <span style="font-size:10px;color:#92400E;font-weight:700">Phép thực tế còn</span>
-          <span style="font-size:14px;font-weight:900;color:#92400E" id="lv-phepThucTe">—</span>
         </div>
       </div>
       <div style="background:linear-gradient(180deg,#EAFBF0,#D7F6E2);border-radius:20px;padding:18px 14px;box-shadow:0 4px 16px rgba(47,158,68,0.18);border:1.5px solid #86D9A3;border-left:5px solid #2F9E44">
@@ -1615,7 +1520,6 @@ async function loadLeave(){
       // "Phép thực tế còn" = phép còn lại trừ các ngày phép đã ĐĂNG KÝ nhưng đang chờ duyệt (nếu API trả về d.phepThucTeConLai thì dùng, không thì tạm lấy bằng "Còn lại")
       const rt = (d.phepThucTeConLai !== undefined && d.phepThucTeConLai !== null) ? d.phepThucTeConLai : r;
       const rtEl=document.getElementById('homePhepThucTe'); if(rtEl) rtEl.textContent=rt;
-      const rt2=document.getElementById('lv-phepThucTe'); if(rt2){ rt2.textContent=rt; rt2.style.color=(Number(rt)<0)?'#B91C1C':'#92400E'; }
       document.getElementById('homeNghiBuTong').textContent=nb; document.getElementById('homeNghiBuDaDung').textContent=nd; document.getElementById('homeNghiBu').textContent=nc;
       const nbBar=document.getElementById('homeNghiBuBar'); if(nbBar) nbBar.style.width=(nb>0?Math.min(100,Math.round(nd/nb*100)):0)+'%';
       const ids=['lv-phepNam','lv-phepDaDung','lv-phepTong','lv-nghiBu','lv-nghiBuDaDung','lv-nghiBuTong'];
@@ -1645,12 +1549,6 @@ function renderTodayShift(){
   const el=document.getElementById('headerShift'); if(!el)return;
   const key=todayKey(), ca=mySchedule[key]||'', n=new Date(), dl=DOW_VI[n.getDay()]+', '+pad(n.getDate())+'/'+pad(n.getMonth()+1);
   const go='<div class="hs-go">›</div>';
-  const tile=document.getElementById('homeShiftTile');
-  if(tile){
-    if(!ca){ tile.innerHTML='<div class="stt-lbl">Ca hôm nay · '+dl+'</div><div class="stt-row"><div class="stt-badge none">—</div><div><div class="stt-name">Chưa có lịch làm</div></div></div>'; }
-    else { const b0=stripStar(ca), t0=getCaType(ca), n0=CA_NAMES[b0]||CA_NAMES[ca]||b0, tm0=CA_TIMES[b0]||CA_TIMES[ca]||'';
-      tile.innerHTML='<div class="stt-lbl">Ca hôm nay · '+dl+'</div><div class="stt-row"><div class="stt-badge '+(t0==='afternoon'?'afternoon':t0==='off'?'off':t0==='morning'?'':'leave')+'">'+b0+(ca.includes('*')?'★':'')+'</div><div><div class="stt-name">'+n0+'</div>'+(tm0?'<div class="stt-time">'+tm0+'</div>':'')+'</div></div>'; }
-  }
   if(!ca){ el.innerHTML='<div class="hs-badge none">📋</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">Chưa có lịch làm</div></div>'+go; return; }
   const b=stripStar(ca), type=getCaType(ca), name=CA_NAMES[b]||CA_NAMES[ca]||b, time=CA_TIMES[b]||CA_TIMES[ca]||'';
   el.innerHTML='<div class="hs-badge '+(type==='afternoon'?'afternoon':type==='off'?'off':type==='morning'?'':'leave')+'">'+b+(ca.includes('*')?'★':'')+'</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">'+name+(time?' · '+time:'')+'</div></div>'+go;
@@ -2038,7 +1936,7 @@ const REQ_ICONS  = {XIN_NGHI:'🏖️',DOICA:'↔️',KHAC:'✨',VE_SOM:'🌙',T
 const REQ_COLORS = {XIN_NGHI:'#FFF9DB',DOICA:'#EEF2FF',KHAC:'#FAFBFF',VE_SOM:'#FFF4ED',TRA_GIO:'#ECFDF5',TRA_PHEP:'#EDE9FE',AL:'#FFF9DB',CL:'#EBFBEE'};
 function reqLabel(loai){ if(loai==='XIN_NGHI')return 'Xin nghỉ'; if(loai==='DOICA')return 'Đổi ca'; if(loai==='KHAC')return 'Yêu cầu khác'; if(loai==='VE_SOM')return 'Về sớm / Thiếu giờ'; if(loai==='TRA_GIO')return 'Trả giờ / Làm bù'; if(loai==='TRA_PHEP')return 'Trả giờ bằng phép'; return loai; }
 function reqDateLine(r){ if(isTimeType(r.loaiNghi)){ const gio=Number(r.soNgay)||0; return fmtDate(r.tuNgay)+' · '+(gio>0?'+':'')+gio+' giờ'; } return fmtDate(r.tuNgay)+' – '+fmtDate(r.denNgay)+' · '+r.soNgay+' ngày'; }
-async function loadRequests(){ try{ const d=await supaGetRequests(currentUser.maNV); const icons=REQ_ICONS, colors=REQ_COLORS; if(!d.success||!d.requests||!d.requests.length){ const hr0=document.getElementById('homeRequests'); if(hr0)hr0.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; lastLeaveRequests=[]; return; } lastLeaveRequests=d.requests; let htmlHome='',htmlLeave=''; d.requests.slice(0,5).forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; const itemInner = '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div>'; htmlHome+='<div class="req-item">'+itemInner+'</div>'; });
+async function loadRequests(){ try{ const d=await supaGetRequests(currentUser.maNV); const icons=REQ_ICONS, colors=REQ_COLORS; if(!d.success||!d.requests||!d.requests.length){ const hr0=document.getElementById('homeRequests'); if(hr0)hr0.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; const lr=document.getElementById('leaveRecentReqs'); if(lr)lr.innerHTML='<div class="empty">Chưa có yêu cầu nào</div>'; lastLeaveRequests=[]; return; } lastLeaveRequests=d.requests; let htmlHome='',htmlLeave=''; d.requests.forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : ''; const itemInner = '<div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div>'+reasonLine+'</div><div class="req-status '+sc+'">'+r.trangThai+'</div>'; htmlHome+='<div class="req-item">'+itemInner+'</div>'; });
   d.requests.slice(0,3).forEach(r=>{ const sc=r.trangThai==='Đã duyệt'?'status-approved':r.trangThai==='Từ chối'?'status-rejected':'status-pending'; const lblLoai=reqLabel(r.loaiNghi); const reasonLine = (r.trangThai==='Từ chối' && r.lyDoTuChoi) ? '<div class="req-date" style="color:#DC2626;font-weight:700;margin-top:2px">✕ '+r.lyDoTuChoi+'</div>' : '';
     const leaveInner = '<div class="req-item-top"><div class="req-icon" style="background:'+(colors[r.loaiNghi]||'#F0F4FF')+'">'+(icons[r.loaiNghi]||'📋')+'</div><div class="req-info"><div class="req-type">'+lblLoai+'</div><div class="req-date">'+reqDateLine(r)+'</div></div><div class="req-item-btns"><button class="req-btn-icon" title="Chỉnh sửa" onclick="editRequest(\''+r.maYC+'\')">✏️</button><button class="req-btn-icon req-btn-icon-danger" title="Xoá" onclick="openDeleteConfirm(\''+r.maYC+'\')">🗑️</button></div></div><div class="req-item-bottom"><div class="req-status '+sc+'">'+r.trangThai+'</div>'+reasonLine+'</div>';
     htmlLeave+='<div class="req-item-card">'+leaveInner+'</div>';
