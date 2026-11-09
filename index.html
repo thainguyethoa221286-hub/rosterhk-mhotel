@@ -513,6 +513,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .train-chev{font-size:24px;font-weight:900;opacity:.9}
 body.in-train .header{display:none}
 #sopFrame{height:calc(100vh - 92px)}
+.sop-wait{position:absolute;inset:0;z-index:5;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:24px}
+.sop-wait.show{display:flex}
+.sop-wait-box{background:#fff;border-radius:22px;padding:26px 24px;width:100%;max-width:300px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.sop-wait-box .spinner{margin:0 auto 14px}
+.sop-wait-t{font-size:16px;font-weight:900;color:#1E293B}
+.sop-wait-s{font-size:12.5px;color:#64748B;margin-top:6px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -931,7 +937,8 @@ body.in-train .header{display:none}
   </div>
 
   <!-- TAB ĐÀO TẠO (app SOP nhúng, tự đăng nhập bằng mật khẩu đã nhập ở Roster) -->
-  <div class="content" id="tab-train" style="padding:0">
+  <div class="content" id="tab-train" style="padding:0;position:relative">
+    <div id="sopWait" class="sop-wait"><div class="sop-wait-box"><div class="spinner"></div><div class="sop-wait-t">📚 Học hành chăm chỉ</div><div class="sop-wait-s">Vui lòng đợi trong giây lát…</div></div></div>
     <iframe id="sopFrame" title="Đào tạo SOP" allow="autoplay; fullscreen" style="width:100%;border:0;display:block;background:#eef0f5"></iframe>
   </div>
 
@@ -1945,9 +1952,11 @@ function switchTab(tab){
 }
 
 function sopOrigin(){ try{ return new URL(SOP_URL).origin; }catch(e){ return ''; } }
-function loadSopFrame(){ const f=document.getElementById('sopFrame'); if(f && !f.getAttribute('src')) f.src=SOP_URL; }
+let sopWaitTimer=null;
+function showSopWait(on){ const w=document.getElementById('sopWait'); if(w) w.classList.toggle('show',!!on); if(!on&&sopWaitTimer){ clearTimeout(sopWaitTimer); sopWaitTimer=null; } }
+function loadSopFrame(){ const f=document.getElementById('sopFrame'); if(f && !f.getAttribute('src')){ showSopWait(true); sopWaitTimer=setTimeout(()=>showSopWait(false),12000); f.src=SOP_URL; } }
 function sendSopLogin(){ const f=document.getElementById('sopFrame'); if(f&&f.contentWindow&&loginPw) f.contentWindow.postMessage({type:'roster-sso',pw:loginPw}, sopOrigin()); }
-window.addEventListener('message',(e)=>{ if(e.origin===sopOrigin() && e.data && e.data.type==='sop-ready') sendSopLogin(); });
+window.addEventListener('message',(e)=>{ if(e.origin!==sopOrigin()||!e.data) return; if(e.data.type==='sop-ready') sendSopLogin(); else if(e.data.type==='sop-logged-in'||e.data.type==='sop-login-failed') showSopWait(false); });
 
 /* ===== ADMIN — XOÁ YÊU CẦU HÀNG LOẠT (CHỈ NV001) ===== */
 let bdIds=[];
