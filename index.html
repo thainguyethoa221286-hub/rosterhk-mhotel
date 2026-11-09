@@ -740,6 +740,25 @@ body.not-home .hdr-shift{display:none}
   #tab-admin .admin-card-actions { margin-top:auto; border-top:1px solid #EEF2F7; }
   #tab-admin .admin-card-name { font-size:16px; } #tab-admin .admin-meta-val { font-size:13px; } #tab-admin .admin-reason-box { font-size:13px; }
 }
+
+/* ===== Chống giật khi lướt (điện thoại): bỏ làm mờ nền khi cuộn, đẩy phần cố định lên GPU ===== */
+.bottomnav { background:rgba(255,255,255,0.97) !important; -webkit-backdrop-filter:none !important; backdrop-filter:none !important; will-change:transform; box-shadow:0 8px 24px rgba(15,23,42,0.16) !important; }
+.avatar { -webkit-backdrop-filter:none; backdrop-filter:none; }
+.lt-table thead th.col-today::after, .lt-table tbody td.cc-today::after { will-change:opacity; }
+.lt-wrap, .cal-wrap, #ltTable { -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; }
+.lt-table tbody td.col-name, .lt-table tbody tr:nth-child(even) td.col-name { box-shadow:none; border-right:1px solid #B9C9E6!important; }
+.ann-ico { will-change:transform; }
+html { scroll-behavior:auto; }
+
+/* Điện thoại: cột TODAY giữ màu nổi bật nhưng KHÔNG chạy hiệu ứng nhấp nháy liên tục (tránh giật khi lướt). Máy tính vẫn giữ hiệu ứng */
+@media (max-width: 1023px) {
+  .lt-table thead th.col-today::after, .lt-table tbody td.cc-today::after { animation:none !important; opacity:.16; will-change:auto; }
+  .lt-table thead th.col-today::after { opacity:.1; }
+  .ann-ico { animation:none; will-change:auto; }
+}
+
+/* Cột TODAY: bỏ hiệu ứng nhấp nháy ở mọi thiết bị, giữ màu nổi bật đứng yên */
+.lt-table thead th.col-today::after, .lt-table tbody td.cc-today::after { animation:none !important; will-change:auto; opacity:0 !important; display:none; }
 </style>
 </head>
 <body>
