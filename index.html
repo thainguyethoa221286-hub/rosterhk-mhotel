@@ -254,7 +254,7 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .btn-new-mini { background:linear-gradient(135deg,#FDE68A,var(--gx-gold)); color:#1E293B; border:none; border-radius:20px; padding:6px 14px; font-size:11px; font-weight:800; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:4px; }
 
 /* CALENDAR — TAB LỊCH LÀM */
-.cal-wrap { background:var(--surface); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+.cal-wrap { background:var(--bg); border-radius:20px; padding:16px; margin-bottom:12px; border:2px solid #B8C4E6; box-shadow:none; }
 .cal-nav { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
 .cal-title { font-size:17px; font-weight:800; color:var(--text); }
 .cal-sub   { font-size:10px; color:var(--muted); margin-bottom:14px; }
@@ -546,10 +546,10 @@ body.not-home .hdr-shift{display:none}
 .lt2-search { background:#0B1F3A; }
 .lt2-dl { background:#15803D; }
 .lt-wrap { margin:0 12px; background:white; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
-.lt-table thead th { background:#E5E7EB!important; color:#0B1F3A!important; border:1px solid #fff!important; border-bottom:1px solid #D1D5DB!important; padding:5px 3px!important; min-width:40px; text-align:center; line-height:1.1; }
+.lt-table thead th { background:#CBD5E1!important; color:#0B1F3A!important; border:1px solid #fff!important; border-bottom:1px solid #94A3B8!important; padding:5px 3px!important; min-width:40px; text-align:center; line-height:1.1; }
 .lt-table thead th .d-n { display:block; font-size:18px; font-weight:800; }
 .lt-table thead th .d-w { display:block; font-size:10px; font-weight:600; }
-.lt-table thead th.col-name { background:#E5E7EB!important; color:#0B1F3A!important; text-align:left; padding-left:8px!important; font-size:13px; font-weight:700; }
+.lt-table thead th.col-name { background:#CBD5E1!important; color:#0B1F3A!important; text-align:left; padding-left:8px!important; font-size:13px; font-weight:700; }
 .lt-table thead th.col-sun { background:#FDE047!important; }
 .lt-table thead th.col-today { box-shadow:inset 0 -3px 0 #F76707; }
 .lt-table tbody td.col-sun, .lt-table tbody tr:nth-child(even) td.col-sun { background:#FEF9C3!important; }
@@ -558,29 +558,31 @@ body.not-home .hdr-shift{display:none}
 /* ===== Admin sửa ca trực tiếp (Lịch tổng) ===== */
 .lt-table tbody td.ce-edit { cursor:pointer; }
 .lt-table tbody td.ce-edit:active { background:#DBEAFE!important; }
-#ceOverlay { position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:600; display:none; align-items:center; justify-content:center; padding:14px; }
-.ce-box { width:100%; max-width:460px; max-height:92vh; overflow:auto; background:white; border:2px solid #1E3A8A; border-radius:22px; padding:18px; box-sizing:border-box; }
-.ce-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:14px; }
-.ce-head h3 { margin:0; font-size:18px; font-weight:800; color:#0B1F3A; }
-.ce-x { width:40px; height:40px; border:0; background:transparent; font-size:26px; color:#475569; cursor:pointer; }
-.ce-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
-.ce-chip { min-width:54px; height:44px; padding:0 14px; border-radius:999px; border:2px solid #CBD5E1; background:#F1F5F9; color:#334155; font-size:15px; font-weight:800; font-family:inherit; cursor:pointer; }
+#ceOverlay { position:fixed; inset:0; background:rgba(15,23,42,.12); z-index:600; display:none; align-items:flex-end; justify-content:center; padding:0 10px 10px; }
+.ce-box { width:100%; max-width:430px; background:white; border:2px solid #1E3A8A; border-radius:18px; padding:12px; box-sizing:border-box; box-shadow:0 -6px 24px rgba(15,23,42,.25); }
+.ce-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+.ce-head h3 { margin:0; font-size:14px; font-weight:800; color:#0B1F3A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ce-x { width:32px; height:32px; border:0; background:transparent; font-size:22px; color:#475569; cursor:pointer; flex:none; }
+.ce-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+.ce-chip { min-width:42px; height:34px; padding:0 11px; border-radius:999px; border:2px solid #CBD5E1; background:#F1F5F9; color:#334155; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer; }
 .ce-chip.half { border-style:dashed; }
-.ce-chip.sel { box-shadow:0 0 0 3px #1E3A8A; }
+.ce-chip.sel { box-shadow:0 0 0 2px #1E3A8A; }
 .ce-chip.cc-M7,.ce-chip.cc-M8,.ce-chip.cc-M9,.ce-chip.cc-M10 { background:#DBEAFE; color:#1E3A8A; border-color:#93C5FD; }
 .ce-chip.cc-A12,.ce-chip.cc-A14 { background:#E9D5FF; color:#581C87; border-color:#C084FC; }
 .ce-chip.cc-O,.ce-chip.cc-O2 { background:#FFF1F2; color:#BE123C; border-color:#FDA4AF; }
 .ce-chip.cc-AL,.ce-chip.cc-AL2 { background:#FDE68A; color:#78350F; border-color:#FBBF24; }
 .ce-chip.cc-CL,.ce-chip.cc-CL2 { background:#A7F3D0; color:#064E3B; border-color:#10B981; }
 .ce-chip.cc-PH { background:#FCE7F3; color:#9D174D; border-color:#F9A8D4; }
-.ce-in { width:100%; box-sizing:border-box; height:48px; border:1.5px solid #D6DCEF; background:#F8FAFC; border-radius:12px; padding:0 14px; font-size:15px; font-family:inherit; color:#0B1F3A; margin-bottom:10px; }
-.ce-chk { display:flex; align-items:center; gap:10px; font-size:15px; color:#0B1F3A; margin:4px 0 14px; }
-.ce-chk input { width:22px; height:22px; }
-.ce-acts { display:flex; gap:10px; }
-.ce-acts button { flex:1; height:48px; border-radius:12px; font-size:15px; font-weight:800; font-family:inherit; cursor:pointer; }
+.ce-ins { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px; }
+.ce-in { width:100%; box-sizing:border-box; height:38px; border:1.5px solid #D6DCEF; background:#F8FAFC; border-radius:10px; padding:0 10px; font-size:13px; font-family:inherit; color:#0B1F3A; min-width:0; }
+.ce-chk { display:flex; align-items:center; gap:8px; font-size:13px; color:#0B1F3A; margin:2px 0 8px; }
+.ce-chk input { width:18px; height:18px; }
+.ce-acts { display:flex; gap:8px; }
+.ce-acts button { flex:1; height:40px; border-radius:10px; font-size:14px; font-weight:800; font-family:inherit; cursor:pointer; }
 .ce-del { background:#F8FAFC; border:1.5px solid #CBD5E1; color:#0B1F3A; }
 .ce-save { background:#16A34A; border:0; color:white; }
 .ce-save:disabled { opacity:.6; }
+.lt-table tbody td.ce-cur { outline:3px solid #1E3A8A; outline-offset:-3px; }
 .cc-badge.cc-A14 { background:#E9D5FF; color:#581C87; border-color:#C084FC; font-weight:600; }
 .cc-badge.cc-TRAIN,.cc-badge.cc-N22 { background:#E2E8F0; color:#334155; border-color:#CBD5E1; font-weight:700; }
 </style>
@@ -717,11 +719,11 @@ body.not-home .hdr-shift{display:none}
       <div style="font-size:28px;font-weight:900;color:#1A1F36;letter-spacing:-0.5px">Gửi Yêu Cầu</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:16px">
-      <div style="background:white;border-radius:20px;padding:18px 14px;box-shadow:0 4px 16px rgba(59,91,219,0.1);border:1.5px solid #EEF2FF">
-        <div style="font-size:10px;font-weight:800;color:#3B5BDB;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">📅 Phép năm</div>
-        <div style="font-size:36px;font-weight:900;color:#3B5BDB;line-height:1" id="lv-phepNam">—</div>
+      <div style="background:linear-gradient(180deg,#FFF9E6,#FFF3C4);border-radius:20px;padding:18px 14px;box-shadow:0 4px 16px rgba(202,138,4,0.18);border:1.5px solid #F2C94C;border-left:5px solid #CA8A04">
+        <div style="font-size:10px;font-weight:800;color:#92400E;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">📅 Phép năm</div>
+        <div style="font-size:36px;font-weight:900;color:#92400E;line-height:1" id="lv-phepNam">—</div>
         <div style="font-size:10px;color:#8892B0;margin-top:4px;font-weight:600;margin-bottom:12px">ngày còn lại</div>
-        <div style="height:1px;background:#EEF2FF;margin-bottom:10px"></div>
+        <div style="height:1px;background:rgba(146,64,14,.2);margin-bottom:10px"></div>
         <div style="display:flex;justify-content:space-between;margin-bottom:4px">
           <span style="font-size:10px;color:#8892B0">Đã dùng</span>
           <span style="font-size:13px;font-weight:800;color:#F76707" id="lv-phepDaDung">—</span>
@@ -731,11 +733,11 @@ body.not-home .hdr-shift{display:none}
           <span style="font-size:13px;font-weight:800;color:#1A1F36" id="lv-phepTong">—</span>
         </div>
       </div>
-      <div style="background:white;border-radius:20px;padding:18px 14px;box-shadow:0 4px 16px rgba(47,158,68,0.1);border:1.5px solid #EBFBEE">
+      <div style="background:linear-gradient(180deg,#EAFBF0,#D7F6E2);border-radius:20px;padding:18px 14px;box-shadow:0 4px 16px rgba(47,158,68,0.18);border:1.5px solid #86D9A3;border-left:5px solid #2F9E44">
         <div style="font-size:10px;font-weight:800;color:#2F9E44;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px">🔄 Nghỉ bù</div>
         <div style="font-size:36px;font-weight:900;color:#2F9E44;line-height:1" id="lv-nghiBu">—</div>
         <div style="font-size:10px;color:#8892B0;margin-top:4px;font-weight:600;margin-bottom:12px">ngày còn lại</div>
-        <div style="height:1px;background:#EBFBEE;margin-bottom:10px"></div>
+        <div style="height:1px;background:rgba(47,158,68,.25);margin-bottom:10px"></div>
         <div style="display:flex;justify-content:space-between;margin-bottom:4px">
           <span style="font-size:10px;color:#8892B0">Đã dùng</span>
           <span style="font-size:13px;font-weight:800;color:#F76707" id="lv-nghiBuDaDung">—</span>
@@ -1256,7 +1258,7 @@ let currentUser = null, mySchedule = {}, ltEmployees = null;
 // Dán link /exec của bản triển khai mới vào SHEET_WRITE_URL. Để trống = chỉ lưu trên app.
 const SHEET_WRITE_URL = 'https://script.google.com/macros/s/AKfycbwbz-sy15q7FWSKT_XR-iXSQb4ZKqKia6h9c-SQcN3caS9i3fC6vgquvOrybOSXq3Ky/exec';
 const SHEET_WRITE_SECRET = 'hoA221286'; // phải TRÙNG với ROSTER_EDIT_SECRET trong Script Properties
-const CA_CHOICES = ['M7','M8','M9','M10','A12','A14','O','AL','CL','PH','AL2','CL2','O2','TRAIN','N22'];
+const CA_CHOICES = ['M7','M8','M9','M10','A12','A14','O','AL','CL','PH','AL2','CL2','O2','TRAIN'];
 const SOP_URL = 'https://sop-training-hk.vercel.app/sop_training.html';
 let loginPw = ''; // chỉ giữ trong bộ nhớ, không lưu ra trình duyệt
 
@@ -1512,13 +1514,15 @@ function openCaEdit(ma,k){
   const nm=DANH_SACH_TEN[ma]||emp.hoTen||ma;
   o.innerHTML='<div class="ce-box"><div class="ce-head"><h3>'+nm+' · '+ceDateLabel(k)+'</h3><button class="ce-x" onclick="closeCaEdit()" aria-label="Đóng">×</button></div>'
    +'<div class="ce-chips">'+CA_CHOICES.map(c=>'<button class="ce-chip cc-'+c+(/2$/.test(c)?' half':'')+(c===base?' sel':'')+'" data-c="'+c+'" onclick="ceChoose(this.dataset.c)">'+c+'</button>').join('')+'</div>'
-   +'<input class="ce-in" id="ceCode" placeholder="MÃ CA TỰ NHẬP: M8, A14, TRAIN…" value="'+base+'" oninput="ceTyped()" autocapitalize="characters">'
-   +'<input class="ce-in" id="ceNote" placeholder="Ghi chú (hiện ★)">'
+   +'<div class="ce-ins"><input class="ce-in" id="ceCode" placeholder="Mã ca: M8, A14…" value="'+base+'" oninput="ceTyped()" autocapitalize="characters"><input class="ce-in" id="ceNote" placeholder="Ghi chú (hiện ★)"></div>'
    +'<label class="ce-chk"><input type="checkbox" id="ceNext" checked>Lưu xong tự chuyển sang ngày kế tiếp</label>'
    +'<div class="ce-acts"><button class="ce-del" onclick="ceSave(true)">🗑️ Xoá ô</button><button class="ce-save" id="ceSaveBtn" onclick="ceSave(false)">Lưu</button></div></div>';
   o.style.display='flex';
+  document.querySelectorAll('#ltTable td.ce-cur').forEach(x=>x.classList.remove('ce-cur'));
+  const td=document.querySelector('#ltTable td[data-ma="'+ma+'"][data-k="'+k+'"]');
+  if(td){ td.classList.add('ce-cur'); const r=td.getBoundingClientRect(); if(r.bottom>window.innerHeight-330||r.top<120){ window.scrollBy(0,r.top-170); } const w=document.querySelector('#tab-lichTong .lt-wrap'); if(w){ const wr=w.getBoundingClientRect(), tr=td.getBoundingClientRect(); if(tr.right>wr.right-10||tr.left<wr.left+110){ w.scrollLeft+= tr.left-wr.left-150; } } }
 }
-function closeCaEdit(){ const o=document.getElementById('ceOverlay'); if(o)o.style.display='none'; ceState=null; }
+function closeCaEdit(){ const o=document.getElementById('ceOverlay'); if(o)o.style.display='none'; document.querySelectorAll('#ltTable td.ce-cur').forEach(x=>x.classList.remove('ce-cur')); ceState=null; }
 function ceChoose(c){ if(!ceState)return; ceState.sel=c; document.getElementById('ceCode').value=c; document.querySelectorAll('#ceOverlay .ce-chip').forEach(b=>b.classList.toggle('sel',b.dataset.c===c)); }
 function ceTyped(){ if(!ceState)return; const v=document.getElementById('ceCode').value.trim().toUpperCase().replace(/\*/g,''); ceState.sel=v; document.querySelectorAll('#ceOverlay .ce-chip').forEach(b=>b.classList.toggle('sel',b.dataset.c===v)); }
 function sheetWrite(params){
