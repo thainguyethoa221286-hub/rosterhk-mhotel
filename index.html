@@ -612,6 +612,51 @@ body.not-home .hdr-shift{display:none}
 .lt2-editbtn.on { background:#EA580C; border-color:#EA580C; color:white; }
 .lt2-edithint { font-size:12px; color:#475569; font-weight:600; }
 .lt2-edithint.on { color:#C2410C; }
+
+/* ===== Lịch tổng v3: bảng gọn, dễ nhìn (điện thoại + máy tính) ===== */
+.lt-table { border-collapse:separate; border-spacing:0; }
+.lt-table thead th { border:0!important; border-right:1px solid #E2E8F0!important; border-bottom:1px solid #94A3B8!important; background:#CBD5E1!important; }
+.lt-table thead th.col-sun { background:#FACC15!important; }
+.lt-table thead th.col-today { background:#CBD5E1!important; color:#0B1F3A!important; box-shadow:inset 0 -4px 0 #EA580C; }
+.lt-table thead th.col-today.col-sun { background:#FACC15!important; }
+.lt-table thead th.col-m1, .lt-table tbody td.col-m1 { border-left:2px solid #64748B!important; }
+.lt-table tbody td { background:#fff!important; border:0!important; border-right:1px solid #E2E8F0!important; border-bottom:1px solid #E2E8F0!important; padding:3px 2px!important; position:relative; }
+.lt-table tbody tr:nth-child(even) td { background:#fff!important; }
+.lt-table tbody td.col-sun, .lt-table tbody tr:nth-child(even) td.col-sun { background:#FEF9C3!important; }
+.lt-table tbody td.cc-today { outline:none!important; box-shadow:inset 2px 0 0 #EA580C, inset -2px 0 0 #EA580C; }
+.lt-table tbody td.col-name { background:#fff!important; border-right:2px solid var(--primary)!important; }
+.lt-table tbody tr:nth-child(even) td.col-name { background:#F8FAFC!important; }
+.lt-table .cc-badge { border:0; height:auto; min-width:0; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:800; box-shadow:none; }
+.lt-table .cc-badge:hover { transform:none; box-shadow:none; }
+.lt-table .cc-badge.cc-M7,.lt-table .cc-badge.cc-M8,.lt-table .cc-badge.cc-M9,.lt-table .cc-badge.cc-M10 { background:none; color:#334155; font-weight:700; padding:4px 2px; }
+.lt-table .cc-badge.cc-A12,.lt-table .cc-badge.cc-A14 { background:#E9D5FF; color:#581C87; }
+.lt-table .cc-badge.cc-O,.lt-table .cc-badge.cc-O2 { background:#FFE4E6; color:#9F1239; }
+.lt-table .cc-badge.cc-AL,.lt-table .cc-badge.cc-AL2 { background:#FCD34D; color:#78350F; }
+.lt-table .cc-badge.cc-CL,.lt-table .cc-badge.cc-CL2 { background:#86EFAC; color:#14532D; }
+.lt-table .cc-badge.cc-PH { background:#FBCFE8; color:#9D174D; }
+.lt-table .cc-badge.cc-TRAIN,.lt-table .cc-badge.cc-N22 { background:#CBD5E1; color:#1E293B; }
+.lt-table .cc-star { top:-7px; right:-8px; width:auto; height:auto; border:0; background:none; box-shadow:none; color:#D97706; font-size:11px; }
+.lt-table tbody td.ce-edit:active { background:#DBEAFE!important; }
+.lt-table tbody td.ce-cur { outline:3px solid #1E3A8A; outline-offset:-3px; }
+/* Máy tính: cả chu kỳ 31 ngày vừa một màn hình, tiêu đề + nút cùng hàng */
+@media (min-width: 1024px) {
+  #tab-lichTong { display:none; }
+  #tab-lichTong.active { padding:0 12px!important; display:grid; grid-template-columns:420px 1fr; column-gap:12px; align-content:start; }
+  #tab-lichTong > * { grid-column:1 / -1; }
+  #tab-lichTong > .lt2-card { grid-column:1; margin:12px 0 10px; }
+  #tab-lichTong > .lt2-bar { grid-column:2; margin:12px 0 10px; }
+  #tab-lichTong > .lt2-card, #tab-lichTong > .lt2-bar { align-self:stretch; }
+  #tab-lichTong > .lt2-editrow, #tab-lichTong > .lt-wrap, #tab-lichTong > .legend { margin-left:0; margin-right:0; }
+  .lt-table thead th { min-width:36px!important; width:36px; padding:4px 0!important; }
+  .lt-table thead th .d-n { font-size:15px; }
+  .lt-table thead th .d-w { font-size:10px; }
+  .lt-table tbody td { min-width:36px!important; width:36px; padding:2px 0!important; height:36px; }
+  .lt-table .cc-badge { font-size:11.5px; padding:3px 4px; }
+  .lt-table thead th.col-name, .lt-table tbody td.col-name { min-width:150px!important; width:150px; }
+  .lt-table tbody td.col-name { font-size:12.5px; line-height:1.2; padding:2px 8px!important; }
+  .lt-table tbody td.col-name .nv-id { display:inline; margin-left:6px; font-size:10px; }
+  .lt-table.collapsed thead th.col-name, .lt-table.collapsed tbody td.col-name { min-width:64px!important; }
+}
 </style>
 </head>
 <body>
@@ -1532,7 +1577,7 @@ async function loadLichTong(){
   document.getElementById('ltTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải...</div>';
   try{ const d=await supaGetAllSchedule(ltMonth+1,ltYear); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees.slice().sort((a,b)=>{ const na=parseInt(String(a.maNV||'').replace(/\D/g,''),10)||0, nb=parseInt(String(b.maNV||'').replace(/\D/g,''),10)||0; return na-nb; });renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';}
 }
-function renderLichTong(){ ltEditUI(); if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent='Roster tháng '+(ltMonth+1); document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=filterDatesByMode(cycleDates(ltMonth,ltYear)); if(!dates.length){ document.getElementById('ltTable').innerHTML='<div class="empty">Khoảng ngày này không nằm trong chu kỳ đang xem — bấm ‹ › để chuyển tháng hoặc chọn lại ngày</div>'; return; } const keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name">Nhân viên</th>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isS=dt.getDay()===0,isT=k===keyToday,cls=(isS?'col-sun ':'')+(isT?'col-today':''); h1+='<th class="'+cls+'"><span class="d-n">'+pad(dt.getDate())+'</span><span class="d-w">'+DOW_VI[dt.getDay()]+'</span></th>'; }); h1+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? getFirstName(tenThienThanh) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="cc-star">★</span>':'')+'</span>' : ''; const ceOn=ltEditMode&&currentUser&&currentUser.maNV==='NV001'; tbody+='<td class="'+(dt.getDay()===0?'col-sun ':'')+(isT?'cc-today ':'')+(ceOn?'ce-edit':'')+'"'+(ceOn?' data-ma="'+ma+'" data-k="'+k+'" onclick="openCaEdit(this.dataset.ma,this.dataset.k)"':'')+'>'+badge+'</td>'; }); tbody+='</tr>'; }); const _w=document.querySelector('#tab-lichTong .lt-wrap'), _sl=_w?_w.scrollLeft:0; document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+'</thead><tbody>'+tbody+'</tbody></table>'; if(_w)_w.scrollLeft=_sl; }
+function renderLichTong(){ ltEditUI(); if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent='Roster tháng '+(ltMonth+1); document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=filterDatesByMode(cycleDates(ltMonth,ltYear)); if(!dates.length){ document.getElementById('ltTable').innerHTML='<div class="empty">Khoảng ngày này không nằm trong chu kỳ đang xem — bấm ‹ › để chuyển tháng hoặc chọn lại ngày</div>'; return; } const keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name">Nhân viên</th>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isS=dt.getDay()===0,isT=k===keyToday,cls=(isS?'col-sun ':'')+(isT?'col-today ':'')+(dt.getDate()===1&&dt!==dates[0]?'col-m1':''); h1+='<th class="'+cls+'"><span class="d-n">'+pad(dt.getDate())+'</span><span class="d-w">'+DOW_VI[dt.getDay()]+'</span></th>'; }); h1+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? getFirstName(tenThienThanh) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="cc-star">★</span>':'')+'</span>' : ''; const ceOn=ltEditMode&&currentUser&&currentUser.maNV==='NV001'; tbody+='<td class="'+(dt.getDay()===0?'col-sun ':'')+(isT?'cc-today ':'')+(dt.getDate()===1&&dt!==dates[0]?'col-m1 ':'')+(ceOn?'ce-edit':'')+'"'+(ceOn?' data-ma="'+ma+'" data-k="'+k+'" onclick="openCaEdit(this.dataset.ma,this.dataset.k)"':'')+'>'+badge+'</td>'; }); tbody+='</tr>'; }); const _w=document.querySelector('#tab-lichTong .lt-wrap'), _sl=_w?_w.scrollLeft:0; document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+'</thead><tbody>'+tbody+'</tbody></table>'; if(_w)_w.scrollLeft=_sl; }
 
 /* ===== ADMIN SỬA CA TRỰC TIẾP: lưu Supabase + ghi ngược Google Sheet ===== */
 let ceState=null, ltEditMode=false;
