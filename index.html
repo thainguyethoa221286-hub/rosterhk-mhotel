@@ -606,6 +606,12 @@ body.not-home .hdr-shift{display:none}
   #tab-schedule .cal-title { font-size:22px; }
   #tab-schedule .cal-sub { font-size:12px; }
 }
+
+.lt2-editrow { display:flex; align-items:center; gap:10px; margin:0 12px 10px; }
+.lt2-editbtn { flex:none; height:40px; padding:0 14px; display:flex; align-items:center; gap:7px; border:1.5px solid #CBD5E1; background:white; color:#0B1F3A; border-radius:12px; font-size:13px; font-weight:800; font-family:inherit; cursor:pointer; }
+.lt2-editbtn.on { background:#EA580C; border-color:#EA580C; color:white; }
+.lt2-edithint { font-size:12px; color:#475569; font-weight:600; }
+.lt2-edithint.on { color:#C2410C; }
 </style>
 </head>
 <body>
@@ -970,6 +976,10 @@ body.not-home .hdr-shift{display:none}
       <label class="lt2-dt"><span>Đến ngày</span><input type="date" id="ltExpTo"></label>
       <button class="lt2-ic lt2-search" onclick="ltSearchRange()" aria-label="Tìm khoảng ngày"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <button class="lt2-ic lt2-dl" onclick="exportLichTongXlsx()" aria-label="Tải Lịch Tổng (Excel)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></svg></button>
+    </div>
+    <div class="lt2-editrow" id="ltEditRow" style="display:none">
+      <button class="lt2-editbtn" id="ltEditBtn" onclick="ltToggleEdit()" aria-pressed="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg><span id="ltEditTxt">Chỉnh lịch: TẮT</span></button>
+      <span class="lt2-edithint" id="ltEditHint">Bật lên mới bấm vào ô để sửa ca</span>
     </div>
     <div class="lt-wrap">
       <div id="ltTable"><div class="loading"><div class="spinner"></div>Đang tải...</div></div>
@@ -1522,13 +1532,23 @@ async function loadLichTong(){
   document.getElementById('ltTable').innerHTML='<div class="loading"><div class="spinner"></div>Đang tải...</div>';
   try{ const d=await supaGetAllSchedule(ltMonth+1,ltYear); if(d.success&&d.employees&&d.employees.length){ltEmployees=d.employees.slice().sort((a,b)=>{ const na=parseInt(String(a.maNV||'').replace(/\D/g,''),10)||0, nb=parseInt(String(b.maNV||'').replace(/\D/g,''),10)||0; return na-nb; });renderLichTong();}else{document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';} } catch(e){document.getElementById('ltTable').innerHTML='<div class="empty">Lỗi tải dữ liệu</div>';}
 }
-function renderLichTong(){ if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent='Roster tháng '+(ltMonth+1); document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=filterDatesByMode(cycleDates(ltMonth,ltYear)); if(!dates.length){ document.getElementById('ltTable').innerHTML='<div class="empty">Khoảng ngày này không nằm trong chu kỳ đang xem — bấm ‹ › để chuyển tháng hoặc chọn lại ngày</div>'; return; } const keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name">Nhân viên</th>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isS=dt.getDay()===0,isT=k===keyToday,cls=(isS?'col-sun ':'')+(isT?'col-today':''); h1+='<th class="'+cls+'"><span class="d-n">'+pad(dt.getDate())+'</span><span class="d-w">'+DOW_VI[dt.getDay()]+'</span></th>'; }); h1+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? getFirstName(tenThienThanh) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="cc-star">★</span>':'')+'</span>' : ''; const ceOn=currentUser&&currentUser.maNV==='NV001'; tbody+='<td class="'+(dt.getDay()===0?'col-sun ':'')+(isT?'cc-today ':'')+(ceOn?'ce-edit':'')+'"'+(ceOn?' data-ma="'+ma+'" data-k="'+k+'" onclick="openCaEdit(this.dataset.ma,this.dataset.k)"':'')+'>'+badge+'</td>'; }); tbody+='</tr>'; }); const _w=document.querySelector('#tab-lichTong .lt-wrap'), _sl=_w?_w.scrollLeft:0; document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+'</thead><tbody>'+tbody+'</tbody></table>'; if(_w)_w.scrollLeft=_sl; }
+function renderLichTong(){ ltEditUI(); if(!ltEmployees||!ltEmployees.length){document.getElementById('ltTable').innerHTML='<div class="empty">Không có dữ liệu</div>';return;} document.getElementById('ltTitle').textContent='Roster tháng '+(ltMonth+1); document.getElementById('ltRange').textContent=cycleRange(ltMonth,ltYear); const dates=filterDatesByMode(cycleDates(ltMonth,ltYear)); if(!dates.length){ document.getElementById('ltTable').innerHTML='<div class="empty">Khoảng ngày này không nằm trong chu kỳ đang xem — bấm ‹ › để chuyển tháng hoặc chọn lại ngày</div>'; return; } const keyToday=makeKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()); let h1='<tr><th class="col-name">Nhân viên</th>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),isS=dt.getDay()===0,isT=k===keyToday,cls=(isS?'col-sun ':'')+(isT?'col-today':''); h1+='<th class="'+cls+'"><span class="d-n">'+pad(dt.getDate())+'</span><span class="d-w">'+DOW_VI[dt.getDay()]+'</span></th>'; }); h1+='</tr>'; let tbody=''; ltEmployees.forEach(emp=>{ const ma=String(emp.maNV||'').trim().toUpperCase(); const tenThienThanh=DANH_SACH_TEN[ma]||emp.hoTen||ma; const oChuaTen = ltCollapsed ? getFirstName(tenThienThanh) : (tenThienThanh+'<div class="nv-id">'+ma+'</div>'); tbody+='<tr><td class="col-name">'+oChuaTen+'</td>'; dates.forEach(dt=>{ const k=makeKey(dt.getFullYear(),dt.getMonth(),dt.getDate()),ca=(emp.schedule&&emp.schedule[k])||'',isT=k===keyToday; const badge = ca ? '<span class="cc-badge cc-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="cc-star">★</span>':'')+'</span>' : ''; const ceOn=ltEditMode&&currentUser&&currentUser.maNV==='NV001'; tbody+='<td class="'+(dt.getDay()===0?'col-sun ':'')+(isT?'cc-today ':'')+(ceOn?'ce-edit':'')+'"'+(ceOn?' data-ma="'+ma+'" data-k="'+k+'" onclick="openCaEdit(this.dataset.ma,this.dataset.k)"':'')+'>'+badge+'</td>'; }); tbody+='</tr>'; }); const _w=document.querySelector('#tab-lichTong .lt-wrap'), _sl=_w?_w.scrollLeft:0; document.getElementById('ltTable').innerHTML='<table class="lt-table'+(ltCollapsed?' collapsed':'')+'"><thead>'+h1+'</thead><tbody>'+tbody+'</tbody></table>'; if(_w)_w.scrollLeft=_sl; }
 
 /* ===== ADMIN SỬA CA TRỰC TIẾP: lưu Supabase + ghi ngược Google Sheet ===== */
-let ceState=null;
+let ceState=null, ltEditMode=false;
+function ltEditUI(){
+  const row=document.getElementById('ltEditRow'); if(!row)return;
+  const adm=!!(currentUser&&currentUser.maNV==='NV001'); row.style.display=adm?'flex':'none';
+  const b=document.getElementById('ltEditBtn'), t=document.getElementById('ltEditTxt'), h=document.getElementById('ltEditHint');
+  b.classList.toggle('on',ltEditMode); b.setAttribute('aria-pressed',ltEditMode?'true':'false');
+  t.textContent=ltEditMode?'Chỉnh lịch: ĐANG BẬT':'Chỉnh lịch: TẮT';
+  h.classList.toggle('on',ltEditMode); h.textContent=ltEditMode?'Bấm vào ô ca để sửa':'Bật lên mới bấm vào ô để sửa ca';
+}
+function ltToggleEdit(){ ltEditMode=!ltEditMode; if(!ltEditMode)closeCaEdit(); ltEditUI(); renderLichTong(); }
+function ltEditOff(){ if(!ltEditMode)return; ltEditMode=false; closeCaEdit(); ltEditUI(); }
 function ceDateLabel(k){ const p=k.split('-'), d=new Date(+p[0],+p[1]-1,+p[2]); return DOW_VI[d.getDay()]+' '+pad(+p[2])+'/'+pad(+p[1])+'/'+p[0]; }
 function openCaEdit(ma,k){
-  if(!currentUser||currentUser.maNV!=='NV001')return;
+  if(!ltEditMode||!currentUser||currentUser.maNV!=='NV001')return;
   const emp=(ltEmployees||[]).find(e=>String(e.maNV||'').trim().toUpperCase()===ma); if(!emp)return;
   const cur=(emp.schedule&&emp.schedule[k])||''; const base=stripStar(cur);
   ceState={ma,k,sel:base,hadStar:cur.includes('*'),emp};
@@ -2096,6 +2116,7 @@ async function confirmReject(){
 
 /* ===== TAB SWITCHING ===== */
 function switchTab(tab){
+  if(tab!=='lichTong' && typeof ltEditOff==='function') ltEditOff();
   document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>{
     n.classList.remove('active');
