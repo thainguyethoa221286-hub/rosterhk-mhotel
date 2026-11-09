@@ -585,6 +585,27 @@ body.not-home .hdr-shift{display:none}
 .lt-table tbody td.ce-cur { outline:3px solid #1E3A8A; outline-offset:-3px; }
 .cc-badge.cc-A14 { background:#E9D5FF; color:#581C87; border-color:#C084FC; font-weight:600; }
 .cc-badge.cc-TRAIN,.cc-badge.cc-N22 { background:#E2E8F0; color:#334155; border-color:#CBD5E1; font-weight:700; }
+
+/* ===== Lịch làm trên máy tính (>=768px): kẻ ô rõ ràng, chữ to ===== */
+@media (min-width: 768px) {
+  #tab-schedule .cal-days-hdr { gap:0; margin-bottom:0; border:1px solid #9FB0D6; border-bottom:0; border-radius:12px 12px 0 0; background:#D5DDF0; overflow:hidden; }
+  #tab-schedule .cal-hdr-cell { font-size:14px; font-weight:800; color:#0B1F3A; padding:10px 0; border-right:1px solid #B7C4E4; }
+  #tab-schedule .cal-hdr-cell:last-child { border-right:0; }
+  #tab-schedule .cal-hdr-cell.red { color:#C92A2A; }
+  #tab-schedule .cal-grid { gap:0; border-left:1px solid #9FB0D6; border-top:1px solid #9FB0D6; border-radius:0 0 12px 12px; overflow:hidden; background:white; }
+  #tab-schedule .cal-grid .dc { border-radius:0; min-height:82px; gap:8px; border:0; border-right:1px solid #9FB0D6; border-bottom:1px solid #9FB0D6; background:white; }
+  #tab-schedule .cal-grid .dc.empty { background:#F1F4FB; }
+  #tab-schedule .cal-grid .dc:hover:not(.empty) { background:#EEF2FF; }
+  #tab-schedule .cal-grid .dc.weekend:not(.empty) { background:#FFF8F8; }
+  #tab-schedule .cal-grid .dc.today { background:var(--primary-light); box-shadow:inset 0 0 0 3px var(--primary); }
+  #tab-schedule .cal-grid .dc.selected { box-shadow:inset 0 0 0 3px #4338CA; }
+  #tab-schedule .dc-num { font-size:20px; }
+  #tab-schedule .dc-num-m { font-size:15px !important; }
+  #tab-schedule .dc-ca { font-size:13px; padding:4px 14px; }
+  #tab-schedule .dc-ca .dc-star { font-size:11px; top:-6px; right:-6px; }
+  #tab-schedule .cal-title { font-size:22px; }
+  #tab-schedule .cal-sub { font-size:12px; }
+}
 </style>
 </head>
 <body>
@@ -1475,6 +1496,7 @@ function renderCalendar(){
     const badge=ca?'<div class="dc-ca ca-'+stripStar(ca)+'">'+stripStar(ca)+(ca.includes('*')?'<span class="dc-star">★</span>':'')+'</div>':'';
     html+='<div class="'+cls+'" onclick="selectDay(\''+key+'\')">'+'<div class="dc-num'+(numTxt.length>2?' dc-num-m':'')+'">'+numTxt+'</div>'+badge+'</div>';
   });
+  const _tail=(7-((cyc.dates[0].getDay()+6)%7+cyc.dates.length)%7)%7; for(let i=0;i<_tail;i++) html+='<div class="dc empty"></div>';
   document.getElementById('calGrid').innerHTML=html; renderDayDetail(selKey);
 }
 function selectDay(key){ selKey=key; document.querySelectorAll('.dc').forEach(c=>{c.classList.toggle('selected',c.onclick&&c.onclick.toString().includes("'"+key+"'"));}); renderDayDetail(key); }
@@ -1516,7 +1538,7 @@ function openCaEdit(ma,k){
    +'<div class="ce-chips">'+CA_CHOICES.map(c=>'<button class="ce-chip cc-'+c+(/2$/.test(c)?' half':'')+(c===base?' sel':'')+'" data-c="'+c+'" onclick="ceChoose(this.dataset.c)">'+c+'</button>').join('')+'</div>'
    +'<div class="ce-ins"><input class="ce-in" id="ceCode" placeholder="Mã ca: M8, A14…" value="'+base+'" oninput="ceTyped()" autocapitalize="characters"><input class="ce-in" id="ceNote" placeholder="Ghi chú (hiện ★)"></div>'
    +'<label class="ce-chk"><input type="checkbox" id="ceNext" checked>Lưu xong tự chuyển sang ngày kế tiếp</label>'
-   +'<div class="ce-acts"><button class="ce-del" onclick="ceSave(true)">🗑️ Xoá ô</button><button class="ce-save" id="ceSaveBtn" onclick="ceSave(false)">Lưu</button></div></div>';
+   +'<div class="ce-acts"><button class="ce-del" onclick="ceSave(true)">Xoá ô</button><button class="ce-save" id="ceSaveBtn" onclick="ceSave(false)">Lưu</button></div></div>';
   o.style.display='flex';
   document.querySelectorAll('#ltTable td.ce-cur').forEach(x=>x.classList.remove('ce-cur'));
   const td=document.querySelector('#ltTable td[data-ma="'+ma+'"][data-k="'+k+'"]');
@@ -1551,12 +1573,15 @@ async function ceSave(isDelete){
   if(!st.emp.schedule)st.emp.schedule={};
   if(isDelete)delete st.emp.schedule[st.k]; else st.emp.schedule[st.k]=final;
   renderLichTong();
-  let sheetMsg='';
+  const lbl=isDelete?'Đã xoá ô':'Đã lưu '+final;
   if(SHEET_WRITE_URL){
-    try{ const r=await sheetWrite({maNV:st.ma,ngay:st.k,ca:final,note:note}); sheetMsg=(r&&r.ok)?' · đã ghi về Google Sheet':' · ⚠️ chưa ghi được về Sheet: '+((r&&r.error)||'lỗi'); }
-    catch(e){ sheetMsg=' · ⚠️ chưa ghi được về Sheet: '+e.message; }
-  } else sheetMsg=' · (chưa nối Google Sheet)';
-  showToast((isDelete?'Đã xoá ô':'Đã lưu '+final)+sheetMsg, sheetMsg.indexOf('⚠️')>=0?'#E8590C':'#2F9E44');
+    showToast(lbl+' · đang ghi về Google Sheet…','#2F9E44');
+    // ghi Sheet chạy nền — không bắt admin phải chờ mới sửa tiếp được ô kế bên
+    sheetWrite({maNV:st.ma,ngay:st.k,ca:final,note:note}).then(r=>{
+      if(r&&r.ok) showToast(lbl+' · đã ghi về Google Sheet','#2F9E44');
+      else showToast('⚠️ '+lbl+' trên app, nhưng chưa ghi được về Sheet: '+((r&&r.error)||'lỗi'),'#E8590C');
+    }).catch(e=>showToast('⚠️ '+lbl+' trên app, nhưng chưa ghi được về Sheet: '+e.message,'#E8590C'));
+  } else showToast(lbl+' · (chưa nối Google Sheet)','#2F9E44');
   if(goNext){
     const ds=cycleDates(ltMonth,ltYear).map(d=>makeKey(d.getFullYear(),d.getMonth(),d.getDate())); const ix=ds.indexOf(st.k);
     if(ix>=0&&ix+1<ds.length){ openCaEdit(st.ma,ds[ix+1]); return; }
@@ -2191,7 +2216,7 @@ async function saveAnnouncement(){
   catch(e){ showToast('❌ Lưu thất bại. Kiểm tra đã tạo bảng announcements chưa.','#E03131'); b.disabled=false; b.textContent='Lưu'; }
 }
 
-function showToast(msg,bg='#2F9E44'){ const t=document.getElementById('toast'); t.textContent=msg; t.style.background=bg; t.style.display='block'; setTimeout(()=>t.style.display='none',3000); }
+let _toastT; function showToast(msg,bg='#2F9E44'){ const t=document.getElementById('toast'); t.textContent=msg; t.style.background=bg; t.style.display='block'; clearTimeout(_toastT); _toastT=setTimeout(()=>t.style.display='none',3000); }
 
 const ts=new Date().toISOString().split('T')[0];
 document.getElementById('reqTuNgay').value=ts; document.getElementById('reqDenNgay').value=ts;
