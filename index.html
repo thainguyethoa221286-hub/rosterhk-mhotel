@@ -506,6 +506,13 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
 .ann-box .acts{display:flex;gap:8px;margin-top:16px}
 .ann-box .acts button{flex:1;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:900;font-family:inherit;cursor:pointer}
 .ann-box .b1{background:#F1F5F9;color:#475569}.ann-box .b2{background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff}
+.train-card{margin:0 0 14px;padding:14px 16px;border-radius:20px;background:linear-gradient(135deg,#10B981,#0F766E);color:#fff;box-shadow:0 8px 20px rgba(15,118,110,.28);cursor:pointer;display:flex;gap:12px;align-items:center}
+.train-ico{font-size:26px;line-height:1}.train-body{flex:1;min-width:0}
+.train-tag{font-size:10px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;opacity:.9}
+.train-title{font-size:15px;font-weight:900;margin-top:2px}.train-text{font-size:12.5px;margin-top:3px;opacity:.95}
+.train-chev{font-size:24px;font-weight:900;opacity:.9}
+body.in-train .header{display:none}
+#sopFrame{height:calc(100vh - 92px)}
 </style>
 </head>
 <body>
@@ -570,6 +577,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     <div id="todayShiftCard"></div>
     <div id="timeBalanceCard"></div>
     <div id="announceCard"></div>
+    <div class="train-card" onclick="switchTab('train')">
+      <div class="train-ico">📚</div>
+      <div class="train-body"><div class="train-tag">Đào tạo</div><div class="train-title">Học SOP · Xem video · Thi đua</div><div class="train-text">Bấm để vào học và làm bài ngay trong Roster</div></div>
+      <div class="train-chev">›</div>
+    </div>
     <div class="card">
       <div class="card-title">Ngày phép</div>
       <div class="balance-grid">
@@ -918,6 +930,11 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
   </div>
 
+  <!-- TAB ĐÀO TẠO (app SOP nhúng, tự đăng nhập bằng mật khẩu đã nhập ở Roster) -->
+  <div class="content" id="tab-train" style="padding:0">
+    <iframe id="sopFrame" title="Đào tạo SOP" allow="autoplay; fullscreen" style="width:100%;border:0;display:block;background:#eef0f5"></iframe>
+  </div>
+
   <!-- BOTTOM NAV -->
   <div class="bottomnav" id="bottomnav">
     <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
@@ -931,6 +948,9 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); mi
     </div>
     <div class="nav-item" id="nav-lichTong" onclick="switchTab('lichTong')">
       <div class="nav-icon">📊</div><div class="nav-label">Lịch tổng</div>
+    </div>
+    <div class="nav-item" id="nav-train" onclick="switchTab('train')">
+      <div class="nav-icon">📚</div><div class="nav-label">Đào tạo</div>
     </div>
     <!-- Nút Admin sẽ được JS chèn vào đây nếu là NV001 -->
   </div>
@@ -1171,6 +1191,9 @@ const DOW_FULL = ['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm'
 const MON_VI   = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 
 let currentUser = null, mySchedule = {}, ltEmployees = null;
+/* ===== TAB ĐÀO TẠO: đường dẫn app SOP (sửa tại đây nếu đổi địa chỉ) ===== */
+const SOP_URL = 'https://sop-training-hk.vercel.app/sop_training.html';
+let loginPw = ''; // chỉ giữ trong bộ nhớ, không lưu ra trình duyệt
 
 function pad(n){ return String(n).padStart(2,'0'); }
 function makeKey(y,m0,d){ return y+'-'+pad(m0+1)+'-'+pad(d); }
@@ -1266,7 +1289,7 @@ async function doLogin(){
   try{
     const d=await supaLogin(matKhau);
     if(d.success){
-      currentUser=d;
+      currentUser=d; loginPw=matKhau;
       document.getElementById('loginScreen').style.display='none';
       document.getElementById('appScreen').style.display='block';
       initApp();
@@ -1915,9 +1938,16 @@ function switchTab(tab){
     nav.classList.add('active');
     const dot=document.createElement('div'); dot.className='nav-dot'; nav.appendChild(dot);
   }
+  document.body.classList.toggle('in-train', tab==='train');
   if(tab==='lichTong' && !ltEmployees) loadLichTong();
   if(tab==='admin') loadAdminRequests();
+  if(tab==='train') loadSopFrame();
 }
+
+function sopOrigin(){ try{ return new URL(SOP_URL).origin; }catch(e){ return ''; } }
+function loadSopFrame(){ const f=document.getElementById('sopFrame'); if(f && !f.getAttribute('src')) f.src=SOP_URL; }
+function sendSopLogin(){ const f=document.getElementById('sopFrame'); if(f&&f.contentWindow&&loginPw) f.contentWindow.postMessage({type:'roster-sso',pw:loginPw}, sopOrigin()); }
+window.addEventListener('message',(e)=>{ if(e.origin===sopOrigin() && e.data && e.data.type==='sop-ready') sendSopLogin(); });
 
 /* ===== ADMIN — XOÁ YÊU CẦU HÀNG LOẠT (CHỈ NV001) ===== */
 let bdIds=[];
