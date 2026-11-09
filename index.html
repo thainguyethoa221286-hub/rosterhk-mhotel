@@ -775,6 +775,20 @@ html { scroll-behavior:auto; }
 }
 html { overscroll-behavior-y:none; }
 body { overscroll-behavior-y:none; }
+
+/* Thẻ Quỹ giờ: nền xanh dương nhạt, chữ đen đậm (điện thoại + máy tính). Thiếu giờ = viền đỏ, dư giờ = viền xanh lá để vẫn phân biệt */
+.tb-card, .tb-card.balanced, .tb-card.deficit, .tb-card.surplus { background:linear-gradient(180deg,#EAF3FF,#D6E8FF) !important; color:#0B1F3A !important; border:1.5px solid #A9CBF7; border-left:5px solid #3B82F6; box-shadow:0 2px 8px rgba(59,130,246,.18) !important; }
+.tb-card.deficit { border-left-color:#DC2626; } .tb-card.surplus { border-left-color:#16A34A; }
+.tb-card .tb-icon { background:rgba(59,130,246,.16); }
+.tb-card .tb-lbl { color:#1E3A5F !important; font-weight:800; }
+.tb-card .tb-val { color:#0B1F3A !important; font-weight:900; }
+.tb-card .tb-chev { color:#0B1F3A !important; }
+@media (min-width: 1024px) {
+  #homeShiftTile { display:flex !important; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px; }
+  #homeShiftTile .stt-row { flex-direction:column; gap:10px; margin-top:0; align-items:center; }
+  #homeShiftTile .stt-row > div:last-child { text-align:center; }
+  #homeShiftTile .stt-badge { font-size:34px; padding:10px 26px; }
+}
 </style>
 </head>
 <body>
