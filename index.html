@@ -840,6 +840,20 @@ body { overscroll-behavior-y:none; }
   #tab-home.active, #tab-lichTong.active { max-width:1100px; }
   body.in-train #sopFrame { height:100vh; }
 }
+
+/* Thu gọn menu dọc + bỏ khối tên cuối menu */
+.sb-toggle { display:none; }
+@media (min-width: 1024px) {
+  .sb-user { display:none !important; }
+  .sb-toggle { display:flex; align-items:center; gap:12px; margin-top:auto; order:99; height:44px; padding:0 14px; border-radius:14px; color:#C7D8FF; font-size:14px; font-weight:700; cursor:pointer; border-top:1px solid rgba(190,215,255,.2); }
+  .sb-toggle:hover { background:rgba(255,255,255,.08); }
+  body.sb-collapsed .bottomnav { width:76px; max-width:76px !important; padding:22px 10px 18px; }
+  body.sb-collapsed #appScreen { margin-left:76px; }
+  body.sb-collapsed .sb-brand { justify-content:center; margin:0 0 22px; }
+  body.sb-collapsed .sb-brand > div:last-child, body.sb-collapsed .nav-label, body.sb-collapsed .sb-tl { display:none; }
+  body.sb-collapsed .nav-item, body.sb-collapsed .sb-toggle { justify-content:center; padding:0; }
+  body.sb-collapsed .nav-icon { width:auto; }
+}
 </style>
 </head>
 <body>
@@ -1288,7 +1302,7 @@ body { overscroll-behavior-y:none; }
       <div class="nav-icon">📚</div><div class="nav-label">Đào tạo</div>
     </div>
     <!-- Nút Admin sẽ được JS chèn vào đây nếu là NV001 -->
-    <div class="sb-user"><div class="sb-av" id="sbAv">H</div><div class="sb-ut"><div class="sb-un" id="sbName">—</div><div class="sb-ui" id="sbId"></div></div></div>
+    <div class="sb-toggle" id="sbToggle" onclick="toggleSidebar()" title="Thu gọn / mở rộng menu"><svg id="sbChev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span class="sb-tl">Thu gọn</span></div>
   </div>
 </div>
 
@@ -1665,7 +1679,6 @@ async function initApp(){
   const init=currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join('');
   document.getElementById('headerName').textContent=currentUser.hoTen;
   document.getElementById('headerDept').textContent=currentUser.phongBan+' · '+currentUser.maNV;
-  { const a=document.getElementById('sbName'); if(a)a.textContent=currentUser.hoTen; const b=document.getElementById('sbId'); if(b)b.textContent=currentUser.phongBan+' · '+currentUser.maNV; const c=document.getElementById('sbAv'); if(c)c.textContent=String(currentUser.hoTen||'H').trim().split(' ').pop().charAt(0).toUpperCase(); }
   selKey=todayKey();
 
   // Chèn nút Admin vào nav nếu là NV001
@@ -1675,6 +1688,14 @@ async function initApp(){
 
   await Promise.all([loadLeave(),loadMySchedule(),loadRequests(),loadTimeBalance(),loadAnnouncement()]);
 }
+
+/* ===== THU GỌN MENU DỌC (máy tính) ===== */
+function toggleSidebar(){
+  const c=document.body.classList.toggle('sb-collapsed');
+  try{ localStorage.setItem('sbCollapsed', c?'1':'0'); }catch(e){}
+  const ch=document.getElementById('sbChev'); if(ch) ch.innerHTML=c?'<path d="M9 5l7 7-7 7"/>':'<path d="M15 5l-7 7 7 7"/>';
+}
+(function(){ try{ if(localStorage.getItem('sbCollapsed')==='1'){ document.body.classList.add('sb-collapsed'); const ch=document.getElementById('sbChev'); if(ch) ch.innerHTML='<path d="M9 5l7 7-7 7"/>'; } }catch(e){} })();
 
 /* ===== INJECT ADMIN NAV (CHỈ NV001) ===== */
 function injectAdminNav(){
@@ -1732,11 +1753,11 @@ function renderTodayShift(){
   const tile=document.getElementById('homeShiftTile');
   if(tile){
     if(!ca){ tile.innerHTML='<div class="stt-lbl">Ca hôm nay · '+dl+'</div><div class="stt-row"><div class="stt-badge none">—</div><div><div class="stt-name">Chưa có lịch làm</div></div></div>'; }
-    else { const b0=stripStar(ca), t0=getCaType(ca), n0=CA_NAMES[b0]||CA_NAMES[ca]||b0, tm0=CA_TIMES[b0]||CA_TIMES[ca]||''; if(tm0.trim().toLowerCase()===String(n0).trim().toLowerCase()) tm0='';
+    else { let b0=stripStar(ca), t0=getCaType(ca), n0=CA_NAMES[b0]||CA_NAMES[ca]||b0, tm0=CA_TIMES[b0]||CA_TIMES[ca]||''; if(tm0.trim().toLowerCase()===String(n0).trim().toLowerCase()) tm0='';
       tile.innerHTML='<div class="stt-lbl">Ca hôm nay · '+dl+'</div><div class="stt-row"><div class="stt-badge '+(t0==='afternoon'?'afternoon':t0==='off'?'off':t0==='morning'?'':'leave')+'">'+b0+(ca.includes('*')?'★':'')+'</div><div><div class="stt-name">'+n0+'</div>'+(tm0?'<div class="stt-time">'+tm0+'</div>':'')+'</div></div>'; }
   }
   if(!ca){ el.innerHTML='<div class="hs-badge none">📋</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">Chưa có lịch làm</div></div>'+go; return; }
-  const b=stripStar(ca), type=getCaType(ca), name=CA_NAMES[b]||CA_NAMES[ca]||b, time=CA_TIMES[b]||CA_TIMES[ca]||''; if(time.trim().toLowerCase()===String(name).trim().toLowerCase()) time='';
+  let b=stripStar(ca), type=getCaType(ca), name=CA_NAMES[b]||CA_NAMES[ca]||b, time=CA_TIMES[b]||CA_TIMES[ca]||''; if(time.trim().toLowerCase()===String(name).trim().toLowerCase()) time='';
   el.innerHTML='<div class="hs-badge '+(type==='afternoon'?'afternoon':type==='off'?'off':type==='morning'?'':'leave')+'">'+b+(ca.includes('*')?'★':'')+'</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">'+name+(time?' · '+time:'')+'</div></div>'+go;
 }
 function renderCalendar(){
