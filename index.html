@@ -813,6 +813,33 @@ body { overscroll-behavior-y:none; }
 .admin-header::after { background:linear-gradient(118deg,transparent 30%,rgba(125,170,255,.22) 46%,rgba(196,181,253,.24) 52%,transparent 66%); top:-20%; bottom:-20%; left:-10%; right:-10%; width:auto; height:auto; border-radius:0; }
 @media (min-width: 1024px) { #tab-admin .admin-header { background:transparent; } #tab-admin .admin-header::before, #tab-admin .admin-header::after { display:none; } }
 @media (prefers-reduced-motion: reduce) { #loginScreen::before { animation:none; } }
+
+/* ===== MENU DỌC BÊN TRÁI (chỉ máy tính >=1024px) — điện thoại giữ menu dưới như cũ ===== */
+.sb-brand, .sb-user { display:none; }
+@media (min-width: 1024px) {
+  body { max-width:none; margin:0; }
+  #appScreen { margin-left:232px; }
+  .bottomnav { left:0; top:0; bottom:0; transform:none; width:232px; max-width:232px !important; border-radius:0; border:0; flex-direction:column; justify-content:flex-start; padding:22px 14px 18px; overflow:hidden; will-change:auto; background:radial-gradient(120% 70% at 50% 120%,#1B3A86 0%,#0B1A4A 45%,#050B1E 90%) !important; box-shadow:2px 0 16px rgba(2,8,40,.25) !important; }
+  .bottomnav::before { content:''; position:absolute; left:0; top:0; width:1px; height:1px; border-radius:50%; box-shadow:42px 856px 0 1px rgba(186,214,255,.9),162px 576px 0 0px rgba(255,255,255,.95),202px 972px 0 1px rgba(255,255,255,.95),129px 1080px 0 0px rgba(255,255,255,.95),3px 759px 0 1px rgba(186,214,255,.9),17px 296px 0 0px rgba(255,255,255,.95),177px 86px 0 0px rgba(221,214,254,.85),197px 833px 0 1px rgba(186,214,255,.9),8px 673px 0 1px rgba(186,214,255,.9),177px 237px 0 1px rgba(186,214,255,.9),5px 317px 0 1px rgba(255,255,255,.95),31px 40px 0 0px rgba(255,255,255,.95),141px 702px 0 0px rgba(186,214,255,.9),38px 382px 0 1px rgba(255,255,255,.95),120px 481px 0 0px rgba(255,255,255,.95),53px 1189px 0 1px rgba(255,255,255,.95),31px 1147px 0 0px rgba(221,214,254,.85),211px 794px 0 0px rgba(186,214,255,.9),37px 1097px 0 0px rgba(186,214,255,.9),93px 924px 0 1px rgba(186,214,255,.9),81px 992px 0 0px rgba(186,214,255,.9),6px 191px 0 0px rgba(221,214,254,.85),183px 1015px 0 0px rgba(186,214,255,.9),17px 1127px 0 1px rgba(221,214,254,.85),133px 454px 0 1px rgba(221,214,254,.85),81px 1139px 0 1px rgba(255,255,255,.95),46px 348px 0 1px rgba(186,214,255,.9),213px 680px 0 0px rgba(221,214,254,.85),78px 503px 0 0px rgba(255,255,255,.95),16px 356px 0 0px rgba(186,214,255,.9),40px 75px 0 1px rgba(221,214,254,.85),230px 494px 0 0px rgba(255,255,255,.95),189px 29px 0 0px rgba(186,214,255,.9),129px 769px 0 1px rgba(255,255,255,.95),224px 503px 0 0px rgba(221,214,254,.85),17px 899px 0 0px rgba(221,214,254,.85),123px 117px 0 0px rgba(255,255,255,.95),218px 528px 0 1px rgba(186,214,255,.9),8px 859px 0 0px rgba(255,255,255,.95),100px 142px 0 0px rgba(221,214,254,.85),230px 299px 0 0px rgba(221,214,254,.85),186px 980px 0 0px rgba(186,214,255,.9),35px 1076px 0 1px rgba(186,214,255,.9),7px 434px 0 0px rgba(255,255,255,.95),225px 755px 0 1px rgba(186,214,255,.9),124px 1190px 0 0px rgba(186,214,255,.9),35px 1094px 0 1px rgba(186,214,255,.9),35px 20px 0 0px rgba(221,214,254,.85),32px 48px 0 0px rgba(221,214,254,.85),83px 511px 0 1px rgba(186,214,255,.9),65px 830px 0 0px rgba(255,255,255,.95),36px 194px 0 0px rgba(255,255,255,.95),47px 51px 0 1px rgba(186,214,255,.9),201px 288px 0 0px rgba(255,255,255,.95),167px 576px 0 0px rgba(186,214,255,.9),137px 664px 0 0px rgba(186,214,255,.9),227px 449px 0 1px rgba(255,255,255,.95),46px 376px 0 0px rgba(255,255,255,.95),181px 1126px 0 0px rgba(221,214,254,.85),181px 1033px 0 1px rgba(255,255,255,.95),202px 16px 0 0px rgba(186,214,255,.9),221px 130px 0 0px rgba(221,214,254,.85),44px 477px 0 0px rgba(221,214,254,.85),154px 642px 0 1px rgba(255,255,255,.95),62px 796px 0 0px rgba(186,214,255,.9),185px 604px 0 1px rgba(221,214,254,.85),125px 1173px 0 0px rgba(221,214,254,.85),153px 122px 0 1px rgba(221,214,254,.85),188px 663px 0 1px rgba(186,214,255,.9),74px 1076px 0 1px rgba(255,255,255,.95),16px 667px 0 0px rgba(186,214,255,.9),16px 651px 0 1px rgba(186,214,255,.9),27px 155px 0 1px rgba(255,255,255,.95),160px 917px 0 1px rgba(221,214,254,.85),5px 906px 0 0px rgba(221,214,254,.85),131px 797px 0 0px rgba(255,255,255,.95),57px 51px 0 0px rgba(221,214,254,.85),111px 86px 0 0px rgba(186,214,255,.9),180px 828px 0 1px rgba(186,214,255,.9),116px 484px 0 0px rgba(186,214,255,.9),83px 996px 0 0px rgba(221,214,254,.85),167px 174px 0 0px rgba(186,214,255,.9),44px 1007px 0 0px rgba(221,214,254,.85),154px 442px 0 0px rgba(221,214,254,.85),161px 536px 0 0px rgba(186,214,255,.9),127px 790px 0 0px rgba(221,214,254,.85),97px 1073px 0 1px rgba(255,255,255,.95),41px 640px 0 0px rgba(186,214,255,.9),224px 801px 0 1px rgba(255,255,255,.95),23px 1133px 0 0px rgba(255,255,255,.95); pointer-events:none; }
+  .bottomnav::after { content:''; position:absolute; top:-20%; bottom:-20%; left:-30%; right:-30%; background:linear-gradient(118deg,transparent 30%,rgba(125,170,255,.2) 46%,rgba(196,181,253,.22) 52%,transparent 66%); pointer-events:none; }
+  .bottomnav > * { position:relative; z-index:1; }
+  .sb-brand { display:flex; align-items:center; gap:12px; margin:0 6px 26px; }
+  .sb-logo { width:44px; height:44px; border-radius:14px; background:rgba(255,255,255,.14); border:1px solid rgba(190,215,255,.45); display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .sb-t { font-size:18px; font-weight:900; color:#fff; } .sb-s { font-size:11px; color:#BFD4FF; }
+  .nav-item { flex:none; flex-direction:row; align-items:center; justify-content:flex-start; gap:12px; height:46px; padding:0 14px; border-radius:14px; margin-bottom:4px; }
+  .nav-icon { font-size:20px; width:24px; text-align:center; }
+  .nav-label { font-size:15px; font-weight:700; color:#C7D8FF; }
+  .nav-item:hover { background:rgba(255,255,255,.08); }
+  .nav-item.active { background:linear-gradient(135deg,#FDE68A,#F59E0B); box-shadow:0 6px 18px rgba(245,158,11,.35); }
+  .nav-item.active .nav-label { color:#1E293B; }
+  .nav-dot { display:none; }
+  .nav-icon-wrap { position:relative; }
+  .sb-user { display:flex; align-items:center; gap:10px; margin-top:auto; border-top:1px solid rgba(190,215,255,.25); padding-top:14px; order:99; }
+  .sb-av { width:38px; height:38px; border-radius:50%; background:#3B5BDB; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; flex:none; }
+  .sb-ut { min-width:0; } .sb-un { font-size:13px; font-weight:800; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .sb-ui { font-size:11px; color:#BFD4FF; }
+  #tab-home.active, #tab-lichTong.active { max-width:1100px; }
+  body.in-train #sopFrame { height:100vh; }
+}
 </style>
 </head>
 <body>
@@ -1244,6 +1271,7 @@ body { overscroll-behavior-y:none; }
 
   <!-- BOTTOM NAV -->
   <div class="bottomnav" id="bottomnav">
+    <div class="sb-brand"><div class="sb-logo">🏨</div><div><div class="sb-t">HK Roster</div><div class="sb-s">M Hotel Saigon</div></div></div>
     <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
       <div class="nav-icon">🏠</div><div class="nav-label">Tổng quan</div><div class="nav-dot"></div>
     </div>
@@ -1260,6 +1288,7 @@ body { overscroll-behavior-y:none; }
       <div class="nav-icon">📚</div><div class="nav-label">Đào tạo</div>
     </div>
     <!-- Nút Admin sẽ được JS chèn vào đây nếu là NV001 -->
+    <div class="sb-user"><div class="sb-av" id="sbAv">H</div><div class="sb-ut"><div class="sb-un" id="sbName">—</div><div class="sb-ui" id="sbId"></div></div></div>
   </div>
 </div>
 
@@ -1636,6 +1665,7 @@ async function initApp(){
   const init=currentUser.hoTen.split(' ').slice(-2).map(w=>w[0]).join('');
   document.getElementById('headerName').textContent=currentUser.hoTen;
   document.getElementById('headerDept').textContent=currentUser.phongBan+' · '+currentUser.maNV;
+  { const a=document.getElementById('sbName'); if(a)a.textContent=currentUser.hoTen; const b=document.getElementById('sbId'); if(b)b.textContent=currentUser.phongBan+' · '+currentUser.maNV; const c=document.getElementById('sbAv'); if(c)c.textContent=String(currentUser.hoTen||'H').trim().split(' ').pop().charAt(0).toUpperCase(); }
   selKey=todayKey();
 
   // Chèn nút Admin vào nav nếu là NV001
@@ -1702,11 +1732,11 @@ function renderTodayShift(){
   const tile=document.getElementById('homeShiftTile');
   if(tile){
     if(!ca){ tile.innerHTML='<div class="stt-lbl">Ca hôm nay · '+dl+'</div><div class="stt-row"><div class="stt-badge none">—</div><div><div class="stt-name">Chưa có lịch làm</div></div></div>'; }
-    else { const b0=stripStar(ca), t0=getCaType(ca), n0=CA_NAMES[b0]||CA_NAMES[ca]||b0, tm0=CA_TIMES[b0]||CA_TIMES[ca]||'';
+    else { const b0=stripStar(ca), t0=getCaType(ca), n0=CA_NAMES[b0]||CA_NAMES[ca]||b0, tm0=CA_TIMES[b0]||CA_TIMES[ca]||''; if(tm0.trim().toLowerCase()===String(n0).trim().toLowerCase()) tm0='';
       tile.innerHTML='<div class="stt-lbl">Ca hôm nay · '+dl+'</div><div class="stt-row"><div class="stt-badge '+(t0==='afternoon'?'afternoon':t0==='off'?'off':t0==='morning'?'':'leave')+'">'+b0+(ca.includes('*')?'★':'')+'</div><div><div class="stt-name">'+n0+'</div>'+(tm0?'<div class="stt-time">'+tm0+'</div>':'')+'</div></div>'; }
   }
   if(!ca){ el.innerHTML='<div class="hs-badge none">📋</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">Chưa có lịch làm</div></div>'+go; return; }
-  const b=stripStar(ca), type=getCaType(ca), name=CA_NAMES[b]||CA_NAMES[ca]||b, time=CA_TIMES[b]||CA_TIMES[ca]||'';
+  const b=stripStar(ca), type=getCaType(ca), name=CA_NAMES[b]||CA_NAMES[ca]||b, time=CA_TIMES[b]||CA_TIMES[ca]||''; if(time.trim().toLowerCase()===String(name).trim().toLowerCase()) time='';
   el.innerHTML='<div class="hs-badge '+(type==='afternoon'?'afternoon':type==='off'?'off':type==='morning'?'':'leave')+'">'+b+(ca.includes('*')?'★':'')+'</div><div class="hs-body"><div class="hs-lbl">Ca hôm nay · '+dl+'</div><div class="hs-main">'+name+(time?' · '+time:'')+'</div></div>'+go;
 }
 function renderCalendar(){
